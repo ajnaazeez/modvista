@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModVista Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="admin-guard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+            
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2>Dashboard</h2>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search orders, users...">
+                </div>
+                <a href="admin-login.html" class="action-btn" id="adminLoginBtn" style="margin-right: 12px;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <div class="admin-profile" id="profileToggle">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" class="dropdown-item logout-action" style="color: var(--accent);">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- Metrics Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Total Users</div>
+                    <div class="metric-value" id="statTotalUsers"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Total Orders</div>
+                    <div class="metric-value" id="statTotalOrders"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Total Revenue</div>
+                    <div class="metric-value" id="statTotalRevenue"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Active Products</div>
+                    <div class="metric-value" id="statActiveProducts"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <!-- Sales Overview Chart -->
+            <div class="section-container" style="margin-bottom: 32px;">
+                <div class="section-header">
+                    <div class="section-title">Sales Overview</div>
+                </div>
+                <div class="chart-container" style="height: 400px; position: relative; padding: 20px;">
+                    <canvas id="salesOverviewChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-header" style="border: none; padding-left: 0;">
+                <div class="section-title">Quick Actions</div>
+            </div>
+            <div class="quick-actions" style="margin-bottom: 32px;">
+                <button class="action-btn" onclick="window.location.href='products.html'">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+                <button class="action-btn" onclick="window.location.href='coupons.html'">
+                    <i class="fas fa-ticket-alt"></i> Create Coupon
+                </button>
+                <button class="action-btn" onclick="window.location.href='orders.html'">
+                    <i class="fas fa-list"></i> View All Orders
+                </button>
+            </div>
+
+            <!-- Recent Orders Table -->
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title">Recent Orders</div>
+                    <a href="#" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">View All</a>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>User Name</th>
+                                <th>Order Date</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Order Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" style="text-align:center;"><i class="fas fa-spinner fa-spin"></i>
+                                    Loading recent orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <script src="dashboard.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

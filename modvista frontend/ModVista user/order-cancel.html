@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Order | ModVista</title>
+    <meta name="description" content="Cancel your order on ModVista - Premium car modifications.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="order-cancel.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" id="cart-count">0</span>
+                </a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="cancel-order-main">
+        <div class="container fade-in">
+
+
+            <header class="page-header">
+                <h1>Cancel Order</h1>
+                <p>We're sorry to see you go. How can we improve?</p>
+            </header>
+
+            <div class="cancel-grid">
+                <!-- Left: Form Section -->
+                <div class="cancel-form-column">
+                    <section class="card-box">
+                        <h2 class="section-title-minor">Why are you cancelling this order?</h2>
+                        <form id="cancel-form">
+                            <div class="reason-options">
+                                <label class="reason-radio">
+                                    <input type="radio" name="cancel-reason" value="mistake" required>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Ordered by mistake</span>
+                                </label>
+                                <label class="reason-radio">
+                                    <input type="radio" name="cancel-reason" value="price">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Found a better price</span>
+                                </label>
+                                <label class="reason-radio">
+                                    <input type="radio" name="cancel-reason" value="delivery">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Delivery taking too long</span>
+                                </label>
+                                <label class="reason-radio">
+                                    <input type="radio" name="cancel-reason" value="changed_mind">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Changed my mind</span>
+                                </label>
+                                <label class="reason-radio">
+                                    <input type="radio" name="cancel-reason" value="other" id="reason-other">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Other</span>
+                                </label>
+                            </div>
+
+                            <div class="other-reason-input" id="other-input-container">
+                                <textarea id="other-reason-text" placeholder="Please tell us more..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <div class="confirmation-checkbox-wrapper">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="confirm-undo" required>
+                                    <span class="checkbox-custom"></span>
+                                    <span class="checkbox-label">I understand that this action cannot be undone</span>
+                                </label>
+                                <p class="warning-text">Cancelled orders cannot be reactivated.</p>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button type="submit" class="primary-btn" id="confirm-cancel-btn" disabled>Confirm
+                                    Cancellation</button>
+                                <a href="order-details.html" class="outline-btn">Keep Order</a>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <!-- Right: Summary & Info Column -->
+                <div class="cancel-info-column">
+                    <section class="card-box order-preview">
+                        <h2 class="section-title-minor">Order Summary</h2>
+                        <div class="preview-content">
+                            <div class="preview-item">
+                                <div class="item-thumbs" id="item-thumbs">
+                                    <img src="https://images.unsplash.com/photo-1611821064430-0d40291d0f0b?w=400"
+                                        alt="Product" class="thumb">
+                                </div>
+                                <div class="preview-details">
+                                    <p class="order-id">Order #MV2026849201</p>
+                                    <p class="order-date">Jan 20, 2026</p>
+                                    <p class="order-total">Total: <span class="neon-text">$2,948.82</span></p>
+                                </div>
+                            </div>
+                            <div class="status-indicator">
+                                <span class="dot"></span>
+                                <span class="status-name">Confirmed</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card-box refund-card">
+                        <h2 class="section-title-minor">Refund Information</h2>
+                        <div class="refund-content">
+                            <div class="info-item">
+                                <i class="fas fa-credit-card"></i>
+                                <div>
+                                    <h4>Original Payment Method</h4>
+                                    <p>Razorpay orders are refunded directly to your original payment source.</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-wallet"></i>
+                                <div>
+                                    <h4>COD Orders</h4>
+                                    <p>Refunds for COD orders will be processed to your ModVista wallet or bank account.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="timeline-box">
+                                <i class="fas fa-clock"></i>
+                                <p>Refund will be processed within <strong>5–7 business days</strong>.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal / Overlay -->
+        <div class="success-overlay" id="success-overlay">
+            <div class="success-card">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Order Cancelled</h2>
+                <p>Your order #MV2026849201 has been cancelled successfully.</p>
+                <p class="redirect-info">Redirecting to Order History...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <div class="footer-links">
+                    <a href="#">Help Center</a>
+                    <a href="#">Support</a>
+                    <a href="#">Policy</a>
+                </div>
+                <p>© 2026 ModVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="cart-script.js"></script>
+    <script src="order-cancel.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Offers | Admin | ModVista</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="admin-guard.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MOD<span>VISTA</span></h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item active">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn logout-action">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2>Product Offers</h2>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="productSearch" placeholder="Search products...">
+                </div>
+                <div class="admin-profile" id="profileToggle">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span id="adminNameDisplay">Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <a href="#" class="dropdown-item logout-action" style="color: var(--accent);">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- Metrics Bar -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Active Offers</div>
+                    <div class="metric-value" id="activeOffersCount">0</div>
+                </div>
+            </div>
+
+            <!-- Offers List Container -->
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title">Manage Product Discounts</div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Base Price</th>
+                                <th>Sale Price</th>
+                                <th>% Off</th>
+                                <th>Offer Period</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offersTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 3rem;">
+                                    <i class="fas fa-spinner fa-spin"
+                                        style="font-size: 1.5rem; margin-bottom: 1rem;"></i><br>
+                                    Loading products...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationContainer"
+                    style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="offerModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modalTitle">Set Product Offer</h2>
+                <button class="close-modal"
+                    style="background:none; border:none; color:var(--text-dim); font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="offerForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="offerProductName" class="form-control" disabled style="opacity: 0.7;">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Base Price (₹)</label>
+                            <input type="number" id="basePrice" class="form-control" disabled style="opacity: 0.7;">
+                        </div>
+                        <div class="form-group">
+                            <label>Sale Price (₹) *</label>
+                            <input type="number" id="salePrice" class="form-control" placeholder="Enter sale price"
+                                required min="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="offerStart" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" id="offerEnd" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 12px; margin-top: 10px;">
+                        <label class="switch">
+                            <input type="checkbox" id="offerActive">
+                            <span class="slider"></span>
+                        </label>
+                        <span style="font-size: 0.9rem; color: var(--text-main);">Enable Offer</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="action-btn" id="cancelBtn"
+                    style="background: var(--bg-hover); border-color: var(--border); color: var(--text-main);">Cancel</button>
+                <button type="submit" form="offerForm" class="action-btn">Save Offer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="offers.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

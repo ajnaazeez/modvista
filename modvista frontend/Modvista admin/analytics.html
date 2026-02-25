@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics & Reports | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item active">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+            
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="line-height: 1.2;">Analytics & Reports</h2>
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">Business performance & AI usage
+                        insights</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div
+                    style="display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border);">
+                    <i class="fas fa-calendar-alt" style="color: var(--text-dim);"></i>
+                    <select id="dateRangeSelect" class="form-control"
+                        style="border: none; background: transparent; padding: 8px 0; width: 140px; font-size: 0.9rem;">
+                        <option value="30">Last 30 Days</option>
+                        <option value="7">Last 7 Days</option>
+                        <option value="90">Last 90 Days</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- KPI Section -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Revenue</div>
+                    <div class="kpi-value" id="totalRevenue">₹0</div>
+                    <div class="trend trend-up">
+                        <i class="fas fa-caret-up"></i> 15% <span>vs prev period</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Orders</div>
+                    <div class="kpi-value" id="totalOrders">0</div>
+                    <div class="trend trend-up">
+                        <i class="fas fa-caret-up"></i> 8% <span>vs prev period</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Avg. Order Value</div>
+                    <div class="kpi-value" id="avgOrderValue">₹0.00</div>
+                    <div class="trend trend-down">
+                        <i class="fas fa-caret-down"></i> 2% <span>vs prev period</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Active Users</div>
+                    <div class="kpi-value" id="activeUsers">0</div>
+                    <div class="trend trend-up">
+                        <i class="fas fa-caret-up"></i> 24% <span>vs prev period</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Conversion Rate</div>
+                    <div class="kpi-value" id="conversionRate">0%</div>
+                    <div class="trend trend-up">
+                        <i class="fas fa-caret-up"></i> 0.5% <span>vs prev period</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">AI Preview Usage</div>
+                    <div class="kpi-value" id="aiPreviewUsage">0</div>
+                    <div class="trend trend-up" style="color: var(--accent);">
+                        <i class="fas fa-bolt"></i> 42% <span>Hot</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Overview Chart -->
+            <div class="section-container" style="margin-bottom: 32px;">
+                <div class="section-header">
+                    <h4 class="section-title">Sales Overview</h4>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn" style="padding: 4px 12px; font-size: 0.8rem;">Daily</button>
+                        <button class="action-btn active"
+                            style="padding: 4px 12px; font-size: 0.8rem; background: var(--accent);">Monthly</button>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 450px; position: relative; padding: 20px;">
+                    <canvas id="salesOverviewChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Two-column grid: Product Performance + Payment Methods -->
+            <div class="analytics-section-grid" style="margin-bottom: 32px;">
+                <!-- Top Products Table -->
+                <div class="section-container">
+                    <div class="section-header">
+                        <h4 class="section-title">Product Performance</h4>
+                        <a href="products.html"
+                            style="color: var(--accent); font-size: 0.85rem; text-decoration: none;">View All</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Units Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productPerformanceTbody">
+                                <tr>
+                                    <td colspan="3" style="text-align:center; padding: 24px;"><i
+                                            class="fas fa-spinner fa-spin"></i> Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payment Methods Donut Chart -->
+                <div class="section-container">
+                    <div class="section-header">
+                        <h4 class="section-title">Payment Methods</h4>
+                    </div>
+                    <div style="height: 320px; position: relative; padding: 20px;">
+                        <canvas id="paymentMethodsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Status Breakdown -->
+            <div class="section-container" style="margin-bottom: 32px;">
+                <div class="section-header">
+                    <h4 class="section-title">Order Status Breakdown</h4>
+                </div>
+                <div style="height: 300px; position: relative; padding: 20px;">
+                    <canvas id="orderStatusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Insights & Reports -->
+            <div class="analytics-section-grid">
+                <!-- Export Options -->
+                <div class="section-container">
+                    <div class="section-header">
+                        <h4 class="section-title">Reports & Exports</h4>
+                    </div>
+                    <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border);">
+                            <div>
+                                <h5 style="margin-bottom: 4px;">Monthly Sales Report</h5>
+                                <p style="font-size: 0.8rem; color: var(--text-dim);">Detailed breakdown of revenue, tax
+                                    and expenses.</p>
+                            </div>
+                            <div class="export-btn-group">
+                                <button class="action-btn" style="padding: 8px 16px;"><i class="fas fa-file-pdf"></i>
+                                    PDF</button>
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border);">
+                            <div>
+                                <h5 style="margin-bottom: 4px;">AI Usage Analytics</h5>
+                                <p style="font-size: 0.8rem; color: var(--text-dim);">User interaction data with the AI
+                                    visualizer.</p>
+                            </div>
+                            <button class="action-btn" style="padding: 8px 24px;"><i class="fas fa-file-pdf"></i>
+                                PDF</button>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border);">
+                            <div>
+                                <h5 style="margin-bottom: 4px;">User Activity Logs</h5>
+                                <p style="font-size: 0.8rem; color: var(--text-dim);">Historical data of user
+                                    registrations and sessions.</p>
+                            </div>
+                            <button class="action-btn" style="padding: 8px 24px;"><i class="fas fa-file-pdf"></i>
+                                PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights Sidebar -->
+                <div class="insights-panel">
+                    <h4
+                        style="margin-bottom: 20px; color: var(--accent); display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-lightbulb"></i> AI Insights
+                    </h4>
+                    <div class="insight-item">
+                        <i class="fas fa-chart-line" style="color: var(--status-delivered); margin-top: 4px;"></i>
+                        <div>
+                            <p style="font-size: 0.9rem; font-weight: 500;">Revenue Boost Detected</p>
+                            <p style="font-size: 0.8rem; color: var(--text-dim);">Headlights category sales increased by
+                                24% this month following the AI Preview feature update.</p>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <i class="fas fa-shopping-cart" style="color: var(--accent); margin-top: 4px;"></i>
+                        <div>
+                            <p style="font-size: 0.9rem; font-weight: 500;">High Cart Abandonment</p>
+                            <p style="font-size: 0.8rem; color: var(--text-dim);">Mobile users show 15% higher cart
+                                abandonment rate. Consider streamlining mobile checkout.</p>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <i class="fas fa-users" style="color: var(--status-shipped); margin-top: 4px;"></i>
+                        <div>
+                            <p style="font-size: 0.9rem; font-weight: 500;">User Retention Tip</p>
+                            <p style="font-size: 0.8rem; color: var(--text-dim);">Users who use AI Preview 3+ times are
+                                80% more likely to return within 7 days.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="analytics.js"></script>
+</body>
+
+</html>

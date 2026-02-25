@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports | ModVista</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        .reports-container {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-light);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .chart-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .visualization-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .trend-bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 200px;
+            padding-top: 20px;
+        }
+
+        .trend-bar {
+            flex: 1;
+            background: var(--accent-gradient);
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            min-height: 4px;
+            transition: height 1s ease-out;
+        }
+
+        .trend-bar::after {
+            content: attr(data-month);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .category-name {
+            width: 120px;
+            font-size: 0.9rem;
+        }
+
+        .category-progress {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .category-fill {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+    <!-- Navbar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">ModVista</a>
+            <div class="nav-links">
+                <a href="shop.html" class="nav-link">Shop</a>
+                
+            </div>
+            <div class="nav-actions">
+                <a href="profile.html" class="profile-trigger">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="Profile"
+                        id="navAvatar">
+            </div>
+        </div>
+    </nav>
+
+    <div class="reports-container">
+        <div class="header-section mb-5">
+            <h1 class="premium-title">My Performance Reports</h1>
+            <p class="text-dim">Insights into your spending habits and gear preferences</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Spending</span>
+                <div class="stat-value" id="totalSpent">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total Orders</span>
+                <div class="stat-value" id="totalOrders">0</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Avg. Order Value</span>
+                <div class="stat-value" id="avgOrderValue">$0.00</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="chart-section">
+                <div class="section-header">
+                    <h3>Monthly Spending Trend</h3>
+                    <span class="badge">Last 6 Months</span>
+                </div>
+                <div class="trend-bar-container" id="monthlyTrend">
+                    <!-- Bars injected by JS -->
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="section-header">
+                    <h3>Gear Categories</h3>
+                    <p class="text-dim">Your preference breakdown</p>
+                </div>
+                <div class="category-list" id="categoryStats">
+                    <!-- Progress bars injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="user-reports.js"></script>
+</body>
+
+</html>

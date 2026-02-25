@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+            
+            <a href="settings.html" class="menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" style="padding-bottom: 0;">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="line-height: 1.2;">System Settings</h2>
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">Manage platform configuration &
+                        operational rules</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <div class="settings-container">
+                <!-- Tabs Navigation -->
+                <div class="settings-tabs">
+                    <button class="settings-tab-btn active" data-tab="general">
+                        <i class="fas fa-sliders-h"></i> General Settings
+                    </button>
+                    <button class="settings-tab-btn" data-tab="payment">
+                        <i class="fas fa-credit-card"></i> Payment Settings
+                    </button>
+                    <button class="settings-tab-btn" data-tab="order">
+                        <i class="fas fa-shopping-bag"></i> Checkout Rules
+                    </button>
+                    <button class="settings-tab-btn" data-tab="ai">
+                        <i class="fas fa-robot"></i> AI Preview Settings
+                    </button>
+                    <button class="settings-tab-btn" data-tab="wallet">
+                        <i class="fas fa-wallet"></i> Wallet & Refund
+                    </button>
+                    <button class="settings-tab-btn" data-tab="security">
+                        <i class="fas fa-shield-alt"></i> Security & Access
+                    </button>
+                    <button class="settings-tab-btn" data-tab="notification">
+                        <i class="fas fa-bell"></i> Notifications
+                    </button>
+                    <button class="settings-tab-btn" data-tab="maintenance">
+                        <i class="fas fa-tools"></i> Maintenance Mode
+                    </button>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="settings-content-card">
+                    <form id="settingsForm">
+                        <!-- General Settings -->
+                        <div class="settings-section active" id="general">
+                            <h3 style="margin-bottom: 24px;">General Settings</h3>
+                            <div class="settings-form-group">
+                                <label>Platform Name</label>
+                                <input type="text" class="form-control" value="ModVista E-Commerce">
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Support Email</label>
+                                <input type="email" class="form-control" value="support@modvista.com">
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Default Currency</label>
+                                <select class="form-control">
+                                    <option>INR (₹)</option>
+                                    <option>USD ($)</option>
+                                    <option>EUR (€)</option>
+                                </select>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Tax Percentage (%)</label>
+                                <input type="number" class="form-control" value="18">
+                            </div>
+                        </div>
+
+                        <!-- Payment Settings -->
+                        <div class="settings-section" id="payment">
+                            <h3 style="margin-bottom: 24px;">Payment Gateways</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Enable Razorpay</span>
+                                        <div class="description">Accept online payments via UPI, Cards, and Netbanking.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Cash on Delivery (COD)</span>
+                                        <div class="description">Allow customers to pay at the time of delivery.</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Max Order Value for COD (₹)</label>
+                                <input type="number" class="form-control" value="50000">
+                                <div class="description">COD will be disabled for orders above this amount.</div>
+                            </div>
+                        </div>
+
+                        <!-- Checkout Rules -->
+                        <div class="settings-section" id="order">
+                            <h3 style="margin-bottom: 24px;">Order & Checkout Rules</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Allow Guest Checkout</span>
+                                        <div class="description">Users can place orders without creating an account.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Order Cancellation Window (Minutes)</label>
+                                <input type="number" class="form-control" value="30">
+                                <div class="description">Time allowed for users to cancel an order after placing it.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Preview Settings -->
+                        <div class="settings-section" id="ai">
+                            <h3 style="margin-bottom: 24px;">AI Preview Configuration</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Enable AI Visualizer</span>
+                                        <div class="description">Toggle visibility of the "Try AI" button on product
+                                            pages.</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Max Preview Attempts per User</label>
+                                <input type="number" class="form-control" value="5">
+                                <div class="description">Daily limit for non-premium users.</div>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Processing Quality</label>
+                                <select class="form-control">
+                                    <option>Low (Fastest)</option>
+                                    <option selected>Medium (Balanced)</option>
+                                    <option>High (Best Quality)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Wallet & Refund -->
+                        <div class="settings-section" id="wallet">
+                            <h3 style="margin-bottom: 24px;">Wallet & Refund Rules</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Enable Wallet Refunds</span>
+                                        <div class="description">Refunds will be credited to the user's wallet by
+                                            default.</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Auto-Refund on Cancellation</label>
+                                <div class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div class="description">Process wallet refunds instantly when an order is
+                                        cancelled.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security -->
+                        <div class="settings-section" id="security">
+                            <h3 style="margin-bottom: 24px;">Security & Access</h3>
+                            <div class="settings-form-group">
+                                <label>Admin Session Timeout (Minutes)</label>
+                                <input type="number" class="form-control" value="60">
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Two-Factor Authentication (2FA)</span>
+                                        <div class="description">Require OTP for all administrator logins.</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="settings-section" id="notification">
+                            <h3 style="margin-bottom: 24px;">Notification Channels</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </div>
+                                    <span>Email Notifications</span>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </div>
+                                    <span>SMS Notifications</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance Mode -->
+                        <div class="settings-section" id="maintenance">
+                            <h3 style="margin-bottom: 24px;">Maintenance Mode</h3>
+                            <div class="settings-form-group">
+                                <label class="switch-container">
+                                    <div class="switch">
+                                        <input type="checkbox" id="maintToggle">
+                                        <span class="slider"></span>
+                                    </div>
+                                    <div>
+                                        <span>Active Maintenance Mode</span>
+                                        <div class="description">If enabled, the store will be inaccessible to
+                                            customers.</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="settings-form-group">
+                                <label>Custom Maintenance Message</label>
+                                <textarea class="form-control"
+                                    rows="3">We're currently upgrading ModVista to serve you better. We'll be back shortly!</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Footer -->
+        <div class="settings-footer">
+            <button class="action-btn" style="background: transparent; border-color: var(--border);" id="resetBtn">Reset
+                to Default</button>
+            <button class="action-btn" style="background: var(--accent); border-color: var(--accent); min-width: 150px;"
+                id="saveBtn" type="submit" form="settingsForm">Save Changes</button>
+        </div>
+
+        <footer style="margin-top: 0; padding-bottom: 60px;">
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-delivered);"></i>
+            <span id="toastMessage">Settings saved successfully!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="settings.js"></script>
+</body>
+
+</html>

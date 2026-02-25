@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addresses NEW API</title>
+    <meta name="description"
+        content="Manage your delivery addresses for ModVista - Premium car modification e-commerce platform.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="addresses.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="wishlist.html" class="wishlist-icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.svg"
+                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg=='"
+                        alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-container addresses-page-section">
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <div id="sidebar-container"></div>
+
+            <div class="profile-content">
+                <div class="section-container">
+
+
+                    <div class="page-header-flex">
+                        <h1 class="section-title left"><span class="highlight">SAVED</span> ADDRESSES</h1>
+                        <button class="primary-btn add-new-top" id="add-address-trigger">
+                            <i class="fas fa-plus"></i> Add New Address
+                        </button>
+                    </div>
+
+                    <!-- Address Grid -->
+                    <div class="address-grid" id="address-grid">
+                        <!-- Add New Address Card -->
+                        <div class="address-card add-new-card" id="add-new-card-btn">
+                            <div class="add-new-content">
+                                <i class="fas fa-plus-circle"></i>
+                                <p>Add New Address</p>
+                            </div>
+                        </div>
+
+                        <!-- Addresses will be dynamically injected here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="empty-state" style="display: none;">
+                        <div class="empty-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h2>No addresses saved yet</h2>
+                        <p>Add your first delivery address to experience a faster checkout.</p>
+                        <button class="primary-btn mt-4" onclick="openAddressModal()">Add Your First Address</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content confirm-content">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Delete Address?</h3>
+            <p>Are you sure you want to remove this address? This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="outline-btn" id="cancel-delete">No, Keep it</button>
+                <button class="primary-btn" id="confirm-delete">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+                <div class="footer-links-small">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Refund Policy</a>
+                    <a href="index.html#contact">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="authGuard.js"></script>
+    <script>requireAuth();</script>
+    <script src="sidebar-loader.js"></script>
+    <script src="cart-script.js"></script>
+    <script src="script.js"></script>
+    <script src="addresses.js?v=2"></script>
+</body>
+
+</html>

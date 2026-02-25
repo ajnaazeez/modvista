@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | ModVista</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --glass-bg: rgba(10, 10, 10, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-red-glow: 0 0 20px rgba(255, 31, 31, 0.4);
+        }
+
+        body {
+            background: #000;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Cinematic Background */
+        .cinematic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+            z-index: -1;
+            filter: brightness(0.3) contrast(1.1);
+        }
+
+        .cinematic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .success-page-premium {
+            padding: 120px 24px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 20vw;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            z-index: -1;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+        }
+
+        /* Hero Message */
+        .hero-panel {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideUpFade 0.8s ease forwards;
+        }
+
+        .premium-check-icon {
+            font-size: 4rem;
+            color: var(--neon-red);
+            margin-bottom: 20px;
+            filter: drop-shadow(var(--neon-red-glow));
+            display: inline-block;
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .premium-success-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+        }
+
+        .premium-success-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Glass Cards */
+        .premium-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1100px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 60px;
+            animation: slideUpFade 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .card-header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--neon-red);
+            border-radius: 2px;
+        }
+
+        /* Left Section: Details */
+        .order-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-cell {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-cell label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .info-cell span {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item-details h4 {
+            margin: 0 0 5px;
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        .item-details p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .item-price-final {
+            margin-left: auto;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Right Section: Totals & Button */
+        .totals-panel {
+            background: rgba(255, 31, 31, 0.03);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .summary-line.grand-total {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .summary-line.grand-total .val {
+            font-size: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            color: var(--neon-red);
+            text-shadow: 0 0 20px rgba(255, 31, 31, 0.3);
+        }
+
+        .action-btns-premium {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-premium {
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary-premium {
+            background: var(--neon-red);
+            color: white;
+            box-shadow: var(--neon-red-glow);
+        }
+
+        .btn-primary-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 31, 31, 0.6);
+        }
+
+        .btn-outline-premium {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-outline-premium:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: white;
+        }
+
+        /* Animations */
+        @keyframes slideUpFade {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .premium-glass-card {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 30px;
+            }
+
+            .premium-success-title {
+                font-size: 2.5rem;
+            }
+
+            .order-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Elements -->
+    <div class="cinematic-bg"></div>
+    <div class="cinematic-overlay"></div>
+    <div class="watermark">Confirmed</div>
+
+    <!-- Layout -->
+    <main class="success-page-premium">
+        <!-- Minimal Header Logo -->
+        <main class="success-page-premium">
+            <!-- Minimal Header Logo -->
+            <a href="index.html" class="nav-logo"
+                style="margin-bottom: 40px; font-size: 2rem; text-decoration: none;">Mod<span
+                    style="color: var(--neon-red);">Vista</span></a>
+
+            <div class="hero-panel" style="margin-bottom: 40px;">
+                <div class="premium-check-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="premium-success-title">Order <span style="color: var(--neon-red);">Confirmed!</span></h1>
+                <p class="premium-success-subtitle" style="letter-spacing: 1px;">Thank you for your purchase. We're
+                    getting your upgrades ready.</p>
+            </div>
+
+            <div class="premium-glass-card">
+                <!-- Left Side -->
+                <div class="details-side">
+                    <div class="card-header-title">Order Details</div>
+                    <div class="order-info-grid">
+                        <div class="info-cell">
+                            <label>Order Number</label>
+                            <span id="order-id-display">#MV-000000</span>
+                        </div>
+                        <div class="info-cell">
+                            <label>Order Date</label>
+                            <span id="order-date-display">-- -- ----</span>
+                        </div>
+                        <div class="info-cell">
+                            <label>Payment Protocol</label>
+                            <span id="payment-method-display">Confirmed</span>
+                        </div>
+                        <div class="info-cell">
+                            <label>Expected Delivery</label>
+                            <span id="delivery-date-display">-- -- ----</span>
+                        </div>
+                    </div>
+
+                    <div class="card-header-title">Ordered Items</div>
+                    <div id="order-items-display">
+                        <!-- Dynamic Items -->
+                    </div>
+
+                    <!-- Helpful Note -->
+                    <div
+                        style="margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                            <i class="fas fa-info-circle" style="color: var(--neon-red); margin-right: 8px;"></i>
+                            A confirmation email has been sent to your inbox. You can track your order status in your
+                            profile dashboard once it's shipped.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="summary-side">
+                    <div class="card-header-title">Investment Summary</div>
+                    <div class="totals-panel">
+                        <div class="summary-breakdown">
+                            <div class="summary-line">
+                                <span>Base Value</span>
+                                <span id="summary-subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-line" id="summary-offer-discount-row"
+                                style="display: none; color: #4cd137;">
+                                <span>Offer Discount</span>
+                                <span id="summary-offer-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-line" id="summary-coupon-discount-row"
+                                style="display: none; color: #4cd137;">
+                                <span>Coupon Discount</span>
+                                <span id="summary-coupon-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Shipping</span>
+                                <span style="color: #4cd137;">Free</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Tax (GST 18%)</span>
+                                <span id="summary-tax">$0.00</span>
+                            </div>
+                            <div class="summary-line grand-total">
+                                <span>Total Investment</span>
+                                <span class="val" id="summary-total">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="action-btns-premium">
+                            <a href="index.html" class="btn-premium btn-primary-premium">Continue Shopping</a>
+                            <a href="#" id="invoice-btn" class="btn-premium btn-outline-premium">
+                                <i class="fas fa-file-invoice" style="margin-right: 8px;"></i> Download Invoice
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Support Link -->
+                    <div style="margin-top: 30px; text-align: center;">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Need help with your order?</p>
+                        <a href="#"
+                            style="color: white; text-decoration: none; font-size: 0.85rem; font-weight: 700; border-bottom: 1px solid var(--neon-red); padding-bottom: 2px;">Contact
+                            Support</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="api.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async () => {
+                // 1. Auth Guard - Check JWT token
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login to view your order');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // 2. Get orderId - PRIORITY: URL parameter first, then localStorage fallback
+                const params = new URLSearchParams(window.location.search);
+                const orderIdFromUrl = params.get('orderId');
+                const orderId = orderIdFromUrl || localStorage.getItem('orderId');
+
+                if (!orderId) {
+                    alert('No order found. Redirecting to checkout...');
+                    window.location.href = 'checkout.html';
+                    return;
+                }
+
+                // Update Invoice Link
+                document.getElementById('invoice-btn').href = `invoice.html?orderId=${orderId}`;
+
+                console.log('Loading order:', orderId, 'from', orderIdFromUrl ? 'URL' : 'localStorage');
+
+                try {
+                    // 3. Fetch order from backend
+                    const response = await window.ModVistaAPI.apiCall(`/orders/${orderId}`);
+
+                    if (!response || !response.success) {
+                        throw new Error('Failed to load order');
+                    }
+
+                    const order = response.data;
+                    console.log('Order loaded:', order);
+
+                    // 4. Populate UI with backend order data
+                    populateUI(order);
+
+                } catch (error) {
+                    console.error('Error loading order:', error);
+                    alert('Failed to load order details: ' + error.message);
+                    window.location.href = 'index.html';
+                }
+
+                function populateUI(order) {
+                    // --- Order Meta Information ---
+
+                    // Order ID (with # prefix)
+                    document.getElementById('order-id-display').textContent = '#' + order._id;
+
+                    // Order Date (formatted)
+                    const orderDate = new Date(order.createdAt);
+                    document.getElementById('order-date-display').textContent = orderDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+
+                    // Payment Method (with mapping)
+                    const paymentMethodMap = {
+                        'cod': 'Cash on Delivery',
+                        'razorpay': 'Razorpay',
+                        'mock_razorpay': 'Razorpay (MOCK)',
+                        'mock_wallet': 'Wallet (MOCK)'
+                    };
+                    const paymentMethodText = paymentMethodMap[order.paymentMethod] || order.paymentMethod;
+                    document.getElementById('payment-method-display').textContent = paymentMethodText;
+
+                    // Expected Delivery Date (createdAt + 5 days)
+                    const deliveryDate = new Date(order.createdAt);
+                    deliveryDate.setDate(deliveryDate.getDate() + 5);
+                    document.getElementById('delivery-date-display').textContent = deliveryDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+
+                    // --- Order Items ---
+                    const itemsContainer = document.getElementById('order-items-display');
+                    itemsContainer.innerHTML = '';
+
+                    order.items.forEach(item => {
+                        // Item name (from item or populated product)
+                        const itemName = item.name || item.product?.name || 'Product';
+
+                        // Item image
+                        let itemImage = 'assets/default-product.png';
+                        if (item.image) {
+                            if (item.image.startsWith('uploads/')) {
+                                itemImage = `http://localhost:5000/${item.image}`;
+                            } else if (item.image.startsWith('assets/')) {
+                                itemImage = item.image;
+                            } else {
+                                itemImage = item.image;
+                            }
+                        } else if (item.product?.image) {
+                            itemImage = item.product.image;
+                        }
+
+                        // Item variant
+                        const itemVariant = item.variant || 'Standard';
+
+                        // Item quantity
+                        const itemQuantity = item.quantity || 1;
+
+                        // Item price
+                        const itemPrice = item.price || 0;
+
+                        // Calculate total for this item
+                        const itemTotal = (itemPrice * itemQuantity).toFixed(2);
+
+                        // Create item row
+                        const row = document.createElement('div');
+                        row.className = 'item-row';
+                        row.innerHTML = `
+                            <img src="${itemImage}" alt="${itemName}" class="item-image">
+                            <div class="item-details">
+                                <h4>${itemName}</h4>
+                                <p>${itemVariant} × ${itemQuantity}</p>
+                            </div>
+                            <div class="item-price-final">$${itemTotal}</div>
+                        `;
+                        itemsContainer.appendChild(row);
+                    });
+
+                    // --- Order Totals ---
+
+                    // Subtotal
+                    const subtotal = parseFloat(order.subtotal) || 0;
+                    document.getElementById('summary-subtotal').textContent = `₹${subtotal.toLocaleString()}`;
+
+                    // Offer Discount
+                    const offerDiscount = parseFloat(order.offerDiscount) || 0;
+                    if (offerDiscount > 0) {
+                        document.getElementById('summary-offer-discount-row').style.display = 'flex';
+                        document.getElementById('summary-offer-discount').textContent = `-₹${offerDiscount.toLocaleString()}`;
+                    } else {
+                        document.getElementById('summary-offer-discount-row').style.display = 'none';
+                    }
+
+                    // Coupon Discount
+                    const couponDiscount = parseFloat(order.coupon?.discount) || 0;
+                    if (couponDiscount > 0) {
+                        document.getElementById('summary-coupon-discount-row').style.display = 'flex';
+                        document.getElementById('summary-coupon-discount').textContent = `-₹${couponDiscount.toLocaleString()}`;
+                    } else {
+                        document.getElementById('summary-coupon-discount-row').style.display = 'none';
+                    }
+
+                    // Tax
+                    const tax = parseFloat(order.tax) || 0;
+                    document.getElementById('summary-tax').textContent = `$${tax.toFixed(2)}`;
+
+                    // Total
+                    const total = parseFloat(order.total) || 0;
+                    document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
+                }
+            });
+        </script>
+</body>
+
+</html>

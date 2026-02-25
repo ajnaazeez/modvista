@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Coupons | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MOD<span>VISTA</span></h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item active">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="line-height: 1.2;">Manage Coupons</h2>
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">Create and oversee checkout-only promo
+                        codes</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="couponSearch" placeholder="Search codes...">
+                </div>
+                <button class="action-btn" id="createNewBtn" style="padding: 10px 24px; font-size: 0.9rem;">
+                    <i class="fas fa-plus"></i> Create Coupon
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <div class="section-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Flat Discount (₹)</th>
+                                <th>Min. Product Price (₹)</th>
+                                <th>Validity</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="couponsTbody">
+                            <!-- Data injected here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationContainer"
+                    style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- Create/Edit Coupon Modal -->
+    <div class="modal-overlay" id="couponModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="couponModalTitle">Create New Coupon</h3>
+                <i class="fas fa-times close-modal" style="cursor: pointer; color: var(--text-dim);"></i>
+            </div>
+            <div class="modal-body">
+                <div id="simpleModalMsg"
+                    style="display: none; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; font-weight: 500;">
+                </div>
+                <form id="couponFormSimple">
+                    <div class="form-group">
+                        <label>Coupon Code <span style="color: var(--accent);">*</span></label>
+                        <input type="text" class="form-control" name="code" id="simpleCode" required
+                            placeholder="e.g. FLASH500">
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>Flat Discount (₹) <span style="color: var(--accent);">*</span></label>
+                            <input type="number" class="form-control" name="discountValue" id="simpleValue" required
+                                placeholder="0" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Min. Product Price (₹) <span style="color: var(--accent);">*</span></label>
+                            <input type="number" class="form-control" name="minProductPrice" id="simpleMinPrice"
+                                required value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>Start Date <span style="color: var(--accent);">*</span></label>
+                            <input type="date" class="form-control" name="startDate" id="simpleStart" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date <span style="color: var(--accent);">*</span></label>
+                            <input type="date" class="form-control" name="endDate" id="simpleEnd" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" style="background: transparent; border-color: var(--border);"
+                    onclick="closeCouponModal()">Cancel</button>
+                <button class="action-btn" onclick="createCouponSimple(event)">Create Coupon</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-delivered);"></i>
+            <span id="toastMessage">Coupon saved successfully!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="coupons.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModVista | Secure Checkout</title>
+    <meta name="description"
+        content="Securely complete your purchase on ModVista. Premium car modifications delivered to your doorstep.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="checkout.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <a href="profile.html" class="nav-btn btn-login">Profile</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="checkout-page-section">
+        <div class="section-container">
+            <h1 class="section-title left"><span class="highlight">SECURE</span> CHECKOUT</h1>
+
+            <div class="checkout-grid">
+                <!-- Left Section: Address & Contact -->
+                <div class="checkout-left">
+                    <!-- Delivery Address -->
+                    <div class="checkout-section-box">
+                        <div class="checkout-box-title">
+                            <span>Delivery Address</span>
+                            <a href="addresses.html"
+                                style="font-size: 0.8rem; color: var(--neon-red); text-decoration: none;">Manage
+                                Addresses</a>
+                        </div>
+
+                        <div class="address-cards-grid" id="address-list">
+                            <!-- Addresses will be injected here -->
+                        </div>
+
+                        <button class="add-address-btn" id="show-address-form">
+                            <i class="fas fa-plus"></i> Add New Address
+                        </button>
+
+                        <!-- Add New Address Form -->
+                        <div class="new-address-form" id="new-address-form">
+                            <form id="address-form">
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>Full Name</label>
+                                        <input type="text" id="addr-name" placeholder="Enter your full name" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Phone Number</label>
+                                        <input type="tel" id="addr-phone" placeholder="Enter 10-digit number" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Street Address</label>
+                                    <input type="text" id="addr-street" placeholder="House No, Building, Street, Area"
+                                        required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>City</label>
+                                        <input type="text" id="addr-city" placeholder="Enter City" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>State</label>
+                                        <input type="text" id="addr-state" placeholder="Enter State" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>Pincode</label>
+                                        <input type="text" id="addr-pincode" placeholder="6-digit Pincode" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Landmark (Optional)</label>
+                                        <input type="text" id="addr-landmark" placeholder="Nearby landmark">
+                                    </div>
+                                </div>
+                                <div class="checkout-btn-group">
+                                    <button type="button" class="cancel-btn" id="cancel-address">Cancel</button>
+                                    <button type="submit" class="primary-btn save-address-btn">Save Address</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="checkout-section-box">
+                        <div class="checkout-box-title">
+                            <span>Contact Information</span>
+                        </div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="email" id="contact-email" readonly
+                                    style="opacity: 0.7; cursor: not-allowed;">
+                            </div>
+                            <div class="input-group">
+                                <label>Preferred Phone</label>
+                                <input type="tel" id="contact-phone" placeholder="Confirm phone number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section: Order Summary -->
+                <div class="checkout-right">
+                    <div class="order-summary-card">
+                        <h2 class="summary-title" style="margin-bottom: 25px;">Order Summary</h2>
+
+                        <div class="summary-items-list" id="summary-items">
+                            <!-- Summary items will be injected here -->
+                        </div>
+
+
+                        <!-- Eligible Coupons Section -->
+                        <div id="eligible-coupons-section" class="coupon-container-box">
+                            <div class="coupon-header">
+                                <i class="fas fa-tag"></i>
+                                <span>Available Coupons</span>
+                            </div>
+                            <div id="eligible-coupons-list" class="eligible-coupons-grid">
+                                <!-- Coupons will be injected here -->
+                            </div>
+                            <div id="applied-coupon-info"
+                                style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--input-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span id="applied-coupon-tag"
+                                            style="background: var(--neon-red); color: white; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;"></span>
+                                        <span id="applied-coupon-msg"
+                                            style="margin-left: 10px; color: #4cd137; font-size: 0.85rem;"></span>
+                                    </div>
+                                    <button id="remove-coupon-btn" class="text-link-btn"
+                                        style="color: #ff6b6b; background: none; border: none; cursor: pointer; text-decoration: underline; font-size: 0.85rem;">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">₹0.00</span>
+                            </div>
+                            <div class="summary-row" id="offer-discount-row" style="display: none; color: #4cd137;">
+                                <span>Offer Savings</span>
+                                <span id="summary-offer-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-row" id="discount-row" style="display: none; color: #4cd137;">
+                                <span>Coupon Discount</span>
+                                <span id="summary-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span id="summary-shipping">FREE</span>
+                            </div>
+                            <div class="summary-row" style="display: none;">
+                                <span>Tax (GST 18%)</span>
+                                <span id="summary-tax">₹0.00</span>
+                            </div>
+                            <div class="summary-row total"
+                                style="margin-top: 20px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+                                <span>Total Amount</span>
+                                <span id="summary-total" class="highlight">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <button class="primary-btn checkout-btn" id="pay-btn" style="width: 100%; margin-top: 30px;"
+                            disabled>
+                            Proceed to Payment
+                        </button>
+
+                        <div class="trust-badges">
+                            <div><i class="fas fa-shield-alt"></i> Secure</div>
+                            <div><i class="fas fa-lock"></i> SSL Encrypted</div>
+                        </div>
+
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-apple-pay"></i>
+                            <i class="fab fa-google-pay"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-bottom" style="border: none; padding: 40px 0;">
+                <p>© 2026 ModVista. All rights reserved. | <a href="#" style="color: var(--text-secondary);">Privacy
+                        Policy</a> | <a href="#" style="color: var(--text-secondary);">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="badge-sync.js"></script>
+    <script src="checkout.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoice | ModVista</title>
+    <link rel="stylesheet" href="invoice.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="invoice-wrapper">
+        <!-- Action Buttons (Hidden during print) -->
+        <div class="action-bar no-print">
+            <button onclick="window.location.href='order-success.html'" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Order
+            </button>
+            <div class="main-actions">
+                <button onclick="window.print()" class="btn-print">
+                    <i class="fas fa-print"></i> Print Invoice
+                </button>
+                <button onclick="downloadInvoice()" class="btn-download">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="invoice-container" id="invoice">
+            <!-- Header -->
+            <header class="invoice-header">
+                <div class="brand">
+                    <h1 class="logo">Mod<span>Vista</span></h1>
+                    <p class="tagline">Premium Automotive Modifications</p>
+                </div>
+                <div class="invoice-meta">
+                    <h2>Tax Invoice</h2>
+                    <div class="meta-item">
+                        <span class="label">Invoice No:</span>
+                        <span class="value" id="invoice-no">INV-849201</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Order ID:</span>
+                        <span class="value" id="order-id">#MV-849201</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date:</span>
+                        <span class="value" id="invoice-date">Jan 27, 2026</span>
+                    </div>
+                </div>
+            </header>
+
+            <hr class="divider">
+
+            <!-- Details Section -->
+            <div class="details-grid">
+                <div class="detail-block">
+                    <h3>Seller Details</h3>
+                    <p class="name">ModVista Pvt Ltd</p>
+                    <p>GSTIN: 27AADCM2236N1Z1</p>
+                    <p>123 Performance Way, Automotive SEZ</p>
+                    <p>Pune, Maharashtra, 411001</p>
+                    <p>support@modvista.com | +91 98765 43210</p>
+                </div>
+                <div class="detail-block">
+                    <h3>Billed To</h3>
+                    <p class="name" id="billing-name">John Doe</p>
+                    <p id="billing-phone">+91 90000 00000</p>
+                    <p id="billing-email">john.doe@example.com</p>
+                    <p id="billing-address">Apt 402, Skyline Towers, HSR Layout</p>
+                    <p id="billing-city">Bangalore, Karnataka, 560102</p>
+                </div>
+                <div class="detail-block">
+                    <h3>Ship To</h3>
+                    <p class="name" id="shipping-name">John Doe</p>
+                    <p id="shipping-address">Apt 402, Skyline Towers, HSR Layout</p>
+                    <p id="shipping-city">Bangalore, Karnataka, 560102</p>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="table-responsive">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Variant</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-body">
+                        <!-- Items will be populated by JS -->
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img src="https://images.unsplash.com/photo-1486006920555-c77dcf18193b?q=80&w=600"
+                                        alt="" class="item-thumb">
+                                    <span>Forged Vossen V12</span>
+                                </div>
+                            </td>
+                            <td>Alloy Wheels</td>
+                            <td>Stealth Black</td>
+                            <td>4</td>
+                            <td>$950.00</td>
+                            <td>$3,800.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary-payment-grid">
+                <div class="payment-info">
+                    <div class="info-group">
+                        <label>Payment Method:</label>
+                        <span id="payment-method">Razorpay (Online)</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Payment Status:</label>
+                        <span class="status-badge paid" id="payment-status">Paid</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Transaction ID:</label>
+                        <span id="transaction-id">pay_P1r2s3t4u5v6</span>
+                    </div>
+                    <div class="order-status-info">
+                        <div class="info-group">
+                            <label>Order Status:</label>
+                            <span id="order-status">Processing</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Delivery Date:</label>
+                            <span id="delivery-date">Feb 02, 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="price-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">$3,800.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span id="discount">-$380.00</span>
+                    </div>
+                    <div class="summary-row coupon">
+                        <span>Coupon (MODVISTA10)</span>
+                        <span>Applied</span>
+                    </div>
+                    <div class="summary-row wallet">
+                        <span>Wallet Used</span>
+                        <span id="wallet-used">-$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (GST 18%)</span>
+                        <span id="tax">$615.60</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Charges</span>
+                        <span class="free">Free</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Final Amount Paid</span>
+                        <span id="total">$4,035.60</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes & Footer -->
+            <footer class="invoice-footer">
+                <div class="legal-notes">
+                    <p><strong>Note:</strong> Returns & refunds are applicable within 7 days of delivery. Please keep
+                        the original packaging intact.</p>
+                    <p class="computer-gen">This is a computer-generated invoice and does not require a physical
+                        signature.</p>
+                </div>
+                <div class="thank-you">
+                    <p>Thank you for shopping with ModVista</p>
+                    <div class="copyright">&copy; 2026 ModVista. All rights reserved.</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="invoice.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | ModVista</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="nav-search">
+                    <input type="text" placeholder="Search mods...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <a href="wishlist.html" class="wishlist-icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.svg"
+                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg=='"
+                        alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Layout -->
+    <main class="profile-container">
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <!-- Sidebar -->
+            <div id="sidebar-container"></div>
+
+            <!-- Dynamic Content -->
+            <section class="profile-content" id="profile-content">
+                <!-- My Profile Section (Default) -->
+                <div class="dashboard-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="stat-info">
+                            <h4 id="stat-orders-count">0</h4>
+                            <p>Total Orders</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                        <div class="stat-info">
+                            <h4 id="stat-wishlist-count">0</h4>
+                            <p>Wishlist Items</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="stat-info">
+                            <h4 id="stat-wallet-balance">₹0.00</h4>
+                            <p>Wallet Balance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-heading mt-4">My Profile</h2>
+
+                <div class="profile-cards-grid">
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3>Personal Information</h3>
+                            <button class="edit-btn" onclick="window.location.href='edit-profile.html'">Edit</button>
+                        </div>
+                        <div class="info-group">
+                            <label>Full Name</label>
+                            <p id="profile-name">Alex Rodriguez</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Email Address</label>
+                            <p id="profile-email">alex.rodriguez@example.com</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Mobile Number</label>
+                            <p id="profile-phone">+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3>Default Shipping Address</h3>
+                            <button class="edit-btn" onclick="window.location.href='addresses.html'">Edit</button>
+                        </div>
+                        <div class="info-group" id="default-address-container">
+                            <p>Loading address...</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="quick-actions-grid mt-4">
+                    <button class="action-card" onclick="window.location.href='orders.html'">
+                        <i class="fas fa-box-open"></i>
+                        <span>My Orders</span>
+                    </button>
+                    <a href="cart.html" class="action-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Cart</span>
+                    </a>
+                    <button class="action-card" onclick="window.location.href='wishlist.html'">
+                        <i class="fas fa-heart"></i>
+                        <span>Wishlist</span>
+                    </button>
+                    <button class="action-card" onclick="window.location.href='wallet.html'">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </button>
+                    <button class="action-card" onclick="window.location.href='user-reports.html'">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>My Reports</span>
+                    </button>
+                </div>
+
+
+        </div>
+
+        <!-- Edit Profile Section -->
+        <div class="content-section" id="edit-profile" style="display: none;">
+            <h2 class="section-heading">Edit Personal Information</h2>
+            <div class="info-card">
+                <form id="edit-profile-form">
+                    <div class="input-group">
+                        <label for="edit-name">Full Name</label>
+                        <input type="text" id="edit-name" value="Alex Rodriguez" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-email">Email Address</label>
+                        <input type="email" id="edit-email" value="alex.rodriguez@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-mobile">Mobile Number</label>
+                        <input type="tel" id="edit-mobile" value="+1 (555) 123-4567" required>
+                    </div>
+                    <div class="form-actions mt-4" style="display: flex; gap: 15px;">
+                        <button type="submit" class="primary-btn" style="width: auto; padding: 12px 30px;">Save
+                            Changes</button>
+                        <button type="button" id="cancel-edit" class="outline-btn"
+                            style="width: auto; padding: 12px 30px; background: transparent; border: 1px solid var(--input-border); color: white; border-radius: 8px; cursor: pointer;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!-- Missing Sections (Placeholders) -->
+        <div class="content-section" id="my-orders" style="display: none;">
+            <div class="section-header-flex">
+                <h2 class="section-heading">My Orders</h2>
+                <div class="order-controls">
+                    <select id="profile-order-filter" class="mini-select">
+                        <option value="all">All Orders</option>
+                        <option value="30days">Last 30 Days</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <select id="profile-order-sort" class="mini-select">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="profile-orders-container" class="profile-orders-list">
+                <!-- Orders will be rendered here -->
+                <div class="loading-spinner">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            </div>
+
+            <!-- Empty state for orders -->
+            <div id="profile-orders-empty" style="display: none;" class="empty-state-mini">
+                <i class="fas fa-box-open"></i>
+                <p>No orders found match your criteria.</p>
+                <a href="index.html#shop" class="outline-btn small">Continue Shopping</a>
+            </div>
+        </div>
+
+        <div class="content-section" id="order-tracking" style="display: none;">
+            <h2 class="section-heading">Order Tracking</h2>
+            <div class="info-card">
+                <p>Enter your order ID to track your shipment.</p>
+                <div class="input-group" style="margin-top: 15px; max-width: 400px;">
+                    <input type="text" placeholder="Order ID (e.g. MV-1234)">
+                    <button class="primary-btn" style="margin-top: 10px;">Track Order</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="content-section" id="addresses" style="display: none;">
+            <div class="section-header-flex"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 class="section-heading" style="margin-bottom: 0;">Saved Addresses</h2>
+                <button class="primary-btn small" style="width: auto;" id="add-address-trigger">
+                    <i class="fas fa-plus"></i> Add New
+                </button>
+            </div>
+
+            <div class="address-grid" id="address-grid">
+                <!-- Addresses will be injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="address-empty-state" style="display: none;">
+                <div class="empty-icon" style="font-size: 3rem; color: var(--input-border); margin-bottom: 15px;">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3>No addresses saved yet</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Add your delivery address to speed
+                    up checkout.</p>
+                <button class="primary-btn small" style="width: auto;" onclick="openAddressModal()">Add
+                    Address</button>
+            </div>
+        </div>
+
+        <div class="content-section" id="wallet" style="display: none;">
+            <h2 class="section-heading">Wallet</h2>
+            <div class="info-card"
+                style="background: linear-gradient(135deg, var(--bg-dark-3), #1a1a1a); border-color: var(--neon-red);">
+                <div class="wallet-balance">
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Available Balance</label>
+                    <h2 style="font-size: 2.5rem; margin-top: 10px;" id="profile-wallet-balance">₹0.00</h2>
+                </div>
+                <div class="wallet-actions mt-4" style="display: flex; gap: 15px;">
+                    <button class="outline-btn small" style="width: auto;"
+                        onclick="window.location.href='wallet.html'">Transaction History</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="notifications" style="display: none;">
+            <h2 class="section-heading">Notifications</h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-dot"></div>
+                    <div class="activity-content">
+                        <p>Exclusive Offer: 20% off on all Body Kits!</p>
+                        <span class="time">10 minutes ago</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot"></div>
+                    <div class="activity-content">
+                        <p>Your security code is 552190.</p>
+                        <span class="time">1 hour ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wishlist Section -->
+        <div class="content-section" id="wishlist" style="display: none;">
+            <div class="section-header-flex">
+                <h2 class="section-heading">My Wishlist</h2>
+                <a href="wishlist.html" class="outline-btn small" style="width: auto;">
+                    View Full Page
+                </a>
+            </div>
+
+            <!-- Wishlist Grid -->
+            <div class="wishlist-items-grid" id="profile-wishlist-grid">
+                <!-- Wishlist items will be injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state-mini" id="profile-wishlist-empty" style="display: none;">
+                <i class="fas fa-heart-broken"></i>
+                <p>Your wishlist is empty</p>
+                <a href="index.html#shop" class="outline-btn small">Start Shopping</a>
+            </div>
+        </div>
+        </section>
+        </div>
+    </main>
+
+    <!-- Address Modal -->
+    <div class="modal-overlay" id="address-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Address</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <form id="address-form" class="address-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" placeholder="E.g. Alex Rodriguez" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="mobile-number">Mobile Number</label>
+                        <input type="tel" id="mobile-number" placeholder="10-digit number" required pattern="[0-9]{10}">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="house-info">House / Flat / Building Name</label>
+                    <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="street-info">Street / Area</label>
+                    <input type="text" id="street-info" placeholder="E.g. Performance Way, Silicon Valley" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" placeholder="E.g. San Francisco" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="state">State</label>
+                        <select id="state" required>
+                            <option value="" disabled selected>Select State</option>
+                            <option value="California">California</option>
+                            <option value="New York">New York</option>
+                            <option value="Texas">Texas</option>
+                            <option value="Florida">Florida</option>
+                            <option value="Washington">Washington</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" placeholder="6-digit ZIP code" required pattern="[0-9]{5,6}">
+                    </div>
+                    <div class="input-group">
+                        <label>Address Type</label>
+                        <div class="address-type-group">
+                            <label class="type-btn">
+                                <input type="radio" name="address-type" value="Home" checked>
+                                <span>Home</span>
+                            </label>
+                            <label class="type-btn">
+                                <input type="radio" name="address-type" value="Work">
+                                <span>Work</span>
+                            </label>
+                            <label class="type-btn">
+                                <input type="radio" name="address-type" value="Other">
+                                <span>Other</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="set-default">
+                    <label for="set-default">Set as default address</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="outline-btn" id="cancel-form">Cancel</button>
+                    <button type="submit" class="primary-btn" id="save-address-btn">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content confirm-content">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Delete Address?</h3>
+            <p>Are you sure you want to remove this address? This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="outline-btn" id="cancel-delete">No, Keep it</button>
+                <button class="primary-btn" id="confirm-delete">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+                <div class="footer-links-small">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Help Center</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="authGuard.js"></script>
+    <script>requireAuth();</script>
+    <script src="sidebar-loader.js"></script>
+    <script src="cart-script.js"></script>
+    <script src="script.js"></script>
+    <script src="profile.js"></script>
+</body>
+
+</html>

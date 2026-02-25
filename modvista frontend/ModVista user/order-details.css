@@ -1,0 +1,661 @@
+/* Order Details Specific Styles */
+
+:root {
+    --glass-bg: rgba(20, 20, 20, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --neon-red-glow: 0 0 20px rgba(255, 31, 31, 0.4);
+    --timeline-color: #2a2a2a;
+    --step-completed: #4cd137;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.order-details-main {
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.breadcrumb a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    color: white;
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.breadcrumb span {
+    color: var(--neon-red);
+    font-weight: 600;
+}
+
+/* Summary Header */
+.order-summary-header {
+    margin-bottom: 40px;
+}
+
+.summary-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+}
+
+.summary-top h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.summary-top p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-top: 5px;
+}
+
+.header-divider {
+    width: 60px;
+    height: 4px;
+    background: var(--neon-red);
+    border-radius: 2px;
+    box-shadow: var(--neon-red-glow);
+}
+
+/* Status Badges (Reusing from orders.css but enhanced) */
+.status-badge {
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* Card Box */
+.card-box {
+    background: var(--bg-dark-3);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.section-title-minor {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title-minor::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--neon-red);
+    border-radius: 2px;
+}
+
+/* Timeline / Tracker */
+.timeline-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 0;
+    position: relative;
+    overflow-x: auto;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 120px;
+    z-index: 2;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background: #1a1a1a;
+    border: 2px solid var(--timeline-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    transition: var(--transition);
+}
+
+.timeline-step.completed .step-icon {
+    border-color: var(--step-completed);
+    color: var(--step-completed);
+    background: rgba(76, 209, 55, 0.1);
+    box-shadow: 0 0 15px rgba(76, 209, 55, 0.2);
+}
+
+.timeline-step.active .step-icon {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+    background: rgba(255, 31, 31, 0.1);
+    box-shadow: 0 0 15px rgba(255, 31, 31, 0.3);
+    transform: scale(1.1);
+}
+
+.step-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+}
+
+.timeline-step.completed .step-label,
+.timeline-step.active .step-label {
+    color: white;
+}
+
+.step-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.timeline-line {
+    flex: 1;
+    height: 2px;
+    background: var(--timeline-color);
+    margin-top: 25px;
+    position: relative;
+}
+
+.timeline-line.completed {
+    background: var(--step-completed);
+}
+
+.timeline-line.active-line {
+    background: linear-gradient(to right, var(--step-completed), var(--neon-red));
+}
+
+/* Order Grid */
+.order-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+    align-items: start;
+}
+
+/* Items List */
+.items-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-item-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.order-item-row:last-child {
+    border-bottom: none;
+}
+
+.item-thumb {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--glass-border);
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-details h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.item-details p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.item-price-info {
+    text-align: right;
+}
+
+.item-price {
+    display: block;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.item-qty {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Info Column */
+.info-card .info-content p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.info-card .name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.info-card .label {
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+/* Summary Card */
+.summary-rows {
+    margin-bottom: 30px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+}
+
+.summary-row.divider {
+    border-top: 1px solid var(--glass-border);
+    padding-top: 15px;
+}
+
+.summary-row.total {
+    color: white;
+    font-weight: 900;
+    font-size: 1.5rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.summary-row.total span:last-child {
+    color: var(--neon-red);
+    text-shadow: 0 0 20px rgba(255, 31, 31, 0.3);
+}
+
+.free {
+    color: var(--step-completed);
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.action-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cancel-link {
+    display: block;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--transition);
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.cancel-link:hover {
+    color: var(--neon-red);
+    text-decoration: underline;
+}
+
+.outline-btn {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.outline-btn:hover {
+    border-color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 992px) {
+    .order-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .summary-top h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-container {
+        justify-content: flex-start;
+        gap: 30px;
+        padding-bottom: 30px;
+    }
+
+    .timeline-line {
+        display: none;
+    }
+
+    .order-item-row {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .item-price-info {
+        text-align: left;
+        margin-top: 10px;
+    }
+}
+
+/* Refund Animation Overlay */
+.refund-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.refund-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.refund-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animation Stage */
+.animation-stage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.animation-stage.fade-out {
+    opacity: 0;
+}
+
+.wallet-target {
+    text-align: center;
+    margin-top: 200px;
+}
+
+.wallet-icon-large {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    position: relative;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.wallet-icon-large.pulse {
+    color: var(--neon-red);
+    transform: scale(1.2);
+}
+
+.wallet-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: var(--neon-red);
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wallet-icon-large.pulse .wallet-glow {
+    opacity: 0.6;
+}
+
+.wallet-balance-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.wallet-balance-counter {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+}
+
+.wallet-balance-counter.updated {
+    color: var(--neon-red);
+    text-shadow: 0 0 20px rgba(255, 31, 31, 0.5);
+    transition: color 0.3s ease;
+}
+
+.floating-amount {
+    position: absolute;
+    top: 100px;
+    /* Start point */
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--neon-red);
+    text-shadow: 0 0 20px rgba(255, 31, 31, 0.5);
+    opacity: 0;
+}
+
+/* Keyframes */
+@keyframes flyToWallet {
+    0% {
+        top: 100px;
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    10% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        top: 50%;
+        /* Center of wallet approx */
+        transform: scale(0.2);
+        opacity: 0;
+    }
+}
+
+.floating-amount.animate {
+    animation: flyToWallet 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Success Card */
+.refund-success-card {
+    background: var(--bg-dark-3);
+    border: 1px solid var(--neon-red);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    display: none;
+    animation: cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cardPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(76, 209, 55, 0.1);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Checkmark Animation */
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #4cd137;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke: #4cd137;
+    /* Success green */
+    stroke-width: 3;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.refund-success-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.refund-success-card p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.refund-success-card p span {
+    color: var(--neon-red);
+    font-weight: 700;
+}
+
+.refund-details {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-row .mono {
+    font-family: monospace;
+    color: white;
+}
+
+.refund-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

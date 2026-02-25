@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | ModVista</title>
+    <meta name="description" content="View and manage your past orders on ModVista.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="orders.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="wishlist.html" class="wishlist-icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.svg"
+                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg=='"
+                        alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-container">
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <div id="sidebar-container"></div>
+
+            <!-- Dynamic Content -->
+            <section class="profile-content">
+                <div class="content-section" id="my-orders">
+                    <div class="section-header-flex">
+                        <h2 class="section-heading">My Orders</h2>
+                        <div class="order-controls">
+                            <select id="order-filter" class="mini-select">
+                                <option value="all">All Orders</option>
+                                <option value="30days">Last 30 Days</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="return_requested">Return Requested</option>
+                                <option value="returned">Returned</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <select id="order-sort" class="mini-select">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="orders-container" class="profile-orders-list">
+                        <!-- Order cards will be injected here via JavaScript -->
+                        <div class="loading-state">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                            <span>Synchronizing your order history...</span>
+                        </div>
+                    </div>
+
+                    <!-- Empty State (hidden by default) -->
+                    <div id="empty-state" class="empty-state-mini" style="display: none;">
+                        <i class="fas fa-box-open"></i>
+                        <p>You haven't placed any orders yet</p>
+                        <a href="index.html#shop" class="outline-btn small">Start Shopping</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">Mod<span>Vista</span></a>
+                    <p>
+                        performance parts.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#shop">Shop</a></li>
+                        
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Join the Crew</h3>
+                    <p>Get exclusive early access to .</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email Address">
+                        <button type="submit" class="primary-btn">Join</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Return Request Modal -->
+    <div id="return-modal" class="logout-modal-overlay" style="z-index: 9999;">
+        <div class="logout-modal-content" style="max-width: 440px; width: 90%;">
+            <div class="logout-modal-icon" style="background: rgba(255,165,0,0.15); border-color: rgba(255,165,0,0.3);">
+                <i class="fas fa-undo" style="color: #ffb347;"></i>
+            </div>
+            <h3 style="color: #fff;">Request a Return</h3>
+            <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 16px;">Please describe your reason for returning
+                this order. Our team will review and process accordingly.</p>
+            <input type="hidden" id="return-order-id">
+            <textarea id="return-reason" placeholder="e.g. Product received was damaged, wrong item sent..." rows="4"
+                style="width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; padding: 12px; font-size: 0.9rem; resize: vertical; box-sizing: border-box; margin-bottom: 8px;"></textarea>
+            <p id="return-error-msg" style="color: #ff6b6b; font-size: 0.85rem; min-height: 20px; margin-bottom: 8px;">
+            </p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="window.closeReturnModal()">Cancel</button>
+                <button id="return-submit-btn" class="btn-confirm-logout" onclick="window.submitReturnRequest()"
+                    style="background: linear-gradient(135deg, #ff9500, #ff6b00);">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="authGuard.js"></script>
+    <script>requireAuth();</script>
+    <script src="sidebar-loader.js"></script>
+    <script src="cart-script.js"></script>
+    <script src="script.js"></script>
+    <script src="api.js"></script>
+    <script src="orders.js"></script>
+</body>
+
+</html>

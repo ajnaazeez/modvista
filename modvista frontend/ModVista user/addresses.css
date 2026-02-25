@@ -1,0 +1,439 @@
+/* Addresses Page Specific Styles */
+.addresses-page-section {
+    padding-top: 120px;
+    padding-bottom: 80px;
+    min-height: 80vh;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    color: var(--neon-red);
+}
+
+.breadcrumb .active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.page-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.add-new-top {
+    width: auto;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+}
+
+/* Address Grid */
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.address-card {
+    background: var(--bg-dark-3);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.address-card:hover {
+    border-color: var(--text-secondary);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.address-card.default {
+    border-color: var(--neon-red);
+    box-shadow: 0 0 15px rgba(255, 31, 31, 0.1);
+}
+
+.card-header-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.type-badge {
+    background: var(--input-border);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.default-badge {
+    background: rgba(255, 31, 31, 0.1);
+    color: var(--neon-red);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.address-details h3 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.address-details .phone {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.address-details .address-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.address-actions {
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid var(--input-border);
+    padding-top: 20px;
+}
+
+.action-link {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+}
+
+.action-link:hover {
+    color: var(--text-primary);
+}
+
+.action-link.delete:hover {
+    color: var(--neon-red);
+}
+
+.action-link.set-default {
+    color: var(--neon-red);
+    opacity: 0.8;
+}
+
+.action-link.set-default:hover {
+    opacity: 1;
+}
+
+/* Add New Card */
+.add-new-card {
+    border: 2px dashed var(--input-border);
+    background: transparent;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+}
+
+.add-new-card:hover {
+    border-color: var(--neon-red);
+    background: rgba(255, 31, 31, 0.02);
+}
+
+.add-new-content {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.add-new-content i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    transition: var(--transition);
+}
+
+.add-new-card:hover .add-new-content i {
+    color: var(--neon-red);
+    transform: scale(1.1);
+}
+
+.add-new-content p {
+    font-weight: 600;
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-dark-3);
+    border: 1px solid var(--input-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    padding: 35px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: modalAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.modal-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    color: white;
+}
+
+/* Form Styles */
+.address-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.address-form select {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.address-type-group {
+    display: flex;
+    gap: 10px;
+}
+
+.type-btn {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+}
+
+.type-btn input {
+    position: absolute;
+    opacity: 0;
+}
+
+.type-btn span {
+    display: block;
+    text-align: center;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.type-btn input:checked+span {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+    background: rgba(255, 31, 31, 0.05);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+    cursor: pointer;
+}
+
+.checkbox-group input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--neon-red);
+}
+
+.checkbox-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.form-actions .outline-btn {
+    border-color: var(--input-border);
+    color: var(--text-secondary);
+}
+
+.form-actions .outline-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    background: transparent;
+}
+
+/* Confirm Modal */
+.confirm-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.confirm-icon {
+    font-size: 3rem;
+    color: #ffd43b;
+    margin-bottom: 20px;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 100px 0;
+    background: var(--bg-dark-2);
+    border-radius: 20px;
+    border: 1px dashed var(--input-border);
+}
+
+.empty-icon {
+    font-size: 5rem;
+    color: var(--input-border);
+    margin-bottom: 25px;
+}
+
+.empty-state h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Form Validation */
+.input-group.invalid input,
+.input-group.invalid select {
+    border-color: var(--neon-red);
+}
+
+.error-msg {
+    color: var(--neon-red);
+    font-size: 0.75rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.input-group.invalid .error-msg {
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .add-new-top {
+        width: 100%;
+    }
+
+    .address-form .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        padding: 25px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}

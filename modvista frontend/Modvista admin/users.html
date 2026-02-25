@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="line-height: 1.2;">User Management</h2>
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">View and manage registered users</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-box" style="width: 350px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="userSearch" placeholder="Search by name, email, or phone...">
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- Table Controls -->
+            <div class="section-container" style="padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-dim);">Status:</span>
+                        <select class="form-control" id="statusFilter"
+                            style="width: auto; height: 38px; padding: 0 12px;">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="blocked">Blocked</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-dim);">Joined:</span>
+                        <input type="date" id="startDate" class="form-control"
+                            style="width: auto; height: 38px; padding: 0 12px;">
+                        <span style="color: var(--text-dim);">to</span>
+                        <input type="date" id="endDate" class="form-control"
+                            style="width: auto; height: 38px; padding: 0 12px;">
+                    </div>
+                    <button id="resetFilters" class="action-btn"
+                        style="height: 38px; display: flex; align-items: center; gap: 6px; background: var(--bg-dark); color: var(--text-dim); border-color: var(--border);">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="section-container">
+                <div class="table-wrapper">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Joined Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTbody">
+                            <!-- Dynamic users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="paginationContainer"
+                    style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px; border-top: 1px solid var(--border);">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- User Profile Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>User Profile <span id="targetUserId"
+                        style="color: var(--accent); font-size: 1rem; margin-left: 8px;"></span></h3>
+                <i class="fas fa-times" id="closeModal" style="cursor: pointer; color: var(--text-dim);"></i>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="avatar"
+                        style="width: 80px; height: 80px; margin: 0 auto 12px; font-size: 2rem; background: var(--bg-hover);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 id="profileName">Alex Johnson</h3>
+                    <p style="color: var(--text-dim); font-size: 0.9rem;" id="profileEmail">alex.j@example.com</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div
+                        style="background: var(--bg-dark); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+                        <p
+                            style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px;">
+                            Orders</p>
+                        <p id="profileOrderCount" style="font-weight: 700; font-size: 1.25rem;">0</p>
+                    </div>
+                    <div
+                        style="background: var(--bg-dark); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+                        <p
+                            style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px;">
+                            Vehicles</p>
+                        <p id="profileVehicleCount" style="font-weight: 700; font-size: 1.25rem;">0</p>
+                    </div>
+                </div>
+
+                <div id="userVehiclesSection" style="margin-bottom: 24px; display: none;">
+                    <h4
+                        style="font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">
+                        Saved Vehicles</h4>
+                    <div id="userVehiclesList" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Vehicles will be loaded here -->
+                    </div>
+                </div>
+
+                <div
+                    style="background: var(--bg-dark); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="color: var(--text-dim);">Phone:</span>
+                        <span id="profilePhone">+1 (555) 123-4567</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">Status:</span>
+                        <span class="status-badge status-active" id="profileStatus">Active</span>
+                    </div>
+                </div>
+
+                <div style="padding: 12px; border: 1px solid rgba(255, 31, 31, 0.2); background: rgba(255, 31, 31, 0.05); border-radius: 8px; font-size: 0.8rem; color: var(--text-dim); display: none;"
+                    id="blockNote">
+                    <i class="fas fa-info-circle" style="color: var(--accent); margin-right: 6px;"></i>
+                    Blocked users cannot place new orders or use their wallet.
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="action-btn"
+                    style="background: var(--status-cancelled); border-color: var(--status-cancelled);"
+                    id="modalActiveBtn">Deactivate User</button>
+                <button class="action-btn" style="background: var(--accent); border-color: var(--accent);"
+                    id="modalBlockBtn">Block User</button>
+                <button class="action-btn" style="background: transparent; border-color: var(--border);"
+                    id="closeProfileBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-delivered);"></i>
+            <span id="toastMessage">Action completed!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="users.js"></script>
+</body>
+
+</html>

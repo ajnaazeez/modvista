@@ -1,0 +1,35 @@
+<aside class="profile-sidebar">
+    <div class="profile-sidebar-header">
+        <div class="profile-avatar-wrap">
+            <div class="profile-avatar-clip">
+                <div id="profileAvatar" class="profile-avatar-letter">A</div>
+            </div>
+            <button class="avatar-edit-btn" type="button" id="avatarEditBtn"
+                onclick="window.location.href='edit-profile.html'">
+                <i class="fas fa-camera"></i>
+            </button>
+        </div>
+        <h2 class="profile-name" id="profileName">Loading...</h2>
+        <p class="profile-email" id="profileEmail">...</p>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a href="profile.html" class="menu-item">
+            <i class="fas fa-user-circle"></i> My Profile
+        </a>
+        <a href="orders.html" class="menu-item">
+            <i class="fas fa-box"></i> My Orders
+        </a>
+        
+        <a href="addresses.html" class="menu-item">
+            <i class="fas fa-map-marker-alt"></i> Saved Addresses
+        </a>
+        <a href="wallet.html" class="menu-item">
+            <i class="fas fa-wallet"></i> Wallet
+        </a>
+        <hr class="sidebar-divider">
+        <button class="menu-item logout-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </nav>
+</aside>

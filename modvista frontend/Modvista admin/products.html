@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <script src="admin-guard.js"></script>
+    <script>requireAdminAuth();</script>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item active">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn" onclick="adminLogout(event)">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2>Products</h2>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="productSearch" placeholder="Search products...">
+                </div>
+                <a href="admin-login.html" class="action-btn" id="adminLoginBtn"
+                    style="display: none; margin-right: 12px;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <div class="admin-profile" id="profileToggle">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <a href="#" class="dropdown-item logout-action" style="color: var(--accent);">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- Table Controls -->
+            <div class="section-header" style="border: none; padding: 0 0 24px 0;">
+                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                    <select class="form-control" id="categoryFilter"
+                        style="width: auto; height: 40px; padding: 0 16px;">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select class="form-control" id="statusFilter" style="width: auto; height: 40px; padding: 0 16px;">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                </div>
+                <button class="action-btn" id="addProductBtn" style="padding: 10px 24px;">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+            </div>
+
+            <!-- Products Table -->
+            <div class="section-container">
+                <div class="table-wrapper">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock Status</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                            <tr>
+                                <td colspan="8">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationContainer"
+                    style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Product</h3>
+                <i class="fas fa-times" id="closeModal" style="cursor: pointer; color: var(--text-dim);"></i>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>Product Name <span style="color: var(--accent);">*</span></label>
+                        <input type="text" class="form-control" name="name" required
+                            placeholder="e.g. Carbon Fiber Hood">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category <span style="color: var(--accent);">*</span></label>
+                            <select class="form-control" name="category" id="productCategorySelect" required>
+                                <option value="">Loading categories...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹) <span style="color: var(--accent);">*</span></label>
+                            <input type="number" class="form-control" name="price" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stock Count <span style="color: var(--status-cancelled);">*</span></label>
+                            <input type="number" class="form-control" name="stock" required min="0"
+                                placeholder="e.g. 50">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Description</label>
+                        <textarea class="form-control" name="description" rows="3"
+                            placeholder="Describe the product details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Images (Max 3)</label>
+                        <div class="image-upload-grid">
+                            <div class="image-upload-slot" id="slot1">
+                                <i class="fas fa-plus"></i>
+                                <span>Main</span>
+                                <input type="file" class="slot-input" accept="image/*" hidden>
+                            </div>
+                            <div class="image-upload-slot" id="slot2">
+                                <i class="fas fa-plus"></i>
+                                <span>Angle 2</span>
+                                <input type="file" class="slot-input" accept="image/*" hidden>
+                            </div>
+                            <div class="image-upload-slot" id="slot3">
+                                <i class="fas fa-plus"></i>
+                                <span>Angle 3</span>
+                                <input type="file" class="slot-input" accept="image/*" hidden>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" style="background: transparent; border-color: var(--border);"
+                    id="cancelModal">Cancel</button>
+                <button class="action-btn" id="saveProductBtn" type="submit" form="productForm" disabled>Save
+                    Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-delivered);"></i>
+            <span>Product saved successfully!</span>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal (Native UI for simplicity or Custom) -->
+
+    <script src="script.js"></script>
+    <script src="products.js"></script>
+</body>
+
+</html>

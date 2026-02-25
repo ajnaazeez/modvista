@@ -1,0 +1,19 @@
+﻿Running validation...
+Validation passed, running createCoupon...
+[asyncHandler] Calling fn, next is a function
+node : NEXT CALLED WITH ERROR: TypeError: next is not a function
+At line:1 char:1
++ node test-create-simulate.js > simulate_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo              : NotSpe    cified: (NEXT CA    LLED WIT... not     a function:Strin    g) [], RemoteExc    eption
+    + FullyQualified    ErrorId : Native    CommandError
+ 
+    at model.<anonymous> (C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\src\models\Coupon.model.js:72:5)
+    at Kareem.execPre (C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\node_modules\kareem\index.js:63:39)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async model.$__save (C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\node_modules\mongoose\lib\model.js:609:5)
+    at async C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\node_modules\mongoose\lib\model.js:2714:9
+    at async Promise.all (index 0)
+    at async model.create (C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\node_modules\mongoose\lib\model.js:2699:11)
+    at async C:\Users\HP\OneDrive\Desktop\modvista 5.0\modvista backend\src\controllers\adminCoupon.controller.js:83:20

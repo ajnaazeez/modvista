@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModVista | Verify OTP</title>
+    <meta name="description" content="Verify your email with OTP for .">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <main class="signup-container">
+        <!-- Left Section: Branding & Background (Same as signup) -->
+        <section class="hero-section">
+            <div class="overlay"></div>
+            <div class="branding-content">
+                <h1 class="logo">Mod<span class="highlight">Vista</span></h1>
+                <p class="tagline"></p>
+            </div>
+        </section>
+
+        <!-- Right Section: OTP Verification Form -->
+        <section class="form-section">
+            <div class="form-panel">
+                <header class="form-header">
+                    <h2>Verify Email</h2>
+                    <p id="otp-message">We've sent a 6-digit code to your email.</p>
+                </header>
+
+                <form id="otp-form" novalidate>
+                    <div class="input-group">
+                        <label for="otp">Enter 6-digit OTP</label>
+                        <input type="text" id="otp" name="otp" placeholder="123456" maxlength="6" inputmode="numeric"
+                            required
+                            style="text-align: center; letter-spacing: 0.5rem; font-size: 1.5rem; font-weight: 700;">
+                    </div>
+
+                    <button type="submit" id="verify-btn" class="primary-btn" disabled>Verify OTP</button>
+
+                    <div class="form-footer" style="margin-top: 2rem; text-align: center;">
+                        <p>Didn't receive the code? <button type="button" id="resend-otp-link"
+                                style="background: none; border: none; color: var(--neon-red); cursor: pointer; text-decoration: underline; font-family: inherit;">Resend
+                                OTP</button></p>
+                    </div>
+                </form>
+
+                <footer class="form-footer" style="margin-top: 1rem; text-align: center;">
+                    <p><a href="signup.html" class="login-link">Back to Sign Up</a></p>
+                </footer>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+    <script src="otp-script.js"></script>
+</body>
+
+</html>

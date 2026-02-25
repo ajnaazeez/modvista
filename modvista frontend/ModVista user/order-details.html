@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details | ModVista</title>
+    <meta name="description" content="Detailed view of your ModVista order.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="order-details.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="wishlist.html" class="wishlist-icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.svg" alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-container order-details-main">
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <!-- Sidebar -->
+            <div id="sidebar-container"></div>
+
+            <div class="profile-content">
+                <div class="container">
+
+
+                    <!-- Order Summary Header -->
+                    <header class="order-summary-header">
+                        <div class="summary-top">
+                            <div>
+                                <h1 id="order-id">Order #MV2026849201</h1>
+                                <p id="order-date">Placed on Jan 20, 2026 • 04:30 PM</p>
+                            </div>
+                            <div class="status-badge" id="order-status-badge">
+                                <span class="status-dot"></span>
+                                <span id="status-text">Delivered</span>
+                            </div>
+                        </div>
+                        <div class="header-divider"></div>
+                    </header>
+
+                    <!-- Order Timeline Section -->
+                    <section class="order-timeline-section card-box">
+                        <h2 class="section-title-minor">Track Progress</h2>
+                        <div class="timeline-container">
+                            <div class="timeline-step completed" data-step="1">
+                                <div class="step-icon"><i class="fas fa-receipt"></i></div>
+                                <div class="step-content">
+                                    <span class="step-label">Order Placed</span>
+                                    <span class="step-date">Jan 20, 04:30 PM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-line completed"></div>
+                            <div class="timeline-step completed" data-step="2">
+                                <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="step-content">
+                                    <span class="step-label">Confirmed</span>
+                                    <span class="step-date">Jan 20, 05:15 PM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-line completed"></div>
+                            <div class="timeline-step completed" data-step="3">
+                                <div class="step-icon"><i class="fas fa-box"></i></div>
+                                <div class="step-content">
+                                    <span class="step-label">Shipped</span>
+                                    <span class="step-date">Jan 21, 10:00 AM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-line completed"></div>
+                            <div class="timeline-step completed" data-step="4">
+                                <div class="step-icon"><i class="fas fa-truck"></i></div>
+                                <div class="step-content">
+                                    <span class="step-label">Out for Delivery</span>
+                                    <span class="step-date">Jan 23, 09:30 AM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-line active-line"></div>
+                            <div class="timeline-step active" data-step="5">
+                                <div class="step-icon"><i class="fas fa-home"></i></div>
+                                <div class="step-content">
+                                    <span class="step-label">Delivered</span>
+                                    <span class="step-date">Jan 23, 11:20 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="order-grid">
+                        <!-- Left: Order Items -->
+                        <div class="order-items-column">
+                            <section class="card-box">
+                                <h2 class="section-title-minor">Items Ordered (<span id="item-count">2</span>)</h2>
+                                <div class="items-list" id="items-container">
+                                    <!-- Items will be injected -->
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Right: Shipping & Payment Info -->
+                        <div class="order-info-column">
+                            <section class="card-box info-card">
+                                <h2 class="section-title-minor">Shipping Address</h2>
+                                <div class="info-content">
+                                    <p class="name" id="ship-name">Alex Rivera</p>
+                                    <p id="ship-phone">+1 (555) 123-4567</p>
+                                    <p id="ship-address">123 Performance Dr,<br>Carbon Valley, CA 90210<br>United States
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section class="card-box info-card">
+                                <h2 class="section-title-minor">Payment Details</h2>
+                                <div class="info-content">
+                                    <p><span class="label">Method:</span> <span id="payment-type">Razorpay
+                                            (Online)</span></p>
+                                    <p><span class="label">Transaction ID:</span> <span
+                                            id="transaction-id">TXN849201552</span>
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section class="card-box summary-card">
+                                <h2 class="section-title-minor">Order Total</h2>
+                                <div class="summary-rows">
+                                    <div class="summary-row">
+                                        <span>Subtotal</span>
+                                        <span id="subtotal">₹0.00</span>
+                                    </div>
+                                    <div class="summary-row" id="offer-row" style="color: #00d1b2; display: none;">
+                                        <span>Offer Discount</span>
+                                        <span id="offer-discount">-₹0.00</span>
+                                    </div>
+                                    <div class="summary-row" id="coupon-row" style="color: #00d1b2; display: none;">
+                                        <span>Coupon Discount (<span id="coupon-code"></span>)</span>
+                                        <span id="coupon-discount">-₹0.00</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>Shipping</span>
+                                        <span class="free">Free</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>Tax (GST 18%)</span>
+                                        <span id="tax">₹0.00</span>
+                                    </div>
+                                    <div class="summary-row divider"></div>
+                                    <div class="summary-row total">
+                                        <span>Grand Total</span>
+                                        <span id="grand-total">₹2,948.82</span>
+                                    </div>
+                                </div>
+                                <div class="action-btns">
+                                    
+                                    <button class="outline-btn"><i class="fas fa-file-invoice"></i> Invoice</button>
+                                    <button class="outline-btn cancel-order-btn" id="cancel-order-btn"
+                                        style="color: #ff4757; border-color: rgba(255, 71, 87, 0.3);">
+                                        <i class="fas fa-times-circle"></i> Cancel Order
+                                    </button>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Refund Animation Overlay -->
+    <div class="refund-overlay" id="refund-overlay">
+        <div class="refund-container">
+            <div class="animation-stage">
+                <!-- Floating Amount -->
+                <div class="floating-amount" id="floating-amount">
+                    <span class="currency">₹</span><span id="anim-amount">2,499</span>
+                </div>
+
+                <!-- Wallet Target -->
+                <div class="wallet-target" id="wallet-target">
+                    <div class="wallet-icon-large">
+                        <i class="fas fa-wallet"></i>
+                        <span class="wallet-glow"></span>
+                    </div>
+                    <div class="wallet-balance-label">Wallet Balance</div>
+                    <div class="wallet-balance-counter" id="wallet-counter">₹1,250</div>
+                </div>
+            </div>
+
+            <!-- Success Card -->
+            <div class="refund-success-card" id="refund-success-card">
+                <div class="success-icon">
+                    <svg viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+                <h3>Refund Successful</h3>
+                <p>₹<span id="refunded-amount-display">2,499</span> has been instantly credited to your wallet.</p>
+                <div class="refund-details">
+                    <div class="detail-row">
+                        <span>Transaction ID</span>
+                        <span class="mono">RFD-882910</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Time</span>
+                        <span id="refund-time">Just now</span>
+                    </div>
+                </div>
+                <div class="refund-actions">
+                    <button class="primary-btn" onclick="window.location.href='profile.html'">View Wallet</button>
+                    <button class="outline-btn" onclick="closeRefundOverlay()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">Mod<span>Vista</span></a>
+                    <p>
+                        performance parts.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <!-- ... other links ... -->
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="cart-script.js"></script>
+    <script src="script.js"></script>
+    <script src="order-details.js"></script>
+</body>
+
+</html>

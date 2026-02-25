@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wallet | ModVista</title>
+    <meta name="description" content="Manage your ModVista credits and view transaction history.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="wallet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" id="cart-count" style="display: none;">0</span>
+                </a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-container wallet-page-section">
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <!-- Sidebar -->
+            <div id="sidebar-container"></div>
+
+            <div class="profile-content">
+                <div class="section-container">
+
+
+                    <h1 class="section-title left"><span class="highlight">MY</span> WALLET</h1>
+
+                    <div class="wallet-grid">
+                        <!-- Wallet Overview Card -->
+                        <div class="wallet-overview-card">
+                            <div class="wallet-card-content">
+                                <div class="wallet-header">
+                                    <span class="wallet-label">Total Balance</span>
+                                    <i class="fas fa-wallet wallet-icon-bg"></i>
+                                </div>
+                                <h2 class="wallet-balance" id="wallet-balance">₹0.00</h2>
+                                <p class="wallet-desc">Usable for purchases on ModVista</p>
+
+                                <div class="wallet-actions">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction History -->
+                        <div class="transaction-section">
+                            <h3 class="section-heading-small">Transaction History</h3>
+                            <div class="transaction-list" id="transaction-list">
+                                <!-- Transactions injected via JS -->
+                                <div class="loading-spinner">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+                <div class="footer-links-small">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Refund Policy</a>
+                    <a href="index.html#contact">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+    <script src="cart-script.js"></script>
+    <script src="sidebar-loader.js"></script>
+    <script src="wallet.js"></script>
+</body>
+
+</html>

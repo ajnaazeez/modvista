@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders | ModVista Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="admin-guard.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>MODVISTA</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="categories.html" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a href="orders.html" class="menu-item active">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="offers.html" class="menu-item">
+                <i class="fas fa-percent"></i>
+                <span>Offers</span>
+            </a>
+            <a href="coupons.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="users.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2>Orders</h2>
+            </div>
+            <div class="header-right">
+                <a href="admin-login.html" class="action-btn" id="adminLoginBtn"
+                    style="display: none; margin-right: 12px;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <div class="admin-profile" id="profileToggle">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <a href="#" class="dropdown-item logout-action" style="color: var(--accent);">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-body">
+            <!-- Search & Filters -->
+            <div class="section-container" style="padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                    <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="orderSearch" placeholder="OrderId or user name...">
+                    </div>
+                    <select class="form-control" id="statusFilter" style="width: auto;">
+                        <option value="">Order Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="return_requested">Return Requested</option>
+                        <option value="returned">Returned</option>
+                    </select>
+                    <select class="form-control" id="paymentFilter" style="width: auto;">
+                        <option value="">Payment Method</option>
+                        <option value="razorpay">Razorpay</option>
+                        <option value="wallet">Wallet</option>
+                        <option value="cod">COD</option>
+                    </select>
+                    <button class="action-btn" style="padding: 10px 20px; background: var(--bg-dark);">
+                        <i class="fas fa-file-export"></i> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="section-container">
+                <div class="table-wrapper">
+                    <table id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>User Name</th>
+                                <th>Order Date</th>
+                                <th>Total Amount</th>
+                                <th>Payment Method</th>
+                                <th>Payment Status</th>
+                                <th>Order Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationContainer"
+                    style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 ModVista Admin Panel
+        </footer>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-container" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Order Details <span id="targetOrderId"
+                        style="color: var(--accent); font-size: 1.1rem; margin-left: 10px;"></span></h3>
+                <i class="fas fa-times" id="closeModal" style="cursor: pointer; color: var(--text-dim);"></i>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px;">
+                    <!-- Left Column -->
+                    <div>
+                        <div class="section-header" style="padding: 0 0 12px 0; border: none;">
+                            <h4 style="font-size: 1rem;">Customer Information</h4>
+                        </div>
+                        <div
+                            style="background: var(--bg-dark); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 24px;">
+                            <p style="margin-bottom: 8px;"><strong>Name:</strong> John Doe</p>
+                            <p style="margin-bottom: 8px;"><strong>Phone:</strong> +1 (555) 000-1111</p>
+                            <p><strong>Address:</strong> 123 Neon St, Cyber City, NX 90210, USA</p>
+                        </div>
+
+                        <div class="section-header" style="padding: 0 0 12px 0; border: none;">
+                            <h4 style="font-size: 1rem;">Product List</h4>
+                        </div>
+                        <div style="display: grid; gap: 12px;">
+                            <div
+                                style="display: flex; align-items: center; gap: 16px; background: var(--bg-dark); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCI+PHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZpbGw9IiM2NjYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JTUc8L3RleHQ+PC9zdmc+"
+                                    alt="Product" class="product-img">
+                                <div style="flex: 1;">
+                                    <p style="font-weight: 500;">Carbon Fiber Wing GT</p>
+                                    <p style="color: var(--text-dim); font-size: 0.85rem;">1 × ₹450.00</p>
+                                </div>
+                                <div style="font-weight: 600;">₹450.00</div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); display: grid; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; color: var(--text-dim);">
+                                <span>Subtotal</span>
+                                <span id="modalSubtotal">₹0.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: var(--status-shipped);">
+                                <span>Offer Discount</span>
+                                <span id="modalOfferDiscount">-₹0.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: var(--status-shipped);">
+                                <span>Coupon Discount <span id="modalCouponCode"
+                                        style="font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: none;"></span></span>
+                                <span id="modalCouponDiscount">-₹0.00</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; color: var(--text-dim); margin-bottom: 8px;">
+                                <span>GST (18%)</span>
+                                <span id="modalTax">₹0.00</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px;">
+                                <span style="font-size: 1.1rem; font-weight: 600;">Total Amount</span>
+                                <span id="modalTotal"
+                                    style="font-size: 1.1rem; font-weight: 700; color: var(--accent);">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div style="border-left: 1px solid var(--border); padding-left: 32px;">
+                        <div class="section-header" style="padding: 0 0 12px 0; border: none;">
+                            <h4 style="font-size: 1rem;">Payment Details</h4>
+                        </div>
+                        <div style="margin-bottom: 32px;">
+                            <p style="margin-bottom: 8px;">Method: <span style="color: var(--text-dim);">Razorpay</span>
+                            </p>
+                            <p>Status: <span style="color: var(--status-delivered);">Success</span></p>
+                        </div>
+
+                        <div class="section-header" style="padding: 0 0 12px 0; border: none;">
+                            <h4 style="font-size: 1rem;">Order Timeline</h4>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item active">
+                                <div class="timeline-content">
+                                    <h4>Order Placed</h4>
+                                    <span>Jan 24, 2026 - 10:30 AM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-content">
+                                    <h4>Confirmed</h4>
+                                    <span>Jan 24, 2026 - 11:45 AM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-content">
+                                    <h4>Shipped</h4>
+                                    <span>Jan 24, 2026 - 04:20 PM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <h4>Delivered</h4>
+                                    <span>Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="closeDetailModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--status-delivered);"></i>
+            <span id="toastMessage">Status updated successfully!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="orders.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModVista | My Wishlist</title>
+    <meta name="description" content="View and manage your saved car modifications on ModVista.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="wishlist.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                <li><a href="wishlist.html" class="nav-link active">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="nav-search">
+                    <input type="text" placeholder="Search mods...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <a href="wishlist.html" class="wishlist-icon-wrapper active">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.svg"
+                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg=='"
+                        alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wishlist Header & Actions -->
+    <section class="wishlist-page-section">
+        <div class="section-container">
+            <div class="wishlist-header">
+                <h1 class="wishlist-title">My Wishlist <span class="item-count" id="wishlist-count-header">(0
+                        Items)</span></h1>
+                <div class="wishlist-actions">
+                    <button id="move-all-btn" class="secondary-btn" disabled>Move All to Cart</button>
+                    <button id="clear-wishlist-btn" class="text-btn danger">Clear Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-wishlist" id="empty-state" style="display: none;">
+                <i class="far fa-heart"></i>
+                <h2>Your wishlist is empty</h2>
+                <p>Save your favorite modifications here to view or buy them later.</p>
+                <a href="index.html#shop" class="primary-btn">Browse Modifications</a>
+            </div>
+
+            <!-- Wishlist Grid -->
+            <div class="wishlist-grid" id="wishlist-grid">
+                <!-- Products will be injected here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">Mod<span>Vista</span></a>
+                    <p>
+                        performance parts.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#shop">Shop</a></li>
+
+                        <li><a href="wishlist.html">Wishlist</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Join the Crew</h3>
+                    <p>Get exclusive early access to .</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email Address">
+                        <button type="submit" class="primary-btn">Join</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="authGuard.js"></script>
+    <script>requireAuth();</script>
+    <script src="api.js"></script>
+    <script src="cart-actions.js"></script>
+    <script src="wishlist-actions.js"></script>
+    <script src="script.js"></script>
+    <script src="wishlist.js"></script>
+</body>
+
+</html>

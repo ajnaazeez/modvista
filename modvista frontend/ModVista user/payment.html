@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModVista | Secure Payment</title>
+    <meta name="description" content="Securely pay for your ModVista modifications. Trusted by enthusiasts worldwide.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <a href="profile.html" class="nav-btn btn-login">Profile</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="payment-page-section">
+        <div class="section-container">
+            <!-- Breadcrumbs -->
+            <div class="checkout-breadcrumbs">
+                <a href="cart.html">Cart</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="checkout.html">Checkout</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="active">Payment</span>
+            </div>
+
+            <h1 class="section-title left"><span class="highlight">SECURE</span> PAYMENT</h1>
+
+            <div class="checkout-grid">
+                <!-- Left Section: Payment Methods -->
+                <div class="checkout-left">
+                    <div class="checkout-section-box">
+                        <div class="checkout-box-title">
+                            <span>Select Payment Method</span>
+                        </div>
+
+                        <!-- Wallet Section -->
+                        <div class="wallet-section" id="wallet-section" style="display: none;">
+                            <div class="wallet-card">
+                                <div class="wallet-icon-wrapper">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div class="wallet-info">
+                                    <h3>Use Wallet Balance</h3>
+                                    <div class="wallet-balance-row">
+                                        <p class="balance-text">Available Balance: <span class="highlight"
+                                                id="wallet-balance-amount">₹0.00</span></p>
+                                        <p class="balance-subtext">You can use wallet balance to pay for this order.</p>
+                                        <p class="wallet-applied-msg" id="wallet-applied-msg" style="display: none;">
+                                            <span id="wallet-msg-text">Wallet Applied: <span class="neon-text"
+                                                    id="wallet-deduction">-₹0.00</span></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="wallet-toggle-wrapper">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="wallet-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label">Apply</span>
+                                </div>
+                            </div>
+
+                            <!-- Full Wallet Coverage Message -->
+                            <div id="full-wallet-coverage-msg"
+                                style="display: none; margin-top: 15px; padding: 15px; background: rgba(76, 209, 55, 0.1); border: 1px solid #4cd137; border-radius: 8px; color: #4cd137; text-align: center; font-size: 0.9rem;">
+                                <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                                Order amount will be fully covered by your wallet balance.
+                            </div>
+                        </div>
+
+                        <div class="payment-methods-grid" id="payment-methods-grid">
+                            <!-- Razorpay Option -->
+                            <div class="payment-method-card selected" data-method="razorpay">
+                                <div class="method-radio">
+                                    <input type="radio" name="payment_method" value="razorpay" checked>
+                                </div>
+                                <div class="method-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="method-details">
+                                    <h3>Razorpay (Online Payment)</h3>
+                                    <p>Pay securely using UPI, Cards, NetBanking, and Wallets.</p>
+
+                                    <div class="method-content">
+                                        <div class="razorpay-info">
+                                            <div class="supported-icons">
+                                                <i class="fab fa-google-pay" title="Google Pay"></i>
+                                                <i class="fab fa-cc-visa" title="Visa"></i>
+                                                <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                                                <i class="fas fa-university" title="NetBanking"></i>
+                                            </div>
+                                            <p style="margin-top: 10px; font-size: 0.8rem;">You will be redirected to
+                                                Razorpay's secure gateway to complete the payment.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COD Option -->
+                            <div class="payment-method-card" data-method="cod">
+                                <div class="method-radio">
+                                    <input type="radio" name="payment_method" value="cod">
+                                </div>
+                                <div class="method-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="method-details">
+                                    <h3>Cash on Delivery (COD)</h3>
+                                    <p>Pay with cash when your modifications reach your doorstep.</p>
+
+                                    <div class="method-content">
+                                        <div class="cod-confirmation">
+                                            <input type="checkbox" id="confirm-cod">
+                                            <label for="confirm-cod">I confirm to pay upon delivery.</label>
+                                        </div>
+                                        <p style="margin-top: 10px; font-size: 0.8rem; color: #ff1f1f;">Note: Please
+                                            ensure someone is available at the address to receive the order.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="payment-action" style="margin-top: 40px;">
+                            <button class="primary-btn" id="final-pay-btn" style="width: 100%;">
+                                Pay Securely with Razorpay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section: Order Summary (Sticky) -->
+                <div class="checkout-right">
+                    <div class="order-summary-card">
+                        <h2 class="summary-title" style="margin-bottom: 25px;">Final Summary</h2>
+
+                        <!-- Collapsed Address View -->
+                        <div class="compact-address" id="selected-address-summary">
+                            <div class="addr-header">
+                                <span>Delivering to:</span>
+                                <a href="checkout.html"
+                                    style="color: var(--neon-red); text-decoration: none; font-size: 0.75rem;">Change</a>
+                            </div>
+                            <div class="addr-name" id="display-name">Alex Johnson</div>
+                            <div class="addr-text" id="display-address">123 Cyberpunk Road, Neon District, Night City -
+                                400001</div>
+                        </div>
+
+                        <div class="summary-items-list" id="final-summary-items">
+                            <!-- Items will be injected here -->
+                        </div>
+
+                        <div class="summary-details"
+                            style="margin-top: 20px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="final-subtotal">₹0.00</span>
+                            </div>
+                            <div class="summary-row" id="final-offer-discount-row"
+                                style="display: none; color: #4cd137;">
+                                <span>Offer Savings</span>
+                                <span id="final-offer-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-row" id="final-coupon-discount-row"
+                                style="display: none; color: #4cd137;">
+                                <span>Coupon Discount</span>
+                                <span id="final-coupon-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-row" id="wallet-discount-row"
+                                style="display: none; color: var(--neon-red);">
+                                <span>Wallet Discount</span>
+                                <span id="wallet-discount">-₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span>FREE</span>
+                            </div>
+                            <div class="summary-row" style="display: none;">
+                                <span>Tax (18%)</span>
+                                <span id="final-tax">₹0.00</span>
+                            </div>
+                            <div class="summary-row total"
+                                style="margin-top: 20px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+                                <span>Total Amount</span>
+                                <span id="final-total" class="highlight">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="trust-badges" style="border: none; margin-top: 20px; opacity: 0.8;">
+                            <div><i class="fas fa-shield-alt"></i> 100% Secure</div>
+                            <div><i class="fas fa-check-circle"></i> PCI Compliant</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <div class="status-text" id="status-text">Processing Payment...</div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-bottom" style="border: none; padding: 40px 0;">
+                <p>© 2026 ModVista. All rights reserved. | <a href="#" style="color: var(--text-secondary);">Support</a>
+                    | <a href="#" style="color: var(--text-secondary);">Secure Payments</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="api.js"></script>
+    <script src="payment.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

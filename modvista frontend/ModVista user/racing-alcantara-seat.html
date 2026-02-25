@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racing Alcantara Seat - GT-X | ModVista</title>
+    <meta name="description"
+        content="Professional-grade racing bucket seat with premium Alcantara upholstery and lightweight carbon fiber shell.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Mod<span>Vista</span></a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link active">Shop</a></li>
+                
+                <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="wishlist.html" class="wishlist-icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count-badge" id="wishlist-badge" style="display: none;">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-badge" style="display: none;">0</span>
+                </a>
+                <!-- Logged In User Menu -->
+                <div class="user-menu auth-user" id="userMenu" style="display: none;">
+                    <img class="user-avatar" id="navAvatar" src="assets/default-avatar.png" alt="Avatar">
+                    <div class="user-greet">
+                        <small>Hi,</small>
+                        <strong id="navUserName">User</strong>
+                    </div>
+                    <span class="user-caret">▾</span>
+
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                        <a href="edit-profile.html"><i class="fas fa-pen"></i> Edit Profile</a>
+                        <a href="#" class="logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <a href="login.html" class="nav-btn btn-login">Login</a>
+                <a href="signup.html" class="nav-btn btn-signup">Sign Up</a>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Details Section -->
+    <main class="product-details-page">
+        <div class="section-container">
+
+
+            <div class="product-main-layout">
+                <!-- Left: Image Gallery -->
+                <div class="product-gallery">
+                    <div class="featured-image">
+                        <img src="assets/Gemini_Generated_Image_5mip4f5mip4f5mip.png" alt="Racing Alcantara Seat - GT-X"
+                            id="main-img">
+                        <div class="preview-badge">GT-X SERIES</div>
+                    </div>
+                </div>
+
+                <!-- Right: Purchase Info -->
+                <div class="product-buy-info">
+                    <h1 class="product-title">Racing Alcantara Seat - GT-X Series</h1>
+                    <div class="product-stats">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(42 Professional Reviews)</span>
+                        </div>
+                        <span class="stock-status"><i class="fas fa-check-circle"></i> In Stock</span>
+                    </div>
+
+                    <div class="product-price">$1,200.00 <span class="price-unit">Each</span></div>
+
+                    <p class="short-desc">Elevate your driving experience with the GT-X Series. Combining FIA-approved
+                        safety with the ultimate in luxury upholstery, this carbon-fiber backed bucket seat provides the
+                        lateral support needed for high-G cornering and the comfort required for endurance racing.</p>
+
+                    <div class="product-options">
+                        <div class="option-group">
+                            <label>Alcantara Color:</label>
+                            <div class="option-chips">
+                                <span class="chip active">Performance Nero</span>
+                                <span class="chip">Racing Rosso</span>
+                                <span class="chip">Grigio Corsa</span>
+                            </div>
+                        </div>
+                        <div class="option-group">
+                            <label>Shell Finish:</label>
+                            <div class="option-chips">
+                                <span class="chip active">Gloss Carbon</span>
+                                <span class="chip">Matte Carbon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-btns">
+                        <a href="visualizer.html" class="primary-btn detail-ai-btn"><i class="fas fa-magic"></i> Try
+                            </a>
+                        <div class="cart-row">
+                            <div class="qty-selector">
+                                <button>-</button>
+                                <input type="number" value="1">
+                                <button>+</button>
+                            </div>
+                            <button class="outline-btn add-to-cart-big">Add to Cart</button>
+                        </div>
+                        <button class="buy-now-btn">Buy It Now</button>
+                    </div>
+
+                    <div class="feature-pills">
+                        <div class="pill"><i class="fas fa-shield-alt"></i> FIA Approved</div>
+                        <div class="pill"><i class="fas fa-weight-hanging"></i> 14.5 lbs</div>
+                        <div class="pill"><i class="fas fa-chair"></i> Ergonomic Fit</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Tabs -->
+            <div class="product-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active">Product Info</button>
+                    <button class="tab-btn">Dimensions</button>
+                    <button class="tab-btn">Safety</button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="info">
+                        <h2>Maximum Grip & Comfort</h2>
+                        <p>The GT-X Series racing seat is engineered for professional drivers. The Italian-sourced
+                            Alcantara provides superior friction against racing suits, minimizing body movement. The
+                            high-density memory foam padding ensures ergonomic support, while the lightweight carbon
+                            fiber shell reduces the vehicle's overall weight and lowers the center of gravity.</p>
+                        <ul class="benefit-list">
+                            <li><i class="fas fa-check"></i> High-strength carbon fiber monocoque</li>
+                            <li><i class="fas fa-check"></i> 5-point and 6-point harness compatible</li>
+                            <li><i class="fas fa-check"></i> Removable cushions for easy cleaning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2026 ModVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal-overlay">
+        <div class="logout-modal-content">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3>Log out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-buttons">
+                <button class="btn-cancel-logout" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-confirm-logout" onclick="logoutNow()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="cart-script.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
