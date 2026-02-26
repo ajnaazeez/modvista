@@ -174,16 +174,32 @@ function renderOrders(orders) {
         });
 
         const statusLower = order.status.toLowerCase();
-        // Map 'paid' to 'confirmed' for UI consistency if legacy data exists
-        const displayStatus = statusLower === 'paid' ? 'confirmed' : statusLower;
+        const paymentStatus = (order.paymentStatus || (order.isPaid ? 'paid' : 'pending')).toLowerCase();
 
-        // Use user populate or shipping address name
+        // Define userName for the UI
         const userName = order.user ? order.user.name : (order.shippingAddress?.fullName || 'Guest');
 
-        const paymentStatus = order.paymentStatus || (order.isPaid ? 'paid' : 'pending');
-        // Normalize classes: status-badge status-out-for-delivery
-        const displayStatusClass = displayStatus.replace(/_/g, '-');
-        const paymentBadgeClass = `status-${paymentStatus.replace(/_/g, '-')}`;
+        // Define badge classes based on status
+        const statusClassMap = {
+            'pending': 'status-pending',
+            'confirmed': 'status-confirmed',
+            'shipped': 'status-shipped',
+            'out_for_delivery': 'status-out-for-delivery',
+            'delivered': 'status-delivered',
+            'cancelled': 'status-cancelled',
+            'returned': 'status-returned',
+            'return_requested': 'status-return-requested'
+        };
+
+        const paymentClassMap = {
+            'pending': 'status-pending',
+            'paid': 'status-delivered', // Green for paid
+            'failed': 'status-cancelled', // Red for failed
+            'refunded_to_wallet': 'status-shipped' // Blue-ish for refund
+        };
+
+        const displayStatusClass = statusClassMap[statusLower] || 'status-pending';
+        const paymentBadgeClass = paymentClassMap[paymentStatus] || 'status-pending';
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -193,7 +209,7 @@ function renderOrders(orders) {
             <td style="font-weight: 600;">₹${order.total.toLocaleString()}</td>
             <td style="text-transform: capitalize;">${order.paymentMethod}</td>
             <td><span class="status-badge ${paymentBadgeClass}">${capitalize(paymentStatus.replace(/_/g, ' '))}</span></td>
-            <td><span class="status-badge status-${displayStatusClass}">${capitalize(displayStatus.replace(/_/g, ' '))}</span></td>
+            <td><span class="status-badge ${displayStatusClass}">${capitalize(statusLower.replace(/_/g, ' '))}</span></td>
             <td>
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <button class="view-details"
@@ -201,24 +217,29 @@ function renderOrders(orders) {
                         data-id="${order._id}">View Details</button>
                     ${statusLower === 'return_requested'
                 ? `<button onclick="approveReturn('${order._id}')" 
-                                style="background: rgba(76,209,55,0.15); border: 1px solid rgba(76,209,55,0.4); color: #4cd137; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
-                                <i class="fas fa-check"></i> Approve
+                                 style="background: rgba(76,209,55,0.15); border: 1px solid rgba(76,209,55,0.4); color: #4cd137; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+                                 <i class="fas fa-check"></i> Approve
                            </button>
                            <button onclick="rejectReturn('${order._id}')" 
-                                style="background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4); color: #e74c3c; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
-                                <i class="fas fa-times"></i> Reject
+                                 style="background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4); color: #e74c3c; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+                                 <i class="fas fa-times"></i> Reject
                            </button>`
                 : `<select class="form-control status-update" data-id="${order._id}"
-                                style="width: 130px; height: 32px; padding: 0 8px; font-size: 0.8rem;">
-                                <option value="pending" ${statusLower === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="confirmed" ${statusLower === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                                <option value="shipped" ${statusLower === 'shipped' ? 'selected' : ''}>Shipped</option>
-                                <option value="out_for_delivery" ${statusLower === 'out_for_delivery' ? 'selected' : ''}>Out for Delivery</option>
-                                <option value="delivered" ${statusLower === 'delivered' ? 'selected' : ''}>Delivered</option>
-                                <option value="cancelled" ${statusLower === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                                <option value="returned" ${statusLower === 'returned' ? 'selected' : ''}>Returned</option>
+                                 style="width: 130px; height: 32px; padding: 0 8px; font-size: 0.8rem;">
+                                 <option value="pending" ${statusLower === 'pending' ? 'selected' : ''}>Pending</option>
+                                 <option value="confirmed" ${statusLower === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                 <option value="shipped" ${statusLower === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                 <option value="out_for_delivery" ${statusLower === 'out_for_delivery' ? 'selected' : ''}>Out for Delivery</option>
+                                 <option value="delivered" ${statusLower === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                 <option value="cancelled" ${statusLower === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                 <option value="returned" ${statusLower === 'returned' ? 'selected' : ''}>Returned</option>
                            </select>`
             }
+                    <button class="delete-order"
+                        style="background:none; border:none; color: #e74c3c; cursor: pointer; font-size: 0.9rem; padding: 4px 8px;"
+                        data-id="${order._id}" onclick="confirmDeleteOrder('${order._id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </td>
         `;
@@ -495,6 +516,30 @@ async function updateOrderStatus(orderId, status) {
         }
     } catch (error) {
         console.error("Error updating status:", error);
+    }
+}
+
+async function confirmDeleteOrder(orderId) {
+    if (confirm('Are you sure you want to PERMANENTLY delete this order? This action cannot be undone.')) {
+        try {
+            const response = await fetch(`${API_BASE}/admin/orders/${orderId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${adminToken}`
+                }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showToast("Order deleted successfully!");
+                fetchOrders();
+            } else {
+                alert(data.message || "Failed to delete order");
+            }
+        } catch (error) {
+            console.error("Error deleting order:", error);
+            alert("An error occurred while deleting the order.");
+        }
     }
 }
 

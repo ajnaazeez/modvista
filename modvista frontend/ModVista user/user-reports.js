@@ -7,17 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const fetchUserReports = async () => {
         try {
-            // Using global apiFetch if available, else direct fetch
-            let data;
-            if (typeof apiFetch === 'function') {
-                data = await apiFetch('/api/analytics/user');
-            } else {
-                const res = await fetch('http://localhost:5000/api/analytics/user', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                data = await res.json();
-            }
-
+            const data = await window.ModVistaAPI.apiCall("/analytics/user");
             if (data.success) {
                 renderReports(data.data);
             }

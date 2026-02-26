@@ -67,9 +67,7 @@ async function fetchCategories() {
             let img = 'assets/default-product.png';
 
             if (cat.image) {
-                if (cat.image.startsWith('http')) img = cat.image;
-                else if (cat.image.startsWith('uploads/')) img = `http://localhost:5000/${cat.image}`;
-                else img = cat.image; // Assume asset path
+                img = window.ModVistaAPI.resolveImg(cat.image);
             } else if (categoryImageMap[cat.name]) {
                 img = categoryImageMap[cat.name];
             }
@@ -131,10 +129,7 @@ async function fetchFeaturedProducts() {
             // Image
             let img = 'assets/default-product.png';
             if (product.images && product.images.length > 0) {
-                const firstImg = product.images[0];
-                if (firstImg.startsWith('http')) img = firstImg;
-                else if (firstImg.startsWith('uploads/')) img = `http://localhost:5000/${firstImg}`;
-                else img = `assets/${firstImg}`;
+                img = window.ModVistaAPI.resolveImg(product.images[0]);
             }
 
             const pricing = product.pricing || { displayPrice: product.price, originalPrice: null, discountPercent: 0, offerApplied: false };

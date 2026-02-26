@@ -4,12 +4,34 @@ const buildQueryFeatures = require('../utils/queryHelper'); // Keeping old for n
 const asyncHandler = require('../utils/asyncHandler');
 const QueryFeatures = require('../utils/QueryFeatures');
 
-// @desc    Get all active categories
+// @desc    Get all active categories with product counts
 // @route   GET /api/categories
 // @access  Public
 exports.getCategories = asyncHandler(async (req, res) => {
-    const categories = await Category.find({ isActive: true }).sort('name');
-    res.json({ success: true, count: categories.length, data: categories });
+    // Fetch categories and counts in a single aggregation for efficiency
+    const categoriesWithCounts = await Category.aggregate([
+        { $match: { isActive: true } },
+        {
+            $lookup: {
+                from: "products",
+                localField: "_id",
+                foreignField: "category",
+                as: "products"
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                image: 1,
+                description: 1,
+                slug: 1,
+                totalProducts: { $size: "$products" }
+            }
+        },
+        { $sort: { name: 1 } }
+    ]);
+
+    res.json({ success: true, count: categoriesWithCounts.length, data: categoriesWithCounts });
 });
 
 // @desc    Get all categories (Admin) with product count and pagination

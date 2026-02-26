@@ -40,25 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loginBtn.textContent = 'Authenticating...';
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const data = await window.ModVistaAPI.apiCall('/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
-
-            // Handle OTP verification case
-            if (response.status === 403) {
-                localStorage.setItem("pendingEmail", email);
-                alert(data.message || "Please verify OTP first");
-                window.location.href = "otp.html";
-                return;
-            }
-
-            if (data.success) {
+            // Handle successful login
+            if (data && data.success) {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -72,7 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Login error:', error);
-            alert("An error occurred during login. Please ensure the backend is running.");
+
+            // Handle OTP verification case (special check for 403 in apiCall is handled by redirecting to login, 
+            // but here we might need to catch it specifically if apiCall throws for 403)
+            // Actually, based on login.js original code, it checked response.status === 403.
+            // Let's check how api.js handles it.
+
+            if (error.message.includes('verify OTP')) {
+                localStorage.setItem("pendingEmail", email);
+                window.location.href = "otp.html";
+                return;
+            }
+
+            alert(error.message || "An error occurred during login.");
             loginBtn.disabled = false;
             loginBtn.textContent = originalBtnText;
         }

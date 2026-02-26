@@ -1,26 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     // API Configuration
-    const BASE_URL = 'http://localhost:5000/api';
-
-    // Elements
-    const addressForm = document.getElementById('edit-address-form');
-    const pageTitleAction = document.getElementById('page-title-action');
-    const breadcrumbCurrent = document.getElementById('breadcrumb-current');
-    const submitBtnText = document.querySelector('.submit-btn');
-
-    // Get ID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const addressId = urlParams.get('id');
-
-    // --- Helper Functions ---
-
-    function getToken() {
-        return localStorage.getItem("token");
-    }
-
     async function apiFetch(url, options = {}) {
-        const token = getToken();
+        // If url is relative (doesn't start with http), assume it's for our API
+        if (!url.startsWith('http')) {
+            return window.ModVistaAPI.apiCall(url, options);
+        }
 
+        const token = localStorage.getItem("token");
         const res = await fetch(url, {
             ...options,
             headers: {
@@ -56,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Since we don't have a GET /api/addresses/:id yet, we find it from the list
             // Optimization: Fetch all and find
-            const result = await apiFetch(`${BASE_URL}/addresses`);
+            const result = await apiFetch('/addresses');
             const address = result.data.find(addr => (addr._id || addr.id) === id);
 
             if (address) {
@@ -109,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const url = addressId ? `${BASE_URL}/addresses/${addressId}` : `${BASE_URL}/addresses`;
+            const url = addressId ? `/addresses/${addressId}` : `/addresses`;
             const method = addressId ? 'PUT' : 'POST';
 
             await apiFetch(url, {

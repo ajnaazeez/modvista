@@ -65,14 +65,14 @@ function setupShopSearch() {
     });
 }
 
-async function loadShopCategories() {
+async function loadShopCategories(totalAllProducts = 0) {
     const list = document.getElementById('sidebar-category-list');
     if (!list) return;
 
     try {
         const res = await fetch(API_CATEGORIES_URL);
         const responseData = await res.json();
-        const categories = Array.isArray(responseData) ? responseData : (responseData.data || []);
+        const categories = responseData.data || [];
 
         // Function to get icon based on name
         const getIcon = (name) => {
@@ -86,45 +86,36 @@ async function loadShopCategories() {
             return 'fas fa-tags';
         };
 
-        let html = ''; // Initialize html string
+        let html = '';
 
         categories.forEach(cat => {
-            // Calculate count for this category
-            const count = allProducts.filter(p => {
-                const pCatId = p.category?._id || p.category;
-                return pCatId === cat._id;
-            }).length;
+            // Use totalProducts from backend API
+            const count = cat.totalProducts || 0;
 
             // Check if this category is active
-            // Handle URL param being a slug or name instead of ID
             let match = false;
             if (currentFilters.category === cat._id) match = true;
             if (currentFilters.category.toLowerCase() === cat.name.toLowerCase()) {
-                currentFilters.category = cat._id; // Switch to ID for filtering
+                currentFilters.category = cat._id;
                 match = true;
             }
             if (cat.slug && currentFilters.category.toLowerCase() === cat.slug.toLowerCase()) {
-                currentFilters.category = cat._id; // Switch to ID for filtering
+                currentFilters.category = cat._id;
                 match = true;
             }
-            if ((currentFilters.category === 'all' && cat._id === 'all')) match = true;
 
             html += `<li><a href="#" class="${match ? 'active' : ''}" data-cat="${cat._id}"><i class="${getIcon(cat.name)}"></i> ${cat.name} <span class="count">${count}</span></a></li>`;
         });
 
-        // Also update "All" active state
-        const allActive = currentFilters.category === 'all' ? 'active' : '';
-        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${allProducts.length}</span></a></li>` + html;
+        // "All Products" active state and count (provided by fetchProducts)
+        const allActive = (currentFilters.category === 'all' || !currentFilters.category) ? 'active' : '';
+        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${totalAllProducts}</span></a></li>` + html;
 
         list.innerHTML = html;
         attachCategoryListeners();
 
-        // Re-apply filters now that we might have resolved URL slug to ID
-        applyFilters();
-
     } catch (err) {
         console.error("Failed to load categories", err);
-        list.innerHTML = `<li><a href="#" class="active" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${allProducts.length}</span></a></li>`;
     }
 }
 
@@ -291,7 +282,7 @@ async function fetchProducts() {
             totalResults = data.total;
             totalPages = Math.ceil(totalResults / itemsPerPage);
             renderPage();
-            // loadShopCategories(); // We can skip this if we don't want to re-toggle counts
+            loadShopCategories(totalResults);
         } else {
             throw new Error(data.message || 'Failed to load products');
         }
@@ -303,10 +294,7 @@ async function fetchProducts() {
 }
 
 function resolveShopImg(src) {
-    if (!src) return "assets/default.png";
-    if (src.startsWith("uploads/")) return `http://localhost:5000/${src}`;
-    if (src.startsWith("/uploads/")) return `http://localhost:5000${src}`;
-    return src;
+    return window.ModVistaAPI.resolveImg(src);
 }
 
 function renderProducts(products) {

@@ -94,17 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
         errEl.textContent = '';
 
         try {
-            const API_BASE = getApiBase();
-            const response = await fetch(`${API_BASE}/orders/${orderId}/return`, {
+            const data = await window.ModVistaAPI.apiCall(`/orders/${orderId}/return`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({ reason })
             });
-
-            const data = await response.json();
 
             if (data.success) {
                 closeReturnModal();
@@ -150,17 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const shownItems = order.items ? order.items.slice(0, 3) : [];
             const moreItemsCount = itemsCount > 3 ? itemsCount - 3 : 0;
 
-            const getImagePath = (img) => {
-                if (!img) return 'assets/default-product.png';
-                if (img.startsWith('http')) return img;
-                const apiBase = window.ModVistaAPI?.API_BASE || "http://localhost:5000/api";
-                const backendRoot = apiBase.replace(/\/api\/?$/, '');
-                if (img.startsWith('uploads/')) return `${backendRoot}/${img}`;
-                if (img.startsWith('assets/')) return img;
-                return `assets/${img}`;
-            };
-
             const aiPreviewAvailable = order.status === 'delivered';
+
+            const itemsListHtml = shownItems.map(item => `
+                <img src="${window.ModVistaAPI.resolveImg(item.image)}" 
+                     alt="${item.name}" 
+                     class="thumb-image" 
+                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #333;"
+                     onerror="this.src='assets/default-product.png'">
+            `).join('');
 
             // Status label with nice formatting
             const statusLabel = statusRaw === 'return_requested' ? 'Return Requested' : capitalize(order.status);
@@ -201,24 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="product-previews" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
                             ${itemsCount === 1 ? `
                                 <div class="single-item-preview" style="display: flex; align-items: center; gap: 15px;">
-                                    <img src="${getImagePath(shownItems[0].image)}" 
-                                         alt="${shownItems[0].name}" 
-                                         class="thumb-image" 
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #333;"
-                                         onerror="this.src='assets/default-product.png'">
+                                    ${itemsListHtml}
                                     <div class="single-item-header">
                                         <span class="item-name-prominent" style="font-weight: 600; color: #fff; display: block;">${shownItems[0].name}</span>
                                         <span class="item-variant-label" style="font-size: 0.8rem; color: #888;">${shownItems[0].variant || 'Standard'}</span>
                                     </div>
                                 </div>
                             ` : `
-                                ${shownItems.map(item => `
-                                    <img src="${getImagePath(item.image)}" 
-                                         alt="${item.name}" 
-                                         class="thumb-image" 
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #333;"
-                                         onerror="this.src='assets/default-product.png'">
-                                `).join('')}
+                                ${itemsListHtml}
                                 ${moreItemsCount > 0 ? `<span class="more-items" style="color: #888; font-size: 0.9rem;">+${moreItemsCount} more items</span>` : ''}
                             `}
                         </div>
@@ -249,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const s = status.toLowerCase();
 
         if (s === 'shipped' || s === 'out_for_delivery') {
-            
+
         } else if (s === 'pending' || s === 'confirmed') {
             buttons += `
                 <button onclick="window.handleCancelOrder('${orderId}')" class="action-btn btn-secondary" style="cursor: pointer;">

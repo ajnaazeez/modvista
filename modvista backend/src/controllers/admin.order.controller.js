@@ -205,10 +205,59 @@ const rejectReturn = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc    Fix existing "Paid" but "Pending" orders (Migration)
+// @route   POST /api/admin/orders/migrate-statuses
+// @access  Private/Admin
+const migrateOrderStatuses = asyncHandler(async (req, res) => {
+    const result = await Order.updateMany(
+        {
+            paymentStatus: 'paid',
+            status: 'pending'
+        },
+        {
+            $set: { status: 'confirmed' },
+            $push: {
+                statusHistory: {
+                    status: 'confirmed',
+                    updatedBy: req.user._id,
+                    comment: 'System Migration: Auto-confirmed Paid orders.'
+                }
+            }
+        }
+    );
+
+    res.json({
+        success: true,
+        message: `Migration successful. Updated ${result.modifiedCount} orders.`,
+        data: result
+    });
+});
+
+// @desc    Delete an order
+// @route   DELETE /api/admin/orders/:id
+// @access  Private/Admin
+const deleteOrder = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+
+    await order.deleteOne();
+
+    res.json({
+        success: true,
+        message: 'Order removed successfully'
+    });
+});
+
 module.exports = {
     getAllOrders,
     getOrderByIdAdmin,
     updateOrderStatus,
     approveReturn,
-    rejectReturn
+    rejectReturn,
+    migrateOrderStatuses,
+    deleteOrder
 };

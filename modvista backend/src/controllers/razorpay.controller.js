@@ -56,9 +56,28 @@ const verifyRazorpayPayment = asyncHandler(async (req, res) => {
     const isVerified = expectedSignature === razorpay_signature;
 
     if (isVerified) {
+        // Update Order Status
+        const order = await Order.findOne({ razorpay_order_id });
+        if (order) {
+            order.isPaid = true;
+            order.paidAt = Date.now();
+            order.paymentStatus = 'paid';
+            order.razorpay_payment_id = razorpay_payment_id;
+            order.razorpay_signature = razorpay_signature;
+            order.status = 'confirmed';
+
+            order.statusHistory.push({
+                status: 'confirmed',
+                comment: 'Payment verified via Razorpay. Order confirmed.'
+            });
+
+            await order.save();
+        }
+
         res.status(200).json({
             success: true,
-            message: 'Payment verified successfully'
+            message: 'Payment verified successfully and order updated',
+            orderId: order ? order._id : null
         });
     } else {
         res.status(400);

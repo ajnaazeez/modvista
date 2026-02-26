@@ -133,8 +133,25 @@ const placeOrder = asyncHandler(async (req, res) => {
             await product.save(sessionOption);
         }
 
-        // Create Order (remains 'pending')
-        const isPaid = (paymentMethod === 'mock_razorpay' || paymentMethod === 'mock_wallet' || paymentMethod === 'wallet');
+        // Determine initial statuses
+        const isWallet = (paymentMethod === 'wallet' || paymentMethod === 'mock_wallet');
+        const isPaid = isWallet || (paymentMethod === 'mock_razorpay');
+
+        // --- Wallet Payment Processing ---
+        if (isWallet) {
+            let wallet = await Wallet.findOne({ user: req.user._id }).session(useTransaction ? session : null);
+            if (!wallet || wallet.balance < summary.total) {
+                throw new Error('Insufficient wallet balance');
+            }
+            wallet.balance -= summary.total;
+            wallet.transactionHistory.push({
+                type: 'debit',
+                amount: summary.total,
+                description: `Order Payment for #${summary.total}`, // Rough desc, short ID not generated yet
+                createdAt: new Date()
+            });
+            await wallet.save(sessionOption);
+        }
 
         const orderResult = await Order.create([{
             user: req.user._id,
@@ -153,16 +170,21 @@ const placeOrder = asyncHandler(async (req, res) => {
                 phone: contactPhone || user.phone
             },
             paymentMethod: paymentMethod || 'cod',
+            paymentStatus: isPaid ? 'paid' : 'pending',
             subtotal: summary.subtotal,
             tax: summary.tax,
             shipping: summary.shipping,
             total: summary.total,
             offerDiscount: summary.offerDiscountTotal || 0,
-            status: 'pending',
+            status: isPaid ? 'confirmed' : 'pending',
             isPaid,
             paidAt: isPaid ? Date.now() : undefined,
             coupon: coupon ? { code: coupon.code, discount: summary.couponDiscount } : undefined,
-            statusHistory: [{ status: 'pending', updatedBy: req.user._id, comment: 'Order initiated. Waiting for final confirmation/payment.' }]
+            statusHistory: [{
+                status: isPaid ? 'confirmed' : 'pending',
+                updatedBy: req.user._id,
+                comment: isPaid ? `Order confirmed via ${paymentMethod} payment.` : 'Order initiated. Waiting for final confirmation/payment.'
+            }]
         }], sessionOption);
 
         const order = Array.isArray(orderResult) ? orderResult[0] : orderResult;

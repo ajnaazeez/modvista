@@ -214,7 +214,7 @@ async function handleGoogleResponse(response) {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
             if (data.user.avatarUrl) {
-                localStorage.setItem("userAvatar", data.user.avatarUrl.startsWith('http') ? data.user.avatarUrl : `${BASE_URL}${data.user.avatarUrl}`);
+                localStorage.setItem("userAvatar", window.ModVistaAPI.resolveImg(data.user.avatarUrl));
             }
 
             if (typeof window.showToast === 'function') {
@@ -340,7 +340,8 @@ window.addEventListener('cartUpdated', () => updateGlobalBadges()); // Assuming 
 window.toggleWishlist = async function (btn, productId = null) {
     if (typeof window.WishlistActions !== 'undefined') {
         // If the specific page has WishlistActions, use it
-        const id = productId || btn.closest('.product-card')?.getAttribute('data-id');
+        // Support both data-id (old) and data-product-id (new)
+        const id = productId || btn.closest('.product-card')?.getAttribute('data-id') || btn.closest('.product-card')?.getAttribute('data-product-id');
         if (!id) return;
 
         btn.disabled = true;
@@ -362,7 +363,7 @@ window.toggleWishlist = async function (btn, productId = null) {
         }
 
         // Simple implementation using apiFetch
-        const id = productId || btn.closest('.product-card')?.getAttribute('data-id');
+        const id = productId || btn.closest('.product-card')?.getAttribute('data-id') || btn.closest('.product-card')?.getAttribute('data-product-id');
         if (!id) return;
 
         try {
@@ -568,7 +569,7 @@ window.fetchCurrentUserNavbar = async function () {
                     setupAvatarFallback(userAvatarImg, data.user.name);
 
                     if (data.user.avatarUrl) {
-                        userAvatarImg.src = `http://localhost:5000${data.user.avatarUrl}`;
+                        userAvatarImg.src = window.ModVistaAPI.resolveImg(data.user.avatarUrl);
                         userAvatarImg.style.display = 'block';
                     } else {
                         // Trigger fallback immediately if no URL
@@ -795,11 +796,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
             }
 
-            const BASE_URL = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                ? "http://localhost:5000"
-                : window.location.origin;
+            const apiBase = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ? window.ModVistaAPI.API_BASE.replace('/api', '') : 'http://localhost:5000';
 
-            const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+            const res = await fetch(`${apiBase}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

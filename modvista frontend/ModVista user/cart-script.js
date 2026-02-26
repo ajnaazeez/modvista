@@ -92,16 +92,12 @@
                     const itemUnitPrice = item.finalUnitPrice || product.price;
                     const itemTotal = itemUnitPrice * item.quantity;
 
-                    let img = "assets/default-product.png";
-                    if (product.images && product.images.length > 0) {
-                        const imagePath = product.images[0];
-                        img = imagePath.startsWith('uploads/') ? `http://localhost:5000/${imagePath}` : `assets/${imagePath}`;
-                    }
+                    let img = window.ModVistaAPI.resolveImg(product.images?.[0]);
 
                     const row = document.createElement("div");
                     row.className = "cart-item";
                     row.innerHTML = `
-                        <div class="item-img"><img src="${img}" alt="${product.name}"></div>
+                        <div class="item-img"><img src="${img}" alt="${product.name}" onerror="this.onerror=null;this.src='assets/default-product.png'"></div>
                         <div class="item-info">
                           <h3>${product.name}</h3>
                           <p>Variant: ${item.variant || 'Standard'}</p>

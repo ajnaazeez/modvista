@@ -101,6 +101,21 @@
         }
     };
 
+    // Unified Image Resolver
+    const resolveImg = (src) => {
+        if (!src) return 'assets/default-product.png';
+        if (src.startsWith('http') || src.startsWith('data:') || src.startsWith('blob:')) return src;
+
+        const host = API_BASE.replace('/api', '');
+        const cleanPath = src.startsWith('/') ? src.substring(1) : src;
+
+        if (src.startsWith('uploads/') || src.startsWith('assets/')) {
+            return src.startsWith('uploads/') ? `${host}/${cleanPath}` : src;
+        }
+
+        return `assets/${cleanPath}`;
+    };
+
     // Export to global scope safely
     window.ModVistaAPI = {
         API_BASE,
@@ -109,6 +124,7 @@
         requireLogin,
         getUserInfo,
         logout,
-        apiCall
+        apiCall,
+        resolveImg
     };
 })();

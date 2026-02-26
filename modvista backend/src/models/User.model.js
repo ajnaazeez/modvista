@@ -64,7 +64,15 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         min: 0
-    }
+    },
+
+    // ── Forgot-Password OTP flow ──────────────────────────────────────────────
+    resetSessionId: { type: String, default: null },
+    resetOtpHash: { type: String, default: null },
+    resetOtpExpires: { type: Date, default: null },
+    resetOtpAttempts: { type: Number, default: 0 },
+    resetTokenHash: { type: String, default: null },
+    resetTokenExpires: { type: Date, default: null }
 }, {
     timestamps: true
 });

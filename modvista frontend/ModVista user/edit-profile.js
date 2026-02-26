@@ -36,9 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    const API_BASE = window.ModVistaAPI ? window.ModVistaAPI.API_BASE : "http://localhost:5000/api";
+
     // 1. Fetch current data
     try {
-        const res = await fetch('http://localhost:5000/api/users/me', {
+        const res = await fetch(`${API_BASE}/users/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -55,10 +57,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Handle Avatar Display
             if (data.user.avatarUrl) {
-                const fullAvatarUrl = `http://localhost:5000${data.user.avatarUrl}`;
+                const fullAvatarUrl = window.ModVistaAPI.resolveImg(data.user.avatarUrl);
                 avatarPreview.src = fullAvatarUrl;
                 // Pre-warm the cache for other pages
-                localStorage.setItem('userAvatar', fullAvatarUrl);
                 localStorage.setItem('userAvatar', fullAvatarUrl);
             }
             fetchSidebarProfile();
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const payload = { name, phone };
             if (password) payload.password = password;
 
-            const res = await fetch('http://localhost:5000/api/users/me', {
+            const res = await fetch(`${API_BASE}/users/me`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +192,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             confirmCropBtn.disabled = true;
             confirmCropBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
-            const res = await fetch('http://localhost:5000/api/users/me/avatar', {
+            const res = await fetch(`${API_BASE}/users/me/avatar`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (res.ok && data.success) {
                 showMessage("Profile photo updated!", "success");
-                const fullAvatarUrl = `http://localhost:5000${data.avatarUrl}`;
+                const fullAvatarUrl = window.ModVistaAPI.resolveImg(data.avatarUrl);
                 avatarPreview.src = fullAvatarUrl;
                 localStorage.setItem('userAvatar', fullAvatarUrl);
 
@@ -236,7 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 deleteBtn.disabled = true;
                 deleteBtn.innerText = "Deleting...";
 
-                const res = await fetch('http://localhost:5000/api/users/me', {
+                const res = await fetch(`${API_BASE}/users/me`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -286,7 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchSidebarProfile() {
         try {
-            const resp = await fetch('http://localhost:5000/api/users/me', {
+            const resp = await fetch(`${API_BASE}/users/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const pData = await resp.json();
@@ -295,10 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (document.getElementById('profileName')) document.getElementById('profileName').textContent = user.fullName || user.name;
                 if (document.getElementById('profileEmail')) document.getElementById('profileEmail').textContent = user.email;
                 if (document.getElementById('profileAvatar') && user.avatar) {
-                    let avatarSrc = user.avatar;
-                    if (avatarSrc.startsWith('uploads/')) {
-                        avatarSrc = `http://localhost:5000/${avatarSrc}`;
-                    }
+                    let avatarSrc = window.ModVistaAPI.resolveImg(user.avatar);
                     document.getElementById('profileAvatar').src = avatarSrc;
                 }
             }

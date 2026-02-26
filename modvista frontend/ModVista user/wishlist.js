@@ -117,16 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.setAttribute('data-id', product._id);
 
             // Resolve Image
-            let image = 'assets/default.png';
-            if (product.images && product.images.length > 0) {
-                const src = product.images[0];
-                if (src.startsWith('uploads/') || src.startsWith('/uploads/')) {
-                    const cleanPath = src.startsWith('/') ? src.slice(1) : src;
-                    image = `http://localhost:5000/${cleanPath}`;
-                } else {
-                    image = src;
-                }
-            }
+            const image = window.ModVistaAPI.resolveImg(product.images && product.images.length > 0 ? product.images[0] : null);
 
             // Format Price
             const formattedPrice = new Intl.NumberFormat('en-US', {

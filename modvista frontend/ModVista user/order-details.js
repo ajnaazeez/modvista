@@ -23,21 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ====== FETCH ORDER DETAILS ======
     try {
-        const response = await fetch(`${localApiBase}/orders/${orderId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const data = await window.ModVistaAPI.apiCall(`/orders/${orderId}`);
 
-        if (response.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
+        if (data && data.success) {
             renderOrderDetails(data.data);
             fetchSidebarProfile();
         } else {
@@ -51,20 +39,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchSidebarProfile() {
         try {
-            const resp = await fetch(`${localApiBase}/users/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const pData = await resp.json();
-            if (pData.success) {
-                const user = pData.user;
+            const data = await window.ModVistaAPI.apiCall('/users/me');
+            if (data && data.success) {
+                const user = data.user;
                 if (document.getElementById('profileName')) document.getElementById('profileName').textContent = user.fullName || user.name;
                 if (document.getElementById('profileEmail')) document.getElementById('profileEmail').textContent = user.email;
-                if (document.getElementById('profileAvatar') && user.avatar) {
-                    let avatarSrc = user.avatar;
-                    if (avatarSrc.startsWith('uploads/')) {
-                        avatarSrc = `${localApiBase.replace('/api', '')}/${avatarSrc}`;
-                    }
-                    document.getElementById('profileAvatar').src = avatarSrc;
+                if (document.getElementById('profileAvatar') && user.avatarUrl) {
+                    document.getElementById('profileAvatar').src = window.ModVistaAPI.resolveImg(user.avatarUrl);
                 }
             }
         } catch (err) {
@@ -112,12 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         items.forEach(item => {
             // Image handling
-            let img = item.image || 'assets/default-product.png';
-            if (img.startsWith('uploads/')) {
-                img = `${localApiBase.replace('/api', '')}/${img}`;
-            } else if (!img.startsWith('http') && !img.startsWith('assets/')) {
-                img = `assets/${img}`;
-            }
+            const img = window.ModVistaAPI.resolveImg(item.image);
 
             const row = document.createElement('div');
             row.className = 'order-item-row';

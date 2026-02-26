@@ -129,7 +129,12 @@ const createOrder = asyncHandler(async (req, res) => {
             order.isPaid = true;
             order.paidAt = Date.now();
             order.paymentStatus = 'paid';
-            // order.status remains 'pending'
+            order.status = 'confirmed';
+            order.statusHistory.push({
+                status: 'confirmed',
+                updatedBy: req.user._id,
+                comment: 'Order automatically confirmed via wallet payment.'
+            });
         }
 
         // 6. Atomic Stock Decrement
@@ -379,10 +384,12 @@ const payOrder = asyncHandler(async (req, res) => {
         if (razorpay_payment_id) order.razorpay_payment_id = razorpay_payment_id;
         if (razorpay_signature) order.razorpay_signature = razorpay_signature;
 
+        order.status = 'confirmed';
+
         order.statusHistory.push({
-            status: order.status,
+            status: 'confirmed',
             updatedBy: userId,
-            comment: `Payment marked as paid via ${normalizedMethod}`
+            comment: `Payment marked as paid via ${normalizedMethod}. Order confirmed.`
         });
 
         await order.save(sessionOption);

@@ -542,18 +542,7 @@
                         const itemName = item.name || item.product?.name || 'Product';
 
                         // Item image
-                        let itemImage = 'assets/default-product.png';
-                        if (item.image) {
-                            if (item.image.startsWith('uploads/')) {
-                                itemImage = `http://localhost:5000/${item.image}`;
-                            } else if (item.image.startsWith('assets/')) {
-                                itemImage = item.image;
-                            } else {
-                                itemImage = item.image;
-                            }
-                        } else if (item.product?.image) {
-                            itemImage = item.product.image;
-                        }
+                        let itemImage = window.ModVistaAPI.resolveImg(item.image || item.product?.image);
 
                         // Item variant
                         const itemVariant = item.variant || 'Standard';

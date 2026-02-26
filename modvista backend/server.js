@@ -51,6 +51,7 @@ app.use(express.static(path.join(__dirname, '../modvista frontend/ModVista user'
 app.use('/api/admin/upload', require('./src/routes/upload.routes'));
 app.use('/api/admin/auth', require('./src/routes/adminAuth.routes'));
 app.use('/api/auth', require('./src/routes/auth.routes'));
+app.use('/api/auth/forgot-password', require('./src/routes/forgotPassword.routes'));
 app.use('/api/products', require('./src/routes/product.routes'));
 app.use('/api/admin', require('./src/routes/adminProduct.routes'));
 app.use('/api/categories', require('./src/routes/category.routes'));

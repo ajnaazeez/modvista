@@ -15,4 +15,14 @@ const wishlistSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Wishlist', wishlistSchema);
+const Wishlist = mongoose.model('Wishlist', wishlistSchema);
+
+// Cleanup: Drop legacy index if it exists to prevent E11000 errors on old field names
+Wishlist.collection.dropIndex('userId_1').catch(err => {
+    // Silently ignore if index doesn't exist
+    if (err.codeName !== 'IndexNotFound') {
+        console.warn('Note: Could not drop legacy wishlist index:', err.message);
+    }
+});
+
+module.exports = Wishlist;

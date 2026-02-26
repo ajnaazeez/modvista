@@ -34,22 +34,46 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmCheckbox.addEventListener('change', validateForm);
 
     // Form Submission
-    cancelForm.addEventListener('submit', (e) => {
+    cancelForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // Disable button during "processing"
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
-        // Simulate API call
-        setTimeout(() => {
-            successOverlay.classList.add('active');
+        // Real API call
+        const orderId = new URLSearchParams(window.location.search).get('id');
 
-            // Redirect after 3 seconds
-            setTimeout(() => {
-                window.location.href = 'orders.html';
-            }, 3000);
-        }, 1500);
+        if (!orderId) {
+            alert("No order ID found.");
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Confirm Cancellation';
+            return;
+        }
+
+        try {
+            const data = await window.ModVistaAPI.apiCall(`/orders/${orderId}/cancel`, {
+                method: 'PATCH',
+                body: JSON.stringify({ reason: document.querySelector('input[name="cancel-reason"]:checked').value })
+            });
+
+            if (data && data.success) {
+                successOverlay.classList.add('active');
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'orders.html';
+                }, 3000);
+            } else {
+                alert(data.message || "Failed to cancel order.");
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Confirm Cancellation';
+            }
+        } catch (error) {
+            console.error("Cancellation error:", error);
+            alert("An error occurred while cancelling your order.");
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Confirm Cancellation';
+        }
     });
 
     // Mobile Menu Toggle (Consistency with other pages)

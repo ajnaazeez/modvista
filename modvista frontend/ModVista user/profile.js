@@ -116,11 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             itemEl.className = 'wishlist-preview-card';
             itemEl.style.cssText = 'background: #1a1a1a; border: 1px solid #2d2d2d; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 15px;';
 
-            let img = "assets/default-product.png";
-            if (product.images && product.images.length > 0) {
-                const baseUrl = window.ModVistaAPI.API_BASE.replace('/api', '');
-                img = product.images[0].startsWith('uploads/') ? `${baseUrl}/${product.images[0]}` : product.images[0];
-            }
+            const img = window.ModVistaAPI.resolveImg(product.images?.[0]);
 
             itemEl.innerHTML = `
                 <div class="wishlist-img"><img src="${img}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"></div>
@@ -256,12 +252,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const updateAvatar = (imgEl) => {
             if (!imgEl) return;
-            const baseUrl = window.ModVistaAPI.API_BASE.replace('/api', '');
-            if (user.avatarUrl) {
-                imgEl.src = user.avatarUrl.startsWith('http') ? user.avatarUrl : `${baseUrl}${user.avatarUrl}`;
-            } else {
-                imgEl.src = 'assets/default-avatar.svg';
-            }
+            imgEl.src = window.ModVistaAPI.resolveImg(user.avatarUrl || 'assets/default-avatar.svg');
         };
 
         updateAvatar(navAvatar);
@@ -303,14 +294,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (emptyState) emptyState.style.display = 'none';
 
         const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-        const getImagePath = (img) => {
-            if (!img) return 'assets/default-product.png';
-            if (img.startsWith('http')) return img;
-            const apiBase = window.ModVistaAPI?.API_BASE || "http://localhost:5000/api";
-            const backendRoot = apiBase.replace(/\/api\/?$/, '');
-            if (img.startsWith('uploads/')) return `${backendRoot}/${img}`;
-            return `assets/${img}`;
-        };
 
         orders.forEach(order => {
             const card = document.createElement('div');
@@ -329,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
                     <div style="display: flex; gap: 10px;">
                         ${(order.items || []).slice(0, 3).map(item => `
-                            <img src="${getImagePath(item.image)}" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;">
+                            <img src="${window.ModVistaAPI.resolveImg(item.image)}" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;">
                         `).join('')}
                     </div>
                     <div style="text-align: right;">

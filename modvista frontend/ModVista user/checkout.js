@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             city: document.getElementById('addr-city').value,
             state: document.getElementById('addr-state').value,
             pincode: document.getElementById('addr-pincode').value,
+            landmark: document.getElementById('addr-landmark')?.value || "",
             isDefault: addresses.length === 0
         };
 
@@ -124,6 +125,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             alert(error.message);
         }
+    }
+
+    // --- Address Form Event Listeners ---
+    if (showFormBtn) {
+        showFormBtn.addEventListener('click', () => {
+            addressFormContainer.classList.add('open');
+            showFormBtn.style.display = 'none';
+        });
+    }
+
+    if (cancelAddressBtn) {
+        cancelAddressBtn.addEventListener('click', () => {
+            addressFormContainer.classList.remove('open');
+            showFormBtn.style.display = 'flex';
+            addressForm.reset();
+        });
+    }
+
+    if (addressForm) {
+        addressForm.addEventListener('submit', saveNewAddress);
     }
 
     // --- Order Summary & Coupons ---
@@ -292,12 +313,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         items.forEach(item => {
             const itemElement = document.createElement('div');
             itemElement.className = 'summary-item';
-            const fallbackImg = 'assets/default-product.png';
-            let img = item.image || fallbackImg;
-            if (img && img.startsWith('uploads/')) img = `http://localhost:5000/${img}`;
+            const img = window.ModVistaAPI.resolveImg(item.image);
 
             itemElement.innerHTML = `
-                <img src="${img}" alt="${item.name}" onerror="this.onerror=null;this.src='${fallbackImg}'" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;">
+                <img src="${img}" alt="${item.name}" onerror="this.onerror=null;this.src='assets/default-product.png'" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;">
                 <div class="summary-item-info">
                     <h4 style="color: white; font-size: 0.9rem;">${item.name}</h4>
                     <p style="color: #aaa; font-size: 0.8rem;">Qty: ${item.quantity}</p>

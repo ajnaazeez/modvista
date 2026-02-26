@@ -39,9 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Customer & Address
         const addr = data.shippingAddress || {};
         const fullName = addr.fullName || 'N/A';
-        const phone = addr.phone || 'N/A';
-        const email = data.contact?.email || 'N/A'; // Assuming contact was saved
-        const fullAddr = `${addr.street || ''}, ${addr.city || ''}, ${addr.state || ''} - ${addr.pincode || ''}`;
+        const phone = addr.phone || data.contact?.phone || 'N/A';
+        const email = data.contact?.email || 'N/A';
 
         // Billing
         document.getElementById('billing-name').textContent = fullName;
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('billing-address').textContent = addr.street || '';
         document.getElementById('billing-city').textContent = `${addr.city || ''}, ${addr.state || ''} ${addr.pincode || ''}`;
 
-        // Shipping (Same as Billing for MVP)
+        // Shipping
         document.getElementById('shipping-name').textContent = fullName;
         document.getElementById('shipping-address').textContent = addr.street || '';
         document.getElementById('shipping-city').textContent = `${addr.city || ''}, ${addr.state || ''} ${addr.pincode || ''}`;
@@ -66,10 +65,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             let imgUrl = 'assets/default-product.png';
             if (item.image) {
                 if (item.image.startsWith('http')) imgUrl = item.image;
-                else if (item.image.startsWith('uploads/')) imgUrl = `http://localhost:5000/${item.image}`;
-                else imgUrl = item.image;
-            } else if (product.image) {
-                imgUrl = product.image; // Assume full path or handle similarly
+                else if (item.image.startsWith('uploads/') || item.image.startsWith('src/')) {
+                    imgUrl = `http://localhost:5000/${item.image}`;
+                } else imgUrl = item.image;
             }
 
             const tr = document.createElement('tr');
@@ -80,11 +78,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span>${name}</span>
                     </div>
                 </td>
-                <td data-label="Category">${product.category || 'Modification'}</td>
+                <td data-label="Category">${product.category?.name || 'Modification'}</td>
                 <td data-label="Variant">${item.variant || 'Standard'}</td>
                 <td data-label="Qty">${item.quantity}</td>
-                <td data-label="Price">₹${(item.price || 0).toFixed(2)}</td>
-                <td data-label="Total">₹${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</td>
+                <td data-label="Price">₹${(item.price || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td data-label="Total">₹${((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -92,51 +90,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Payment Info
         const paymentMap = {
             'cod': 'Cash on Delivery',
-            'razorpay': 'Razorpay',
-            'mock_razorpay': 'Razorpay (MOCK)',
-            'mock_wallet': 'Wallet (MOCK)'
+            'razorpay': 'Razorpay (Online)',
+            'wallet': 'Wallet Payment',
+            'mock_razorpay': 'Razorpay (Mock)',
+            'mock_wallet': 'Wallet (Mock)'
         };
         document.getElementById('payment-method').textContent = paymentMap[data.paymentMethod] || data.paymentMethod;
 
         const statusBadge = document.getElementById('payment-status');
-        // Backend statuses: 'pending', 'paid'
-        const isPaid = data.isPaid;
+        const isPaid = data.isPaid || data.paymentStatus === 'paid';
         statusBadge.textContent = isPaid ? 'Paid' : 'Pending';
         statusBadge.className = `status-badge ${isPaid ? 'paid' : 'unpaid'}`;
 
-        document.getElementById('transaction-id').textContent = data.paymentResult?.id || 'N/A';
-        document.getElementById('order-status').textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+        // Map transaction ID from various possible fields
+        const txId = data.razorpay_payment_id || data.paymentResult?.id || 'N/A';
+        document.getElementById('transaction-id').textContent = txId;
+
+        document.getElementById('order-status').textContent = data.status.replace(/_/g, ' ').toUpperCase();
 
         // Dates
+        document.getElementById('invoice-date').textContent = new Date(data.createdAt).toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        });
+
         const deliveryDate = new Date(data.createdAt);
-        deliveryDate.setDate(deliveryDate.getDate() + 5);
-        document.getElementById('delivery-date').textContent = deliveryDate.toLocaleDateString();
+        deliveryDate.setDate(deliveryDate.getDate() + 7);
+        document.getElementById('delivery-date').textContent = deliveryDate.toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        });
 
         // Totals
         const subtotal = data.subtotal || 0;
         const tax = data.tax || 0;
         const total = data.total || 0;
-        const discount = data.discount || 0;
+        const couponDisc = data.coupon?.discount || 0;
+        const offerDisc = data.offerDiscount || 0;
+        const totalDiscount = couponDisc + offerDisc;
+        const shipping = data.shipping || 0;
 
-        document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
-        document.getElementById('discount').textContent = `-₹${discount.toFixed(2)}`;
-        document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
-        document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = `₹${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        document.getElementById('discount').textContent = `-₹${totalDiscount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        document.getElementById('total').textContent = `₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
 
-        // Hide coupon if 0
+        // Coupon Logic
         const couponRow = document.querySelector('.summary-row.coupon');
-        if (discount > 0) {
+        if (data.coupon?.code) {
             couponRow.style.display = 'flex';
-            couponRow.querySelector('span:last-child').textContent = 'Applied';
+            couponRow.querySelector('span:first-child').textContent = `Coupon (${data.coupon.code.toUpperCase()})`;
         } else {
             couponRow.style.display = 'none';
         }
 
-        // Wallet (not fully tracked in order model separate from payment method yet, but if method is mock_wallet, total paid via wallet)
-        // For now, leave wallet-used as 0 or implement specific logic if needed. 
-        // Based on previous files, wallet usage wasn't explicitly stored as a separate 'walletUsed' amount in Order model top-level, 
-        // but implied by payment method or split. Assuming 0 for now unless paymentMethod is wallet.
-        document.getElementById('wallet-used').textContent = '-₹0.00';
+        // Shipping logic
+        const shippingEl = document.getElementById('shipping-cost');
+        if (shipping > 0) {
+            shippingEl.textContent = `₹${shipping.toFixed(2)}`;
+            shippingEl.classList.remove('free');
+        } else {
+            shippingEl.textContent = 'Free';
+            shippingEl.classList.add('free');
+        }
+
+        // Wallet deduction (if total payment was not full amount in items, subtract)
+        // Check if wallet was used as payment method or partial
+        const walletUsedEl = document.getElementById('wallet-used');
+        if (data.paymentMethod === 'wallet' || data.paymentMethod === 'mock_wallet') {
+            walletUsedEl.textContent = `-₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        } else {
+            walletUsedEl.textContent = '-₹0.00';
+        }
     }
 });
 
