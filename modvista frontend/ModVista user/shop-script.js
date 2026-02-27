@@ -19,12 +19,15 @@ let totalResults = 0;
 let totalPages = 1;
 let currentFilters = {
     category: 'all',
-    minPrice: '',
-    maxPrice: '',
+    minPrice: null,
+    maxPrice: null,
     rating: 0,
     sortBy: 'price-low',
     search: ''
 };
+
+// Track global total to keep "All Products" count stable
+let globalTotalProducts = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check for category in URL
@@ -107,9 +110,9 @@ async function loadShopCategories(totalAllProducts = 0) {
             html += `<li><a href="#" class="${match ? 'active' : ''}" data-cat="${cat._id}"><i class="${getIcon(cat.name)}"></i> ${cat.name} <span class="count">${count}</span></a></li>`;
         });
 
-        // "All Products" active state and count (provided by fetchProducts)
+        // "All Products" active state and count
         const allActive = (currentFilters.category === 'all' || !currentFilters.category) ? 'active' : '';
-        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${totalAllProducts}</span></a></li>` + html;
+        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${globalTotalProducts}</span></a></li>` + html;
 
         list.innerHTML = html;
         attachCategoryListeners();
@@ -278,9 +281,9 @@ async function fetchProducts() {
         let query = `?page=${currentPage}&limit=${itemsPerPage}`;
 
         if (category && category !== 'all') query += `&category=${category}`;
-        if (currentFilters.minPrice !== null) query += `&price[gte]=${currentFilters.minPrice}`;
-        if (currentFilters.maxPrice !== null) query += `&price[lte]=${currentFilters.maxPrice}`;
-        if (search) query += `&search=${encodeURIComponent(search)}`;
+        if (currentFilters.minPrice !== null && !isNaN(currentFilters.minPrice)) query += `&price[gte]=${currentFilters.minPrice}`;
+        if (currentFilters.maxPrice !== null && !isNaN(currentFilters.maxPrice)) query += `&price[lte]=${currentFilters.maxPrice}`;
+        if (search && search.trim() !== '') query += `&search=${encodeURIComponent(search)}`;
 
         // Sorting mapping
         if (sortBy === 'price-low') query += `&sort=price`;
@@ -293,9 +296,15 @@ async function fetchProducts() {
         if (data.success) {
             allProducts = data.data;
             totalResults = data.total;
+
+            // Only update global total if we're looking at "All Products" with no other filters
+            if (category === 'all' && !minPrice && !maxPrice && !search) {
+                globalTotalProducts = totalResults;
+            }
+
             totalPages = Math.ceil(totalResults / itemsPerPage);
             renderPage();
-            loadShopCategories(totalResults);
+            loadShopCategories(globalTotalProducts);
         } else {
             throw new Error(data.message || 'Failed to load products');
         }

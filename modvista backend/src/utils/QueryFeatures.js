@@ -10,8 +10,25 @@ class QueryFeatures {
         const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
         excludedFields.forEach(el => delete queryObj[el]);
 
+        // Transform flat keys like "price[gte]" into nested objects
+        const finalQuery = {};
+        Object.keys(queryObj).forEach(key => {
+            if (key.includes('[') && key.includes(']')) {
+                const parts = key.split(/[\[\]]/).filter(Boolean);
+                if (parts.length === 2) {
+                    const [field, operator] = parts;
+                    if (!finalQuery[field]) finalQuery[field] = {};
+                    finalQuery[field][operator] = queryObj[key];
+                } else {
+                    finalQuery[key] = queryObj[key];
+                }
+            } else {
+                finalQuery[key] = queryObj[key];
+            }
+        });
+
         // Advanced filtering (gt, gte, lt, lte, regex)
-        let queryStr = JSON.stringify(queryObj);
+        let queryStr = JSON.stringify(finalQuery);
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|regex|options)\b/g, match => `$${match}`);
 
         this.query = this.query.find(JSON.parse(queryStr));

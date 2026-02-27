@@ -56,8 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const data = await res.json();
         if (data.success) {
+            currentUserData = data.user;
             nameInput.value = data.user.name;
             phoneInput.value = data.user.phone || '';
+
+            // Update localStorage
+            localStorage.setItem('user', JSON.stringify(data.user));
 
             // Handle Avatar Display
             if (data.user.avatarUrl) {
@@ -105,18 +109,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 payload.oldPassword = oldPasswordInput.value;
             }
 
-            const res = await fetch(`${API_BASE}/users/me`, {
+            const data = await window.ModVistaAPI.apiCall('/users/me', {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
                 body: JSON.stringify(payload)
             });
 
-            const data = await res.json();
-
-            if (res.ok && data.success) {
+            if (data && data.success) {
                 showMessage("Profile updated successfully!", "success");
                 setTimeout(() => {
                     window.location.href = 'profile.html';
@@ -297,6 +295,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function fetchSidebarProfile() {
+        if (window.modvista_updateSidebar) {
+            window.modvista_updateSidebar();
+            return;
+        }
+        // Fallback if loader not initialized
         try {
             const resp = await fetch(`${API_BASE}/users/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }

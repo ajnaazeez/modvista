@@ -37,15 +37,27 @@ async function fetchCoupons() {
 }
 
 function renderCouponCard(coupon) {
-    const { code, type, value, minOrderAmount, endDate, isExpired } = coupon;
+    const { code, discountType, discountValue, minOrderAmount, minProductPrice, endDate, isExpired } = coupon;
 
-    const discountText = type === 'FLAT'
-        ? `₹${value.toLocaleString()} OFF`
-        : `${value}% OFF`;
+    const discountText = discountType === 'FLAT'
+        ? `₹${discountValue.toLocaleString()} OFF`
+        : `${discountValue}% OFF`;
 
     const formattedExpiry = endDate
         ? new Date(endDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
         : 'Never';
+
+    let minOrderHtml = '';
+    if (minOrderAmount > 0) {
+        minOrderHtml += `<div class="coupon-detail">Min. Order: <strong>₹${minOrderAmount.toLocaleString()}</strong></div>`;
+    }
+    if (minProductPrice > 0) {
+        minOrderHtml += `<div class="coupon-detail">Min. Item: <strong>₹${minProductPrice.toLocaleString()}</strong></div>`;
+    }
+
+    if (!minOrderHtml) {
+        minOrderHtml = `<div class="coupon-detail" style="color: #6c757d; font-style: italic;">No minimum requirement</div>`;
+    }
 
     return `
         <div class="coupon-card ${isExpired ? 'expired' : ''}">
@@ -61,9 +73,7 @@ function renderCouponCard(coupon) {
                 </button>
             </div>
             
-            <div class="coupon-detail">
-                Min. Order: <strong>₹${(minOrderAmount || 0).toLocaleString()}</strong>
-            </div>
+            ${minOrderHtml}
             
             <div class="coupon-expiry">
                 Expires: ${formattedExpiry}

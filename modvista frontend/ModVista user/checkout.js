@@ -281,9 +281,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (appliedCoupon && appliedCoupon.code === code) return;
 
         try {
+            // Corrected endpoint from /cart/coupon/apply to /coupons/apply
             const res = await apiCall('/coupons/apply', {
                 method: 'POST',
-                body: JSON.stringify({ code })
+                body: JSON.stringify({ code: code })
             });
 
             if (res && res.success) {
@@ -403,11 +404,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.setItem('orderId', res.orderId);
                 localStorage.removeItem('appliedCoupon');
                 window.location.href = 'payment.html';
+            } else {
+                throw new Error(res.message || 'Failed to initiate checkout.');
             }
         } catch (error) {
-            alert(error.message);
+            console.error('Checkout error:', error);
+            alert('Checkout Error: ' + error.message);
             payBtn.disabled = false;
-            payBtn.textContent = 'Pay Now';
+            updatePayButtonStatus(); // Restore original label and state
         }
     }
 

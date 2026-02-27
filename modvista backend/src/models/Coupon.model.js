@@ -48,6 +48,10 @@ const couponSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    usersUsed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     startDate: {
         type: Date,
         required: [true, 'Please add a start date']
@@ -65,7 +69,7 @@ const couponSchema = new mongoose.Schema({
 });
 
 // Ensure code is stored uppercase via pre-save hook
-couponSchema.pre('save', function () {
+couponSchema.pre('save', async function () {
     if (this.code) {
         this.code = this.code.toUpperCase().trim();
     }

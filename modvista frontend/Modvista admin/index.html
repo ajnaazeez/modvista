@@ -52,7 +52,7 @@
                 <i class="fas fa-chart-line"></i>
                 <span>Analytics & Reports</span>
             </a>
-            
+
 
         </nav>
         <div class="sidebar-footer">
@@ -120,6 +120,14 @@
             <div class="section-container" style="margin-bottom: 32px;">
                 <div class="section-header">
                     <div class="section-title">Sales Overview</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn" id="btnDaily"
+                            style="padding: 4px 12px; font-size: 0.8rem;">Daily</button>
+                        <button class="action-btn active" id="btnMonthly"
+                            style="padding: 4px 12px; font-size: 0.8rem; background: var(--accent);">Monthly</button>
+                        <button class="action-btn" id="btnYearly"
+                            style="padding: 4px 12px; font-size: 0.8rem;">Yearly</button>
+                    </div>
                 </div>
                 <div class="chart-container" style="height: 400px; position: relative; padding: 20px;">
                     <canvas id="salesOverviewChart"></canvas>

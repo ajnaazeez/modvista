@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Prevent logged-in users from accessing the login page
+    if (localStorage.getItem("token")) {
+        window.location.href = "profile.html";
+        return;
+    }
+
     const loginForm = document.getElementById('login-form');
     if (!loginForm) return;
 

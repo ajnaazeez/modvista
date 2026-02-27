@@ -5,6 +5,12 @@ const API_BASE = (window.location.protocol === 'file:' || !window.location.origi
 const API = `${API_BASE}/admin/auth/signup`;
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Prevent logged-in admins from accessing the signup page
+    if (localStorage.getItem("adminToken")) {
+        window.location.href = "index.html";
+        return;
+    }
+
     const form = document.getElementById("admin-signup-form");
     const nameEl = document.getElementById("admin-name");
     const emailEl = document.getElementById("admin-email");

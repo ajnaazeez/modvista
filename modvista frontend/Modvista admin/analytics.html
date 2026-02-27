@@ -52,7 +52,7 @@
                 <i class="fas fa-chart-line"></i>
                 <span>Analytics & Reports</span>
             </a>
-            
+
 
         </nav>
         <div class="sidebar-footer">
@@ -72,7 +72,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column;">
                     <h2 style="line-height: 1.2;">Analytics & Reports</h2>
-                    <span style="font-size: 0.85rem; color: var(--text-dim);">Business performance & AI usage
+                    <span style="font-size: 0.85rem; color: var(--text-dim);">Business performance
                         insights</span>
                 </div>
             </div>
@@ -128,13 +128,6 @@
                         <i class="fas fa-caret-up"></i> 0.5% <span>vs prev period</span>
                     </div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">AI Preview Usage</div>
-                    <div class="kpi-value" id="aiPreviewUsage">0</div>
-                    <div class="trend trend-up" style="color: var(--accent);">
-                        <i class="fas fa-bolt"></i> 42% <span>Hot</span>
-                    </div>
-                </div>
             </div>
 
             <!-- Sales Overview Chart -->
@@ -142,9 +135,12 @@
                 <div class="section-header">
                     <h4 class="section-title">Sales Overview</h4>
                     <div style="display: flex; gap: 8px;">
-                        <button class="action-btn" style="padding: 4px 12px; font-size: 0.8rem;">Daily</button>
-                        <button class="action-btn active"
-                            style="padding: 4px 12px; font-size: 0.8rem; background: var(--accent);">Monthly</button>
+                        <button class="action-btn" id="btnDaily"
+                            style="padding: 4px 12px; font-size: 0.8rem;">Daily</button>
+                        <button class="action-btn" id="btnMonthly"
+                            style="padding: 4px 12px; font-size: 0.8rem;">Monthly</button>
+                        <button class="action-btn" id="btnYearly"
+                            style="padding: 4px 12px; font-size: 0.8rem;">Yearly</button>
                     </div>
                 </div>
                 <div class="chart-container" style="height: 450px; position: relative; padding: 20px;">
@@ -216,20 +212,13 @@
                                 <p style="font-size: 0.8rem; color: var(--text-dim);">Detailed breakdown of revenue, tax
                                     and expenses.</p>
                             </div>
-                            <div class="export-btn-group">
-                                <button class="action-btn" style="padding: 8px 16px;"><i class="fas fa-file-pdf"></i>
+                            <div class="export-btn-group" style="display: flex; gap: 8px; align-items: center;">
+                                <input type="month" id="salesReportMonth" class="form-control"
+                                    style="width: auto; padding: 6px; font-size: 0.85rem; background: var(--bg-card); border: 1px solid var(--border); color: var(--text);">
+                                <button class="action-btn" id="generateSalesReportBtn" style="padding: 8px 16px;"><i
+                                        class="fas fa-file-pdf"></i>
                                     PDF</button>
                             </div>
-                        </div>
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border);">
-                            <div>
-                                <h5 style="margin-bottom: 4px;">AI Usage Analytics</h5>
-                                <p style="font-size: 0.8rem; color: var(--text-dim);">User interaction data with the AI
-                                    visualizer.</p>
-                            </div>
-                            <button class="action-btn" style="padding: 8px 24px;"><i class="fas fa-file-pdf"></i>
-                                PDF</button>
                         </div>
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border);">
@@ -238,8 +227,9 @@
                                 <p style="font-size: 0.8rem; color: var(--text-dim);">Historical data of user
                                     registrations and sessions.</p>
                             </div>
-                            <button class="action-btn" style="padding: 8px 24px;"><i class="fas fa-file-pdf"></i>
-                                PDF</button>
+                            <button class="action-btn" id="viewUserActivityBtn" style="padding: 8px 24px;"><i
+                                    class="fas fa-eye"></i>
+                                View</button>
                         </div>
                     </div>
                 </div>
@@ -248,14 +238,14 @@
                 <div class="insights-panel">
                     <h4
                         style="margin-bottom: 20px; color: var(--accent); display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-lightbulb"></i> AI Insights
+                        <i class="fas fa-lightbulb"></i> Business Insights
                     </h4>
                     <div class="insight-item">
                         <i class="fas fa-chart-line" style="color: var(--status-delivered); margin-top: 4px;"></i>
                         <div>
                             <p style="font-size: 0.9rem; font-weight: 500;">Revenue Boost Detected</p>
                             <p style="font-size: 0.8rem; color: var(--text-dim);">Headlights category sales increased by
-                                24% this month following the AI Preview feature update.</p>
+                                24% this month.</p>
                         </div>
                     </div>
                     <div class="insight-item">
@@ -270,8 +260,8 @@
                         <i class="fas fa-users" style="color: var(--status-shipped); margin-top: 4px;"></i>
                         <div>
                             <p style="font-size: 0.9rem; font-weight: 500;">User Retention Tip</p>
-                            <p style="font-size: 0.8rem; color: var(--text-dim);">Users who use AI Preview 3+ times are
-                                80% more likely to return within 7 days.</p>
+                            <p style="font-size: 0.8rem; color: var(--text-dim);">Registered users are 40% more likely
+                                to return within 7 days.</p>
                         </div>
                     </div>
                 </div>
@@ -282,6 +272,25 @@
             &copy; 2026 ModVista Admin Panel
         </footer>
     </main>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal"
+        style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);">
+        <div class="modal-content"
+            style="background: var(--bg-card); margin: 5% auto; padding: 32px; border: 1px solid var(--border); width: 80%; max-width: 900px; border-radius: 12px; max-height: 85vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 id="modalTitle">Report</h3>
+                <div style="display: flex; gap: 12px;">
+                    <button class="action-btn" id="printReportBtn"><i class="fas fa-print"></i> Print</button>
+                    <span class="close" id="closeModal"
+                        style="color: var(--text-dim); cursor: pointer; font-size: 28px;">&times;</span>
+                </div>
+            </div>
+            <div id="modalBody" class="table-wrapper">
+                <!-- Content injected here -->
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script src="analytics.js"></script>

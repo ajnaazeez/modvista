@@ -32,6 +32,7 @@ async function apiFetch(path, options = {}) {
 
 // --- Global Instances ---
 let salesOverviewChart = null;
+let allSalesData = null;
 
 // --- Load Dashboard Data ---
 async function loadDashboardStats() {
@@ -55,16 +56,64 @@ async function loadDashboardStats() {
 async function fetchSalesTrend() {
     try {
         const data = await apiFetch('/analytics/admin');
-        if (data.success && data.data.salesTrend) {
-            renderSalesOverviewChart(data.data.salesTrend);
+        if (data.success) {
+            allSalesData = {
+                daily: data.data.salesTrend,
+                monthly: data.data.monthlySales,
+                yearly: data.data.yearlySales
+            };
+
+            // Check initial active button
+            let initialType = 'daily';
+            if (document.getElementById('btnMonthly')?.classList.contains('active')) initialType = 'monthly';
+            if (document.getElementById('btnYearly')?.classList.contains('active')) initialType = 'yearly';
+
+            renderSalesOverviewChart(allSalesData[initialType], initialType);
+            setupToggles();
         }
     } catch (error) {
         console.error("Error fetching sales trend for dashboard:", error);
     }
 }
 
-function renderSalesOverviewChart(trendData) {
-    const ctx = document.getElementById('salesOverviewChart').getContext('2d');
+function setupToggles() {
+    const btns = {
+        daily: document.getElementById('btnDaily'),
+        monthly: document.getElementById('btnMonthly'),
+        yearly: document.getElementById('btnYearly')
+    };
+
+    const updateActive = (type) => {
+        Object.values(btns).forEach(b => {
+            if (b) {
+                b.classList.remove('active');
+                b.style.background = 'var(--bg-card)';
+            }
+        });
+        if (btns[type]) {
+            btns[type].classList.add('active');
+            btns[type].style.background = 'var(--accent)';
+        }
+    };
+
+    if (btns.daily) btns.daily.onclick = () => {
+        updateActive('daily');
+        renderSalesOverviewChart(allSalesData.daily, 'daily');
+    };
+    if (btns.monthly) btns.monthly.onclick = () => {
+        updateActive('monthly');
+        renderSalesOverviewChart(allSalesData.monthly, 'monthly');
+    };
+    if (btns.yearly) btns.yearly.onclick = () => {
+        updateActive('yearly');
+        renderSalesOverviewChart(allSalesData.yearly, 'yearly');
+    };
+}
+
+function renderSalesOverviewChart(trendData, type = 'daily') {
+    const ctxEl = document.getElementById('salesOverviewChart');
+    if (!ctxEl) return;
+    const ctx = ctxEl.getContext('2d');
     if (salesOverviewChart) salesOverviewChart.destroy();
 
     // Sort by date
@@ -75,6 +124,8 @@ function renderSalesOverviewChart(trendData) {
         data: {
             labels: trendData.map(item => {
                 const d = new Date(item._id);
+                if (type === 'yearly') return d.getFullYear().toString();
+                if (type === 'monthly') return d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
                 return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
             }),
             datasets: [

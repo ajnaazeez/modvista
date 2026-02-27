@@ -79,17 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
         set('avgOrderValue', `₹${fmt(Number(kpis.avgOrderValue).toFixed(2))}`);
         set('activeUsers', fmt(kpis.activeUsers));
         set('conversionRate', kpis.conversionRate || '—');
-        set('aiPreviewUsage', fmt(kpis.aiPreviewUsage || 0));
     };
 
     // ─── Sales Overview Chart ───────────────────────────────────────────────────
 
-    const renderSalesOverviewChart = (trendData) => {
+    const renderSalesOverviewChart = (trendData, type = 'daily') => {
         const ctx = document.getElementById('salesOverviewChart');
         if (!ctx) return;
 
         if (salesOverviewChart) salesOverviewChart.destroy();
 
+        // Ensure data is sorted
         trendData.sort((a, b) => new Date(a._id) - new Date(b._id));
 
         salesOverviewChart = new Chart(ctx.getContext('2d'), {
@@ -97,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: trendData.map(item => {
                     const d = new Date(item._id);
+                    if (type === 'yearly') return d.getFullYear().toString();
+                    if (type === 'monthly') return d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
                     return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
                 }),
                 datasets: [
@@ -349,23 +351,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Daily/Monthly Toggle ────────────────────────────────────────────────────
 
-    document.querySelectorAll('.section-container .action-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parent = btn.parentElement;
-            parent.querySelectorAll('.action-btn').forEach(b => {
-                b.classList.remove('active');
-                b.style.background = 'var(--bg-card)';
-            });
-            btn.classList.add('active');
-            btn.style.background = 'var(--accent)';
+    const setupSalesToggles = () => {
+        const btns = {
+            daily: document.getElementById('btnDaily'),
+            monthly: document.getElementById('btnMonthly'),
+            yearly: document.getElementById('btnYearly')
+        };
 
-            if (allData?.salesTrend) {
-                const label = btn.textContent.trim().toLowerCase();
-                const days = label.includes('daily') ? 7 : 30;
-                renderSalesOverviewChart(filterByDays(allData.salesTrend, days));
+        const updateActive = (type) => {
+            Object.values(btns).forEach(b => {
+                if (b) {
+                    b.classList.remove('active');
+                    b.style.background = 'var(--bg-card)';
+                }
+            });
+            if (btns[type]) {
+                btns[type].classList.add('active');
+                btns[type].style.background = 'var(--accent)';
             }
-        });
-    });
+        };
+
+        if (btns.daily) btns.daily.onclick = () => {
+            updateActive('daily');
+            renderSalesOverviewChart(allData.salesTrend, 'daily');
+        };
+
+        if (btns.monthly) btns.monthly.onclick = () => {
+            updateActive('monthly');
+            renderSalesOverviewChart(allData.monthlySales, 'monthly');
+        };
+
+        if (btns.yearly) btns.yearly.onclick = () => {
+            updateActive('yearly');
+            renderSalesOverviewChart(allData.yearlySales, 'yearly');
+        };
+
+        // Default to daily as active initially from HTML? No, analytics.html has Monthly as active.
+        // Let's set monthly as default if it has the active class.
+        if (btns.monthly && btns.monthly.classList.contains('active')) {
+            // Wait for data load though
+        }
+    };
+
+    // Override the old toggle loop
+    // document.querySelectorAll('.section-container .action-btn').forEach...
 
     // ─── Entrance Animation ──────────────────────────────────────────────────────
 
@@ -381,8 +410,166 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ─── Dynamic Reports ────────────────────────────────────────────────────────
+
+    const setupDynamicReports = () => {
+        const modal = document.getElementById('reportModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const printBtn = document.getElementById('printReportBtn');
+
+        const showReportModal = (title, html) => {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = html;
+            modal.style.display = 'block';
+        };
+
+        if (closeModal) {
+            closeModal.onclick = () => { if (modal) modal.style.display = 'none'; };
+        }
+
+        window.onclick = (event) => {
+            if (event.target === modal) modal.style.display = 'none';
+        };
+
+        if (printBtn) {
+            printBtn.onclick = () => {
+                const content = modalBody.innerHTML;
+                const win = window.open('', '', 'height=700,width=900');
+                win.document.write('<html><head><title>Report</title>');
+                win.document.write('<style>body{font-family:Inter,sans-serif;padding:40px;color:#333} table{width:100%;border-collapse:collapse;margin-top:20px} th,td{border:1px solid #ddd;padding:12px;text-align:left} th{background:#f8f9fa}</style>');
+                win.document.write('</head><body>');
+                win.document.write(`<h1>${modalTitle.textContent}</h1>`);
+                win.document.write(content);
+                win.document.write('</body></html>');
+                win.document.close();
+                win.print();
+            };
+        }
+
+        // Sales Report
+        const generateSalesBtn = document.getElementById('generateSalesReportBtn');
+        const salesMonthInput = document.getElementById('salesReportMonth');
+
+        if (generateSalesBtn && salesMonthInput) {
+            // Set default month to current
+            const now = new Date();
+            salesMonthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            generateSalesBtn.onclick = async () => {
+                const month = salesMonthInput.value;
+                if (!month) return alert("Please select a month");
+
+                generateSalesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                try {
+                    const res = await fetch(`${API_BASE}/analytics/sales-report?month=${month}`, { headers: authHeaders() });
+                    const result = await res.json();
+
+                    if (result.success) {
+                        const orders = result.data;
+                        let html = '';
+                        if (orders.length === 0) {
+                            html = '<p style="text-align:center; padding:40px;">No sales found for this month.</p>';
+                        } else {
+                            html = `
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Items</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${orders.map(o => `
+                                            <tr>
+                                                <td>#${o._id.slice(-6).toUpperCase()}</td>
+                                                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                                                <td>${o.user ? o.user.name : 'Guest'}</td>
+                                                <td>${o.items.length}</td>
+                                                <td>₹${fmt(o.total)}</td>
+                                                <td>${o.status}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            `;
+                        }
+                        showReportModal(`Sales Report: ${month}`, html);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to generate report");
+                } finally {
+                    generateSalesBtn.innerHTML = '<i class="fas fa-file-pdf"></i> PDF';
+                }
+            };
+        }
+
+        // User Activity
+        const viewActivityBtn = document.getElementById('viewUserActivityBtn');
+        if (viewActivityBtn) {
+            viewActivityBtn.onclick = async () => {
+                viewActivityBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                try {
+                    const res = await fetch(`${API_BASE}/analytics/user-activity`, { headers: authHeaders() });
+                    const result = await res.json();
+
+                    if (result.success) {
+                        const logs = result.data;
+                        const html = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${logs.map(l => `
+                                        <tr>
+                                            <td>${new Date(l.date).toLocaleString()}</td>
+                                            <td>${l.user}</td>
+                                            <td><span class="badge" style="background: ${l.type === 'registration' ? '#7c3aed' : '#10b981'}; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">${l.type}</span></td>
+                                            <td>${l.description}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        `;
+                        showReportModal("Recent User Activity", html);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to fetch activity");
+                } finally {
+                    viewActivityBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+                }
+            };
+        }
+    };
+
     // ─── Init ────────────────────────────────────────────────────────────────────
 
-    fetchAnalytics();
+    fetchAnalytics(30).then(() => {
+        setupSalesToggles();
+        setupDynamicReports();
+        // Sync initial active state
+        if (document.getElementById('btnDaily')?.classList.contains('active')) {
+            renderSalesOverviewChart(allData.salesTrend, 'daily');
+        } else if (document.getElementById('btnMonthly')?.classList.contains('active')) {
+            renderSalesOverviewChart(allData.monthlySales, 'monthly');
+        } else if (document.getElementById('btnYearly')?.classList.contains('active')) {
+            renderSalesOverviewChart(allData.yearlySales, 'yearly');
+        } else {
+            renderSalesOverviewChart(allData.salesTrend, 'daily');
+        }
+    });
     wireExports();
 });

@@ -266,6 +266,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isFullCoverage) {
             finalPayBtn.textContent = 'Place Order (Paid by Wallet)';
             finalPayBtn.disabled = false;
+            finalPayBtn.style.opacity = '1';
+            finalPayBtn.style.cursor = 'pointer';
         } else {
             if (selectedMethod === 'cod') {
                 finalPayBtn.textContent = `Confirm COD Order (₹${payableAmount.toFixed(2)})`;
@@ -273,6 +275,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 finalPayBtn.textContent = `Pay ₹${payableAmount.toFixed(2)} with Razorpay`;
                 finalPayBtn.disabled = false;
+                finalPayBtn.style.opacity = '1';
+                finalPayBtn.style.cursor = 'pointer';
             }
         }
     }
@@ -359,20 +363,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             if (selectedMethod === 'cod' && amountToPay > 0) {
                 // COD: Call /pay endpoint to ensure cart is cleared on backend
-                setTimeout(async () => {
-                    await processPayment('cod');
-                }, 1500);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                await processPayment('cod');
             } else {
-                // Wallet full coverage
-                setTimeout(async () => {
-                    await processPayment(paymentMethodToBackend);
-                }, 1500);
+                // Wallet full coverage or other method
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                await processPayment(paymentMethodToBackend);
             }
         } catch (error) {
-            console.error('Payment error:', error);
-            alert('Payment failed: ' + error.message);
+            console.error('Payment initiation error:', error);
+            alert('Error: ' + error.message);
             loadingOverlay.style.display = 'none';
             document.getElementById('wallet-toggle').disabled = false;
+            finalPayBtn.disabled = false;
+            updateButtonState(currentTotal, currentTotal <= 0);
         }
     });
 

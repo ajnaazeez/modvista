@@ -37,13 +37,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+window.modvista_updateSidebar = updateSidebarUserInfo;
+
 function updateSidebarUserInfo() {
     // Try to get user data from localStorage
     const userStr = localStorage.getItem("user") || localStorage.getItem("modvista_user");
     let user = userStr ? JSON.parse(userStr) : null;
 
     // Fallback if no user object, try individual keys
-    const name = user?.name || localStorage.getItem("userName") || localStorage.getItem("name") || "User";
+    const name = user?.name || user?.fullname || localStorage.getItem("userName") || localStorage.getItem("name") || "User";
     const email = user?.email || localStorage.getItem("userEmail") || "user@example.com";
 
     // Update Text
@@ -57,7 +59,8 @@ function updateSidebarUserInfo() {
     const avatarLetterEl = document.getElementById("profileAvatarLetter");
     const avatarImgEl = document.getElementById("profileAvatarImg");
 
-    const avatarUrl = user?.avatarUrl || localStorage.getItem("userAvatar");
+    // Prioritize userAvatar if it's already resolved, otherwise use user object
+    const avatarUrl = localStorage.getItem("userAvatar") || user?.avatarUrl;
 
     if (avatarUrl && avatarImgEl) {
         avatarImgEl.src = window.ModVistaAPI.resolveImg(avatarUrl);

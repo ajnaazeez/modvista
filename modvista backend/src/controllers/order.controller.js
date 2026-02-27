@@ -48,6 +48,12 @@ const createOrder = asyncHandler(async (req, res) => {
     let coupon = null;
     if (cart.appliedCoupon && cart.appliedCoupon.code) {
         coupon = await Coupon.findOne({ code: cart.appliedCoupon.code, isActive: true });
+
+        // Double check per-user restriction before ordering
+        if (coupon && coupon.usersUsed && coupon.usersUsed.includes(req.user._id.toString())) {
+            res.status(400);
+            throw new Error('You have already used this coupon');
+        }
     }
 
     // 5. Calculate breakdown using Pricing Engine
@@ -151,6 +157,18 @@ const createOrder = asyncHandler(async (req, res) => {
         }
 
         await order.save(sessionOption);
+
+        // Update coupon usage if applicable
+        if (coupon) {
+            await Coupon.updateOne(
+                { _id: coupon._id },
+                {
+                    $inc: { usedCount: 1 },
+                    $addToSet: { usersUsed: req.user._id }
+                },
+                sessionOption
+            );
+        }
 
         // 7. Clear user cart
         cart.items = [];
@@ -374,10 +392,16 @@ const payOrder = asyncHandler(async (req, res) => {
             await wallet.save(sessionOption);
         }
 
-        // 2. Mark Order as Paid
-        order.isPaid = true;
-        order.paidAt = new Date();
-        order.paymentStatus = 'paid';
+        // 2. Mark Order as Paid (Prepaid only)
+        if (normalizedMethod !== 'cod') {
+            order.isPaid = true;
+            order.paidAt = new Date();
+            order.paymentStatus = 'paid';
+        } else {
+            // COD: Keep unpaid but confirmed
+            order.isPaid = false;
+            order.paymentStatus = 'pending';
+        }
         order.paymentMethod = normalizedMethod;
 
         if (razorpay_order_id) order.razorpay_order_id = razorpay_order_id;
@@ -403,12 +427,15 @@ const payOrder = asyncHandler(async (req, res) => {
             await cart.save(sessionOption);
         }
 
-        // 4. Update Coupon usedCount
+        // 4. Update Coupon usedCount and usersUsed
         if (order.coupon && order.coupon.code) {
             const Coupon = require('../models/Coupon.model');
             await Coupon.findOneAndUpdate(
                 { code: order.coupon.code },
-                { $inc: { usedCount: 1 } },
+                {
+                    $inc: { usedCount: 1 },
+                    $addToSet: { usersUsed: userId }
+                },
                 { session: useTransaction ? session : null }
             );
         }
@@ -479,8 +506,8 @@ const cancelOrder = asyncHandler(async (req, res) => {
         let refundedAmount = 0;
         let walletBalance = 0;
 
-        // 3. Refund Logic if Paid
-        if (order.paymentStatus === 'paid' || order.isPaid === true) {
+        // 3. Refund Logic if Paid (AND NOT COD)
+        if ((order.paymentStatus === 'paid' || order.isPaid === true) && order.paymentMethod !== 'cod') {
             let wallet = await Wallet.findOne({ user: userId }).session(useTransaction ? session : null);
 
             // If wallet doesn't exist, create it

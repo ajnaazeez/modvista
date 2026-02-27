@@ -139,18 +139,17 @@ orderSchema.statics.isValidTransition = function (currentStatus, nextStatus) {
     return validTransitions[currentStatus]?.includes(nextStatus) || false;
 };
 
-orderSchema.pre('save', function (next) {
+orderSchema.pre('save', async function () {
     if (this.isModified('status')) {
         const previousStatus = this._previousStatus || (this.isNew ? null : this.status);
 
         // Skip validation for new orders (they start at pending)
         if (!this.isNew && previousStatus && previousStatus !== this.status) {
             if (!this.constructor.isValidTransition(previousStatus, this.status)) {
-                return next(new Error(`Invalid status transition from ${previousStatus} to ${this.status}`));
+                throw new Error(`Invalid status transition from ${previousStatus} to ${this.status}`);
             }
         }
     }
-    next();
 });
 
 // Capture previous status during init

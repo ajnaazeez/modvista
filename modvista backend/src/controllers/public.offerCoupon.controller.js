@@ -67,6 +67,12 @@ const applyCoupon = asyncHandler(async (req, res) => {
         throw new Error('Coupon usage limit reached');
     }
 
+    // Check if user has already used this coupon
+    if (coupon.usersUsed && coupon.usersUsed.includes(req.user._id.toString())) {
+        res.status(400);
+        throw new Error('You have already used this coupon');
+    }
+
     // Load Cart with populated products and categories (for offer logic)
     const cart = await Cart.findOne({ user: req.user._id }).populate({
         path: 'items.product',

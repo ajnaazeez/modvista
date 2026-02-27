@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     ]);
 
     initSectionSwitching();
-    initProfileEditing();
 
     // ---------- Data Fetching ----------
 
@@ -33,6 +32,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await window.ModVistaAPI.apiCall('/users/me');
             if (data && data.success) {
                 currentUserData = data.user;
+                localStorage.setItem('user', JSON.stringify(data.user));
+                if (data.user.avatarUrl) {
+                    localStorage.setItem('userAvatar', window.ModVistaAPI.resolveImg(data.user.avatarUrl));
+                } else {
+                    localStorage.removeItem('userAvatar');
+                }
                 renderProfileData(data.user);
             }
         } catch (error) {
@@ -179,55 +184,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function initProfileEditing() {
-        const editForm = document.getElementById('edit-profile-form');
-        const cancelEdit = document.getElementById('cancel-edit');
-        const editBtn = document.querySelector('.info-card .edit-btn');
-        const sections = document.querySelectorAll('.content-section');
-
-        if (editBtn) {
-            editBtn.onclick = () => {
-                sections.forEach(s => s.style.display = 'none');
-                document.getElementById('edit-profile').style.display = 'block';
-                if (currentUserData) {
-                    document.getElementById('edit-name').value = currentUserData.name;
-                    document.getElementById('edit-email').value = currentUserData.email;
-                    document.getElementById('edit-mobile').value = currentUserData.phone || '';
-                }
-            };
-        }
-
-        if (cancelEdit) {
-            cancelEdit.onclick = () => {
-                document.getElementById('edit-profile').style.display = 'none';
-                document.getElementById('my-profile').style.display = 'block';
-            };
-        }
-
-        if (editForm) {
-            editForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('edit-name').value;
-                const email = document.getElementById('edit-email').value;
-                const phone = document.getElementById('edit-mobile').value;
-
-                try {
-                    const res = await window.ModVistaAPI.apiCall('/users/me', {
-                        method: 'PUT',
-                        body: JSON.stringify({ name, email, phone })
-                    });
-
-                    if (res && res.success) {
-                        alert('Profile updated successfully!');
-                        fetchUserProfile();
-                        cancelEdit.click();
-                    }
-                } catch (error) {
-                    alert(error.message || 'Failed to update profile');
-                }
-            };
-        }
-    }
 
     function renderProfileWallet(balance) {
         const el = document.getElementById('profile-wallet-balance');
@@ -240,30 +196,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         setText('profile-email', user.email);
         setText('profile-phone', user.phone || 'Not provided');
 
-        // Sidebar data
-        const sidebarName = document.getElementById('profileName');
-        const sidebarEmail = document.getElementById('profileEmail');
-        if (sidebarName) sidebarName.innerText = user.name;
-        if (sidebarEmail) sidebarEmail.innerText = user.email;
-
-        // Avatar Logic
-        const navAvatar = document.getElementById('navAvatar');
-        const avatarLetterEl = document.getElementById("profileAvatarLetter");
-        const avatarImgEl = document.getElementById("profileAvatarImg");
-
-        if (navAvatar) {
-            navAvatar.src = window.ModVistaAPI.resolveImg(user.avatarUrl || 'assets/default-avatar.svg');
+        // Update sidebar and other global UI components
+        if (window.modvista_updateSidebar) {
+            window.modvista_updateSidebar();
         }
 
-        if (user.avatarUrl && avatarImgEl) {
-            avatarImgEl.src = window.ModVistaAPI.resolveImg(user.avatarUrl);
-            avatarImgEl.style.display = "block";
-            if (avatarLetterEl) avatarLetterEl.style.display = "none";
-        } else if (avatarLetterEl) {
-            const initial = user.name.trim().charAt(0).toUpperCase() || "A";
-            avatarLetterEl.innerText = initial;
-            avatarLetterEl.style.display = "flex";
-            if (avatarImgEl) avatarImgEl.style.display = "none";
+        if (window.fetchCurrentUserNavbar) {
+            window.fetchCurrentUserNavbar();
         }
     }
 
