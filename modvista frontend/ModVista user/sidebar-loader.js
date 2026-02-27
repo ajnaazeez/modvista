@@ -53,13 +53,20 @@ function updateSidebarUserInfo() {
     if (nameEl) nameEl.innerText = name;
     if (emailEl) emailEl.innerText = email;
 
-    // Avatar Logic (First Letter)
-    const avatarEl = document.getElementById("profileAvatar");
-    if (avatarEl) {
-        const initial = name.trim().charAt(0).toUpperCase() || "A";
-        avatarEl.innerText = initial;
+    // Avatar Logic
+    const avatarLetterEl = document.getElementById("profileAvatarLetter");
+    const avatarImgEl = document.getElementById("profileAvatarImg");
 
-        // Ensure no image is interfering if styles try to put one
-        avatarEl.style.backgroundImage = "none";
+    const avatarUrl = user?.avatarUrl || localStorage.getItem("userAvatar");
+
+    if (avatarUrl && avatarImgEl) {
+        avatarImgEl.src = window.ModVistaAPI.resolveImg(avatarUrl);
+        avatarImgEl.style.display = "block";
+        if (avatarLetterEl) avatarLetterEl.style.display = "none";
+    } else if (avatarLetterEl) {
+        const initial = name.trim().charAt(0).toUpperCase() || "A";
+        avatarLetterEl.innerText = initial;
+        avatarLetterEl.style.display = "flex";
+        if (avatarImgEl) avatarImgEl.style.display = "none";
     }
 }

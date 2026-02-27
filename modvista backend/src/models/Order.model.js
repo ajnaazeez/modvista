@@ -123,4 +123,39 @@ const orderSchema = new mongoose.Schema({
     timestamps: true
 });
 
+orderSchema.statics.isValidTransition = function (currentStatus, nextStatus) {
+    const validTransitions = {
+        'pending': ['confirmed', 'cancelled'],
+        'confirmed': ['shipped', 'cancelled'],
+        'shipped': ['out_for_delivery', 'cancelled'],
+        'out_for_delivery': ['delivered', 'cancelled'],
+        'delivered': ['return_requested'],
+        'cancelled': [],
+        'return_requested': ['returned', 'delivered'],
+        'returned': []
+    };
+
+    if (currentStatus === nextStatus) return true;
+    return validTransitions[currentStatus]?.includes(nextStatus) || false;
+};
+
+orderSchema.pre('save', function (next) {
+    if (this.isModified('status')) {
+        const previousStatus = this._previousStatus || (this.isNew ? null : this.status);
+
+        // Skip validation for new orders (they start at pending)
+        if (!this.isNew && previousStatus && previousStatus !== this.status) {
+            if (!this.constructor.isValidTransition(previousStatus, this.status)) {
+                return next(new Error(`Invalid status transition from ${previousStatus} to ${this.status}`));
+            }
+        }
+    }
+    next();
+});
+
+// Capture previous status during init
+orderSchema.post('init', function (doc) {
+    doc._previousStatus = doc.status;
+});
+
 module.exports = mongoose.model('Order', orderSchema);

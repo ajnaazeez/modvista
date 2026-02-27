@@ -6,15 +6,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const saveBtn = document.getElementById('save-btn');
 
     // Password Visibility Toggle
-    const toggleBtn = editForm.querySelector('.toggle-password');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            toggleBtn.classList.toggle('fa-eye');
-            toggleBtn.classList.toggle('fa-eye-slash');
+    const toggleBtns = editForm.querySelectorAll('.toggle-password');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+            btn.classList.toggle('fa-eye');
+            btn.classList.toggle('fa-eye-slash');
         });
-    }
+    });
+
+    const oldPasswordInput = document.getElementById('old-password');
     const messageBox = document.getElementById('message-box');
 
     // Avatar elements
@@ -92,7 +96,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             const payload = { name, phone };
-            if (password) payload.password = password;
+            if (password) {
+                if (!oldPasswordInput.value) {
+                    showMessage("Current password is required to set a new password", "error");
+                    return;
+                }
+                payload.password = password;
+                payload.oldPassword = oldPasswordInput.value;
+            }
 
             const res = await fetch(`${API_BASE}/users/me`, {
                 method: 'PUT',
@@ -293,11 +304,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const pData = await resp.json();
             if (pData.success) {
                 const user = pData.user;
-                if (document.getElementById('profileName')) document.getElementById('profileName').textContent = user.fullName || user.name;
+                if (document.getElementById('profileName')) document.getElementById('profileName').textContent = user.name;
                 if (document.getElementById('profileEmail')) document.getElementById('profileEmail').textContent = user.email;
-                if (document.getElementById('profileAvatar') && user.avatar) {
-                    let avatarSrc = window.ModVistaAPI.resolveImg(user.avatar);
-                    document.getElementById('profileAvatar').src = avatarSrc;
+
+                const avatarLetterEl = document.getElementById("profileAvatarLetter");
+                const avatarImgEl = document.getElementById("profileAvatarImg");
+
+                if (user.avatarUrl && avatarImgEl) {
+                    avatarImgEl.src = window.ModVistaAPI.resolveImg(user.avatarUrl);
+                    avatarImgEl.style.display = "block";
+                    if (avatarLetterEl) avatarLetterEl.style.display = "none";
                 }
             }
         } catch (err) {

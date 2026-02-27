@@ -21,7 +21,7 @@ const getAdminAnalytics = asyncHandler(async (req, res) => {
     const activeUsers = await User.countDocuments({ createdAt: { $gte: thirtyDaysAgo } });
 
     // 2. Sales Trend (Last 30 Days)
-    const salesTrend = await Order.aggregate([
+    const rawSalesTrend = await Order.aggregate([
         { $match: { createdAt: { $gte: thirtyDaysAgo }, status: { $ne: 'cancelled' } } },
         {
             $group: {
@@ -32,6 +32,29 @@ const getAdminAnalytics = asyncHandler(async (req, res) => {
         },
         { $sort: { "_id": 1 } }
     ]);
+
+    // Fill in gaps with 0 for the last 30 days
+    const salesTrendMap = rawSalesTrend.reduce((acc, curr) => {
+        acc[curr._id] = curr;
+        return acc;
+    }, {});
+
+    const salesTrend = [];
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+
+        if (salesTrendMap[dateStr]) {
+            salesTrend.push(salesTrendMap[dateStr]);
+        } else {
+            salesTrend.push({
+                _id: dateStr,
+                revenue: 0,
+                orders: 0
+            });
+        }
+    }
 
     // 3. Payment Distribution
     const paymentDistribution = await Order.aggregate([

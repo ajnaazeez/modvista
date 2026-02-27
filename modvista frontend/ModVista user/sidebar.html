@@ -2,7 +2,9 @@
     <div class="profile-sidebar-header">
         <div class="profile-avatar-wrap">
             <div class="profile-avatar-clip">
-                <div id="profileAvatar" class="profile-avatar-letter">A</div>
+                <div id="profileAvatarLetter" class="profile-avatar-letter">A</div>
+                <img id="profileAvatarImg" class="profile-avatar-img" src=""
+                    style="display: none; width: 100%; height: 100%; object-fit: cover;">
             </div>
             <button class="avatar-edit-btn" type="button" id="avatarEditBtn"
                 onclick="window.location.href='edit-profile.html'">
@@ -20,9 +22,12 @@
         <a href="orders.html" class="menu-item">
             <i class="fas fa-box"></i> My Orders
         </a>
-        
+
         <a href="addresses.html" class="menu-item">
             <i class="fas fa-map-marker-alt"></i> Saved Addresses
+        </a>
+        <a href="coupons.html" class="menu-item">
+            <i class="fas fa-tags"></i> My Coupons
         </a>
         <a href="wallet.html" class="menu-item">
             <i class="fas fa-wallet"></i> Wallet

@@ -34,7 +34,19 @@ const updateMe = asyncHandler(async (req, res) => {
         }
 
         if (req.body.password) {
+            if (!req.body.oldPassword) {
+                res.status(400);
+                throw new Error("Please provide your current password to set a new one");
+            }
+
             const bcrypt = require('bcryptjs');
+            const isMatch = await bcrypt.compare(req.body.oldPassword, user.password);
+
+            if (!isMatch) {
+                res.status(400);
+                throw new Error("Current password is incorrect");
+            }
+
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(req.body.password, salt);
         }
@@ -75,7 +87,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
     }
 
     // Save the path (using forward slashes for URL consistency)
-    const avatarPath = '/uploads/avatars/' + req.file.filename;
+    const avatarPath = 'uploads/avatars/' + req.file.filename;
     user.avatarUrl = avatarPath;
     await user.save();
 

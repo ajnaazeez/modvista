@@ -4,10 +4,13 @@ const path = require('path');
 // Configure storage
 const storage = multer.diskStorage({
     destination(req, file, cb) {
-        cb(null, 'uploads/');
+        if (file.fieldname === 'avatar') {
+            cb(null, 'uploads/avatars/');
+        } else {
+            cb(null, 'uploads/');
+        }
     },
     filename(req, file, cb) {
-        // Unique filename: fieldname-timestamp-random.ext
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
     }

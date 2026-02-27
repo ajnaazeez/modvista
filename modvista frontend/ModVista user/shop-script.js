@@ -136,16 +136,29 @@ function attachCategoryListeners() {
 
 function setupPriceFilter() {
     const applyBtn = document.querySelector('.apply-filter-btn');
-    if (!applyBtn) return;
+    const minInput = document.getElementById('price-min');
+    const maxInput = document.getElementById('price-max');
 
-    applyBtn.addEventListener('click', () => {
-        const min = document.getElementById('price-min').value;
-        const max = document.getElementById('price-max').value;
+    if (!applyBtn || !minInput || !maxInput) return;
 
-        currentFilters.minPrice = min ? parseFloat(min) : null;
-        currentFilters.maxPrice = max ? parseFloat(max) : null;
+    const performFilter = () => {
+        const min = minInput.value;
+        const max = maxInput.value;
+
+        currentFilters.minPrice = (min !== '' && !isNaN(min)) ? parseFloat(min) : null;
+        currentFilters.maxPrice = (max !== '' && !isNaN(max)) ? parseFloat(max) : null;
 
         applyFilters();
+    };
+
+    applyBtn.addEventListener('click', performFilter);
+
+    [minInput, maxInput].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performFilter();
+            }
+        });
     });
 }
 
@@ -265,8 +278,8 @@ async function fetchProducts() {
         let query = `?page=${currentPage}&limit=${itemsPerPage}`;
 
         if (category && category !== 'all') query += `&category=${category}`;
-        if (minPrice) query += `&price[gte]=${minPrice}`;
-        if (maxPrice) query += `&price[lte]=${maxPrice}`;
+        if (currentFilters.minPrice !== null) query += `&price[gte]=${currentFilters.minPrice}`;
+        if (currentFilters.maxPrice !== null) query += `&price[lte]=${currentFilters.maxPrice}`;
         if (search) query += `&search=${encodeURIComponent(search)}`;
 
         // Sorting mapping

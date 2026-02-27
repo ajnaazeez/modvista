@@ -59,24 +59,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     }
 
     const currentStatus = order.status;
-    const validTransitions = {
-        'pending': ['confirmed', 'cancelled'],
-        'confirmed': ['shipped', 'cancelled'],
-        'shipped': ['out_for_delivery', 'cancelled'],
-        'out_for_delivery': ['delivered', 'cancelled'],
-        'delivered': ['return_requested'],
-        'cancelled': [],
-        'return_requested': ['returned', 'delivered'],
-        'returned': []
-    };
-
-    const finalStatuses = ['cancelled', 'returned'];
-    if (finalStatuses.includes(currentStatus)) {
-        res.status(400);
-        throw new Error(`Cannot change status of a ${currentStatus} order`);
-    }
-
-    if (!validTransitions[currentStatus] || !validTransitions[currentStatus].includes(status)) {
+    if (!Order.isValidTransition(currentStatus, status)) {
         res.status(400);
         throw new Error(`Invalid transition from ${currentStatus} to ${status}`);
     }

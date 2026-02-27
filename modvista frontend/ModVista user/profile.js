@@ -241,22 +241,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         setText('profile-phone', user.phone || 'Not provided');
 
         // Sidebar data
-        const sidebarName = document.querySelector('.sidebar-user-info h3');
-        const sidebarEmail = document.querySelector('.sidebar-user-info p');
+        const sidebarName = document.getElementById('profileName');
+        const sidebarEmail = document.getElementById('profileEmail');
         if (sidebarName) sidebarName.innerText = user.name;
         if (sidebarEmail) sidebarEmail.innerText = user.email;
 
-        // Avatar
+        // Avatar Logic
         const navAvatar = document.getElementById('navAvatar');
-        const profileAvatar = document.querySelectorAll('.avatar-container img, #profileAvatar');
+        const avatarLetterEl = document.getElementById("profileAvatarLetter");
+        const avatarImgEl = document.getElementById("profileAvatarImg");
 
-        const updateAvatar = (imgEl) => {
-            if (!imgEl) return;
-            imgEl.src = window.ModVistaAPI.resolveImg(user.avatarUrl || 'assets/default-avatar.svg');
-        };
+        if (navAvatar) {
+            navAvatar.src = window.ModVistaAPI.resolveImg(user.avatarUrl || 'assets/default-avatar.svg');
+        }
 
-        updateAvatar(navAvatar);
-        profileAvatar.forEach(updateAvatar);
+        if (user.avatarUrl && avatarImgEl) {
+            avatarImgEl.src = window.ModVistaAPI.resolveImg(user.avatarUrl);
+            avatarImgEl.style.display = "block";
+            if (avatarLetterEl) avatarLetterEl.style.display = "none";
+        } else if (avatarLetterEl) {
+            const initial = user.name.trim().charAt(0).toUpperCase() || "A";
+            avatarLetterEl.innerText = initial;
+            avatarLetterEl.style.display = "flex";
+            if (avatarImgEl) avatarImgEl.style.display = "none";
+        }
     }
 
 
