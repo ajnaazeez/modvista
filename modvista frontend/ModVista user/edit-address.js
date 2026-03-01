@@ -1,25 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // API Configuration
-    async function apiFetch(url, options = {}) {
-        // If url is relative (doesn't start with http), assume it's for our API
-        if (!url.startsWith('http')) {
-            return window.ModVistaAPI.apiCall(url, options);
-        }
+    // API and State
+    const urlParams = new URLSearchParams(window.location.search);
+    const addressId = urlParams.get('id');
 
-        const token = localStorage.getItem("token");
-        const res = await fetch(url, {
-            ...options,
-            headers: {
-                "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                ...(options.headers || {})
-            }
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "API Error");
-        return data;
-    }
+    // DOM Elements
+    const addressForm = document.getElementById('edit-address-form');
+    const pageTitleAction = document.getElementById('page-title-action');
+    const submitBtn = addressForm.querySelector('button[type="submit"]');
 
     // --- Core Functions ---
 
@@ -27,22 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (addressId) {
             // Edit Mode
             pageTitleAction.textContent = 'EDIT';
-            breadcrumbCurrent.textContent = 'Edit Address';
-            submitBtnText.textContent = 'Save Address Changes';
+            submitBtn.textContent = 'Save Address Changes';
             await loadAddressDetails(addressId);
         } else {
             // Add Mode
             pageTitleAction.textContent = 'ADD';
-            breadcrumbCurrent.textContent = 'Add New Address';
-            submitBtnText.textContent = 'Add Address';
+            submitBtn.textContent = 'Add Address';
         }
     }
 
     async function loadAddressDetails(id) {
         try {
-            // Since we don't have a GET /api/addresses/:id yet, we find it from the list
-            // Optimization: Fetch all and find
-            const result = await apiFetch('/addresses');
+            // Since we don't have a single GET /api/addresses/:id on backend, fetch all and filter
+            const result = await window.ModVistaAPI.apiCall('/addresses');
+            if (!result || !result.success) throw new Error("Failed to fetch addresses");
+
             const address = result.data.find(addr => (addr._id || addr.id) === id);
 
             if (address) {
@@ -81,9 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleFormSubmit(e) {
         e.preventDefault();
 
+        // Basic validation for phone number (should be 10 digits as per backend)
+        const phone = document.getElementById('mobile-number').value;
+        if (!/^\d{10}$/.test(phone)) {
+            alert("Please enter a valid 10-digit mobile number.");
+            return;
+        }
+
         const formData = {
             fullName: document.getElementById('full-name').value,
-            phone: document.getElementById('mobile-number').value,
+            phone: phone,
             house: document.getElementById('house-info').value,
             street: document.getElementById('street-info').value,
             landmark: document.getElementById('landmark').value,
@@ -95,10 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = addressId ? 'Saving...' : 'Adding...';
+
             const url = addressId ? `/addresses/${addressId}` : `/addresses`;
             const method = addressId ? 'PUT' : 'POST';
 
-            await apiFetch(url, {
+            await window.ModVistaAPI.apiCall(url, {
                 method: method,
                 body: JSON.stringify(formData)
             });
@@ -107,11 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'addresses.html';
         } catch (error) {
             console.error('Error saving address:', error);
-            alert(error.message);
+            alert(error.message || 'Error occurred while saving');
+            submitBtn.disabled = false;
+            submitBtn.textContent = addressId ? 'Save Address Changes' : 'Add Address';
         }
     }
 
     // --- Init ---
-    addressForm.addEventListener('submit', handleFormSubmit);
+    if (addressForm) {
+        addressForm.addEventListener('submit', handleFormSubmit);
+    }
     initializePage();
 });

@@ -24,7 +24,7 @@
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="shop.html" class="nav-link">Shop</a></li>
-                
+
                 <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
                 <li><a href="cart.html" class="nav-link">Cart</a></li>
                 <li><a href="profile.html" class="nav-link">Profile</a></li>
@@ -62,15 +62,17 @@
                         <!-- Personal Info -->
                         <div class="form-section">
                             <h3><i class="fas fa-user"></i> Personal Information</h3>
-                            <div class="input-row">
-                                <div class="input-group">
-                                    <label for="full-name">Full Name</label>
-                                    <input type="text" id="full-name" placeholder="E.g. Alex Rodriguez" required>
-                                </div>
-                                <div class="input-group">
-                                    <label for="mobile-number">Mobile Number</label>
-                                    <input type="tel" id="mobile-number" placeholder="10-digit mobile number" required
-                                        pattern="[0-9]{10}">
+                            <div class="fields-container">
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label for="full-name">Full Name</label>
+                                        <input type="text" id="full-name" placeholder="E.g. Alex Rodriguez" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="mobile-number">Mobile Number</label>
+                                        <input type="tel" id="mobile-number" placeholder="10-digit mobile number"
+                                            required pattern="[0-9]{10}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -78,78 +80,83 @@
                         <!-- Address Info -->
                         <div class="form-section">
                             <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
-                            <div class="input-group">
-                                <label for="house-info">House / Flat / Building Name</label>
-                                <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers" required>
-                            </div>
-                            <div class="input-group">
-                                <label for="street-info">Street / Area / Colony</label>
-                                <input type="text" id="street-info" placeholder="E.g. Performance Way, Silicon Valley"
-                                    required>
-                            </div>
-                            <div class="input-group">
-                                <label for="landmark">Landmark (Optional)</label>
-                                <input type="text" id="landmark" placeholder="E.g. Near Central Park">
-                            </div>
-                            <div class="input-row">
+                            <div class="fields-container">
                                 <div class="input-group">
-                                    <label for="city">City</label>
-                                    <input type="text" id="city" placeholder="E.g. San Francisco" required>
+                                    <label for="house-info">House / Flat / Building Name</label>
+                                    <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers"
+                                        required>
                                 </div>
                                 <div class="input-group">
-                                    <label for="pincode">Pincode</label>
-                                    <input type="text" id="pincode" placeholder="6-digit ZIP code" required
-                                        pattern="[0-9]{5,6}">
+                                    <label for="street-info">Street / Area / Colony</label>
+                                    <input type="text" id="street-info"
+                                        placeholder="E.g. Performance Way, Silicon Valley" required>
                                 </div>
-                            </div>
-                            <div class="input-group">
-                                <label for="state">State</label>
-                                <select id="state" required>
-                                    <option value="" disabled selected>Select State</option>
-                                    <option value="California">California</option>
-                                    <option value="New York">New York</option>
-                                    <option value="Texas">Texas</option>
-                                    <option value="Florida">Florida</option>
-                                    <option value="Washington">Washington</option>
-                                    <option value="Illinois">Illinois</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <!-- Simplified state list for demo -->
-                                </select>
+                                <div class="input-group">
+                                    <label for="landmark">Landmark (Optional)</label>
+                                    <input type="text" id="landmark" placeholder="E.g. Near Central Park">
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" placeholder="E.g. San Francisco" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="pincode">Pincode</label>
+                                        <input type="text" id="pincode" placeholder="6-digit ZIP code" required
+                                            pattern="[0-9]{5,6}">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="state">State</label>
+                                    <select id="state" required>
+                                        <option value="" disabled selected>Select State</option>
+                                        <option value="California">California</option>
+                                        <option value="New York">New York</option>
+                                        <option value="Texas">Texas</option>
+                                        <option value="Florida">Florida</option>
+                                        <option value="Washington">Washington</option>
+                                        <option value="Illinois">Illinois</option>
+                                        <option value="Georgia">Georgia</option>
+                                        <!-- Simplified state list for demo -->
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Preferences -->
                         <div class="form-section">
                             <h3><i class="fas fa-tag"></i> Preferences</h3>
-                            <div class="input-group">
-                                <label>Address Type</label>
-                                <div class="address-type-selector">
-                                    <label class="type-option">
-                                        <input type="radio" name="address-type" value="Home" checked>
-                                        <div class="type-box">
-                                            <i class="fas fa-home"></i>
-                                            <span>Home</span>
-                                        </div>
-                                    </label>
-                                    <label class="type-option">
-                                        <input type="radio" name="address-type" value="Work">
-                                        <div class="type-box">
-                                            <i class="fas fa-briefcase"></i>
-                                            <span>Work</span>
-                                        </div>
-                                    </label>
-                                    <label class="type-option">
-                                        <input type="radio" name="address-type" value="Other">
-                                        <div class="type-box">
-                                            <i class="fas fa-map-pin"></i>
-                                            <span>Other</span>
-                                        </div>
-                                    </label>
+                            <div class="fields-container">
+                                <div class="input-group">
+                                    <label>Address Type</label>
+                                    <div class="address-type-selector">
+                                        <label class="type-option">
+                                            <input type="radio" name="address-type" value="Home" checked>
+                                            <div class="type-box">
+                                                <i class="fas fa-home"></i>
+                                                <span>Home</span>
+                                            </div>
+                                        </label>
+                                        <label class="type-option">
+                                            <input type="radio" name="address-type" value="Work">
+                                            <div class="type-box">
+                                                <i class="fas fa-briefcase"></i>
+                                                <span>Work</span>
+                                            </div>
+                                        </label>
+                                        <label class="type-option">
+                                            <input type="radio" name="address-type" value="Other">
+                                            <div class="type-box">
+                                                <i class="fas fa-map-pin"></i>
+                                                <span>Other</span>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="set-default">
-                                <label for="set-default">Set as my default shipping address</label>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="set-default">
+                                    <label for="set-default">Set as my default shipping address</label>
+                                </div>
                             </div>
                         </div>
                     </div>
