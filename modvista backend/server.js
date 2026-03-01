@@ -1,11 +1,18 @@
+require("dotenv").config();
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./src/config/db');
 const { errorHandler } = require('./src/middleware/error.middleware');
 
-dotenv.config();
+console.log("Mongo URI:", process.env.MONGODB_URI ? "LOADED" : "MISSING");
+if (!process.env.MONGODB_URI) {
+    console.log("Working directory:", process.cwd());
+    console.log("Env path:", path.join(__dirname, '.env'));
+} else {
+    // Log the start of the URI to verify protocol without exposing credentials
+    console.log("URI Scheme:", process.env.MONGODB_URI.split(':')[0] + "://");
+}
 
 // Connect to Database
 connectDB();
