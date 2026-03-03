@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const { apiCall, requireLogin, API_BASE } = window.ModVistaAPI;
+    // Check ModVistaAPI
+    if (typeof window.ModVistaAPI === 'undefined') {
+        console.error('CRITICAL: ModVistaAPI not loaded!');
+        alert('Site configuration error. Please refresh.');
+        return;
+    }
+
+    const { apiCall, requireLogin } = window.ModVistaAPI;
+    console.log("Checkout initialized. API Host:", window.ModVistaAPI.API_BASE);
 
     // One-time localStorage cleanup (remove old cart data)
     // Uncomment these lines to clear localStorage cart data if needed:
