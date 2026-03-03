@@ -1,0 +1,202 @@
+/* ModVista - Address Modal CSS */
+
+:root {
+    --neon-red: #ff1f1f;
+    --neon-glow: 0 0 15px rgba(255, 31, 31, 0.4);
+    --bg-dark: #0a0a0a;
+    --bg-dark-2: #161616;
+    --bg-dark-3: #1e1e1e;
+    --input-bg: #1a1a1a;
+    --input-border: #333333;
+    --text-secondary: #aaaaaa;
+    --transition: all 0.3s ease;
+}
+
+.address-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.address-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.address-modal-content {
+    background: var(--bg-dark-2);
+    border: 1px solid var(--input-border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transform: translateY(20px);
+    transition: var(--transition);
+}
+
+.address-modal-overlay.active .address-modal-content {
+    transform: translateY(0);
+}
+
+.address-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.address-modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.close-modal-btn:hover {
+    color: var(--neon-red);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.input-group input:focus {
+    border-color: var(--neon-red);
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 31, 31, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.address-type-group {
+    margin-bottom: 25px;
+}
+
+.address-type-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.type-options {
+    display: flex;
+    gap: 30px;
+}
+
+.type-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: white;
+}
+
+.type-options input[type="radio"] {
+    accent-color: var(--neon-red);
+    width: 18px;
+    height: 18px;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.cancel-modal-btn,
+.save-modal-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cancel-modal-btn {
+    background: transparent;
+    border: 1px solid var(--input-border);
+    color: white;
+}
+
+.cancel-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.save-modal-btn {
+    background: var(--neon-red);
+    border: 1px solid var(--neon-red);
+    color: white;
+}
+
+.save-modal-btn:hover {
+    box-shadow: var(--neon-glow);
+    transform: translateY(-2px);
+}
+
+.save-modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .address-modal-content {
+        padding: 20px;
+    }
+}

@@ -9,6 +9,7 @@
         content="Securely complete your purchase on ModVista. Premium car modifications delivered to your doorstep.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="checkout.css">
+    <link rel="stylesheet" href="css/address-modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -25,7 +26,7 @@
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="shop.html" class="nav-link">Shop</a></li>
-                
+
                 <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
                 <li><a href="cart.html" class="nav-link">Cart</a></li>
                 <li><a href="profile.html" class="nav-link">Profile</a></li>
@@ -68,54 +69,9 @@
                             <!-- Addresses will be injected here -->
                         </div>
 
-                        <button class="add-address-btn" id="show-address-form">
+                        <button class="add-address-btn" id="show-address-form" onclick="openAddressModal()">
                             <i class="fas fa-plus"></i> Add New Address
                         </button>
-
-                        <!-- Add New Address Form -->
-                        <div class="new-address-form" id="new-address-form">
-                            <form id="address-form">
-                                <div class="form-row">
-                                    <div class="input-group">
-                                        <label>Full Name</label>
-                                        <input type="text" id="addr-name" placeholder="Enter your full name" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label>Phone Number</label>
-                                        <input type="tel" id="addr-phone" placeholder="Enter 10-digit number" required>
-                                    </div>
-                                </div>
-                                <div class="input-group">
-                                    <label>Street Address</label>
-                                    <input type="text" id="addr-street" placeholder="House No, Building, Street, Area"
-                                        required>
-                                </div>
-                                <div class="form-row">
-                                    <div class="input-group">
-                                        <label>City</label>
-                                        <input type="text" id="addr-city" placeholder="Enter City" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label>State</label>
-                                        <input type="text" id="addr-state" placeholder="Enter State" required>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="input-group">
-                                        <label>Pincode</label>
-                                        <input type="text" id="addr-pincode" placeholder="6-digit Pincode" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label>Landmark (Optional)</label>
-                                        <input type="text" id="addr-landmark" placeholder="Nearby landmark">
-                                    </div>
-                                </div>
-                                <div class="checkout-btn-group">
-                                    <button type="button" class="cancel-btn" id="cancel-address">Cancel</button>
-                                    <button type="submit" class="primary-btn save-address-btn">Save Address</button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
 
                     <!-- Contact Information -->
@@ -233,6 +189,7 @@
 
     <script src="api.js"></script>
     <script src="badge-sync.js"></script>
+    <script src="js/address-modal.js"></script>
     <script src="checkout.js"></script>
     <script src="script.js"></script>
 </body>

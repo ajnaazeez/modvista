@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let deleteId = null;
 
     // ---------- Core ----------
-    async function loadAddresses() {
+    window.loadAddresses = async function () {
         try {
             const result = await window.ModVistaAPI.apiCall("/addresses");
             addresses = result?.data || [];
@@ -121,8 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------- Events ----------
-    if (addAddressTrigger) addAddressTrigger.addEventListener("click", () => { window.location.href = "edit-address.html"; });
-    if (addNewCardBtn) addNewCardBtn.addEventListener("click", () => { window.location.href = "edit-address.html"; });
+    if (addAddressTrigger) addAddressTrigger.addEventListener("click", () => { openAddressModal(); });
+    if (addNewCardBtn) addNewCardBtn.addEventListener("click", () => { openAddressModal(); });
 
     cancelDeleteBtn.addEventListener("click", closeModal);
     confirmDeleteBtn.addEventListener("click", deleteAddress);

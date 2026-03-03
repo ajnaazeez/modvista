@@ -30,8 +30,7 @@ const corsOptions = {
             "http://127.0.0.1:5500",
             "http://localhost:5500",
             "http://localhost:5000",
-            "http://127.0.0.1:5000",
-            "http://modvista-ajna.duckdns.org"
+            "http://127.0.0.1:5000"
         ];
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);

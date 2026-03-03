@@ -45,16 +45,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Address Functions ---
 
-    async function loadAddresses() {
+    window.loadAddresses = async function (newId = null) {
         try {
             const res = await apiCall('/addresses');
             if (res && res.data) {
                 addresses = res.data;
-                const defaultAddr = addresses.find(a => a.isDefault);
-                if (defaultAddr) {
-                    selectedAddressId = defaultAddr._id;
-                } else if (addresses.length > 0) {
-                    selectedAddressId = addresses[0]._id;
+                if (newId) {
+                    selectedAddressId = newId;
+                } else {
+                    const defaultAddr = addresses.find(a => a.isDefault);
+                    if (defaultAddr) {
+                        selectedAddressId = defaultAddr._id;
+                    } else if (addresses.length > 0 && !selectedAddressId) {
+                        selectedAddressId = addresses[0]._id;
+                    }
                 }
                 renderAddresses();
             }
@@ -95,56 +99,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderAddresses();
     }
 
-    async function saveNewAddress(e) {
-        e.preventDefault();
-
-        const formData = {
-            fullName: document.getElementById('addr-name').value,
-            phone: document.getElementById('addr-phone').value,
-            house: "N/A",
-            street: document.getElementById('addr-street').value,
-            city: document.getElementById('addr-city').value,
-            state: document.getElementById('addr-state').value,
-            pincode: document.getElementById('addr-pincode').value,
-            landmark: document.getElementById('addr-landmark')?.value || "",
-            isDefault: addresses.length === 0
-        };
-
-        try {
-            const res = await apiCall('/addresses', {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            });
-
-            if (res && res.success) {
-                addressForm.reset();
-                addressFormContainer.classList.remove('open');
-                showFormBtn.style.display = 'flex';
-                await loadAddresses();
-            }
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    // --- Address Form Event Listeners ---
+    // --- Address Modal Integration ---
     if (showFormBtn) {
-        showFormBtn.addEventListener('click', () => {
-            addressFormContainer.classList.add('open');
-            showFormBtn.style.display = 'none';
+        showFormBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.openAddressModal((newAddr) => {
+                window.loadAddresses(newAddr._id || newAddr.id);
+            });
         });
-    }
-
-    if (cancelAddressBtn) {
-        cancelAddressBtn.addEventListener('click', () => {
-            addressFormContainer.classList.remove('open');
-            showFormBtn.style.display = 'flex';
-            addressForm.reset();
-        });
-    }
-
-    if (addressForm) {
-        addressForm.addEventListener('submit', saveNewAddress);
     }
 
     // --- Order Summary & Coupons ---
