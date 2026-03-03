@@ -4,7 +4,7 @@
  */
 
 (function () {
-    const API_BASE = "http://13.61.174.57/api";
+    const apiCall = window.ModVistaAPI ? window.ModVistaAPI.apiCall : null;
     let onSaveSuccessCallback = null;
 
     // Initialize Modal on Page Load
@@ -97,6 +97,11 @@
     window.submitAddressForm = async function (event) {
         event.preventDefault();
 
+        if (!apiCall) {
+            console.error("ModVistaAPI not found!");
+            return;
+        }
+
         const form = document.getElementById("address-modal-form");
         const submitBtn = form.querySelector('.save-modal-btn');
         const originalBtnText = submitBtn.innerText;
@@ -130,29 +135,23 @@
             submitBtn.innerText = "Saving...";
             submitBtn.disabled = true;
 
-            const response = await fetch(`${API_BASE}/addresses`, {
+            const result = await apiCall('/addresses', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token') || (JSON.parse(localStorage.getItem('userInfo'))?.token)}`
-                },
                 body: JSON.stringify(formData)
             });
 
-            const result = await response.json();
+            if (result && result.success) {
+                // Success
+                alert("Address saved successfully!");
+                window.closeAddressModal();
 
-            if (!response.ok) {
+                if (onSaveSuccessCallback && typeof onSaveSuccessCallback === 'function') {
+                    onSaveSuccessCallback(result.data);
+                } else if (window.loadAddresses) {
+                    window.loadAddresses();
+                }
+            } else {
                 throw new Error(result.message || "Failed to save address");
-            }
-
-            // Success
-            alert("Address saved successfully!");
-            window.closeAddressModal();
-
-            if (onSaveSuccessCallback && typeof onSaveSuccessCallback === 'function') {
-                onSaveSuccessCallback(result.data);
-            } else if (window.loadAddresses) {
-                window.loadAddresses();
             }
         } catch (error) {
             console.error("Address Save Error:", error);
