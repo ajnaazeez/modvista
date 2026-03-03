@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Elements
     const addressList = document.getElementById('address-list');
     const showFormBtn = document.getElementById('show-address-form');
-    const addressFormContainer = document.getElementById('new-address-form');
-    const addressForm = document.getElementById('address-form');
-    const cancelAddressBtn = document.getElementById('cancel-address');
     const summaryItemsList = document.getElementById('summary-items');
     const payBtn = document.getElementById('pay-btn');
     const applyCouponBtn = document.getElementById('apply-coupon');
