@@ -6,7 +6,7 @@
  */
 
 (function () {
-    const getApiBase = () => (window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://localhost:5000/api";
+    const getApiBase = () => (window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://13.61.174.57/api";
     const localApiBase = getApiBase();
 
     // Get token from localStorage

@@ -3,9 +3,7 @@
  * Handles authentication headers, token storage, and login requirement.
  */
 (function () {
-    const API_BASE = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-        ? "http://localhost:5000/api"
-        : window.location.origin + "/api";
+    const API_BASE = "http://13.61.174.57/api";
 
     const AUTH_KEY = 'userInfo';
 

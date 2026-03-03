@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const BASE_URL = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                ? "http://localhost:5000"
+                ? "http://13.61.174.57"
                 : window.location.origin;
 
             const res = await fetch(`${BASE_URL}/api/auth/verify-otp`, {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resendBtn.innerText = 'Resending...';
 
                 const BASE_URL = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                    ? "http://localhost:5000"
+                    ? "http://13.61.174.57"
                     : window.location.origin;
 
                 const res = await fetch(`${BASE_URL}/api/auth/resend-otp`, {

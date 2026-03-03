@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let imgSrc = 'assets/default-product.png';
             if (item.image) {
                 if (item.image.startsWith('uploads/')) {
-                    imgSrc = `http://localhost:5000/${item.image}`;
+                    imgSrc = `http://13.61.174.57/${item.image}`;
                 } else if (item.image.startsWith('assets/')) {
                     imgSrc = item.image;
                 } else {

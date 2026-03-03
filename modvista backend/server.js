@@ -30,7 +30,8 @@ const corsOptions = {
             "http://127.0.0.1:5500",
             "http://localhost:5500",
             "http://localhost:5000",
-            "http://127.0.0.1:5000"
+            "http://127.0.0.1:5000",
+            "http://13.61.174.57"
         ];
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
