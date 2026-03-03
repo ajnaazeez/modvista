@@ -46,10 +46,8 @@
     </nav>
 
     <main class="edit-address-section">
-        <div class="section-container">
-
-
-            <div class="form-container">
+        <div class="address-page">
+            <div class="address-card">
                 <div class="form-header">
                     <h1 class="section-title left"><span class="highlight" id="page-title-action">EDIT</span> ADDRESS
                     </h1>
@@ -61,13 +59,17 @@
                     <div class="form-grid">
                         <!-- Personal Info -->
                         <div class="form-section">
-                            <h3><i class="fas fa-user"></i> Personal Information</h3>
-                            <div class="fields-container">
-                                <div class="input-group">
+                            <div class="section-title-group">
+                                <div class="section-title-box">
+                                    <i class="fas fa-user"></i> Personal Information
+                                </div>
+                            </div>
+                            <div class="fields-container form-grid-2 desktop-grid-2">
+                                <div class="field">
                                     <label for="full-name">Full Name</label>
                                     <input type="text" id="full-name" placeholder="E.g. Alex Rodriguez" required>
                                 </div>
-                                <div class="input-group">
+                                <div class="field">
                                     <label for="mobile-number">Mobile Number</label>
                                     <input type="tel" id="mobile-number" placeholder="10-digit mobile number" required
                                         pattern="[0-9]{10}">
@@ -77,73 +79,85 @@
 
                         <!-- Address Info -->
                         <div class="form-section">
-                            <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+                            <div class="section-title-group">
+                                <div class="section-title-box">
+                                    <i class="fas fa-map-marker-alt"></i> Delivery Address
+                                </div>
+                            </div>
                             <div class="fields-container">
-                                <div class="input-group full-width">
-                                    <label for="house-info">House / Flat / Building Name</label>
-                                    <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers"
-                                        required>
+                                <!-- Top Row: 2 columns on desktop -->
+                                <div class="form-grid-2 desktop-grid-2">
+                                    <div class="field">
+                                        <label for="house-info">House / Flat / Building Name</label>
+                                        <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers"
+                                            required>
+                                    </div>
+                                    <div class="field">
+                                        <label for="street-info">Street / Area / Landmark (Optional)</label>
+                                        <input type="text" id="street-info"
+                                            placeholder="E.g. Performance Way, Silicon Valley" required>
+                                    </div>
                                 </div>
-                                <div class="input-group full-width">
-                                    <label for="street-info">Street / Area / Colony</label>
-                                    <input type="text" id="street-info" placeholder="E.g. Silicon Valley" required>
-                                </div>
-                                <div class="input-group">
-                                    <label for="landmark">Landmark (Optional)</label>
-                                    <input type="text" id="landmark" placeholder="E.g. Near Central Park">
-                                </div>
-                                <div class="input-group">
-                                    <label for="city">City</label>
-                                    <input type="text" id="city" placeholder="E.g. San Francisco" required>
-                                </div>
-                                <div class="input-group">
-                                    <label for="pincode">Pincode</label>
-                                    <input type="text" id="pincode" placeholder="6-digit ZIP code" required
-                                        pattern="[0-9]{6}">
-                                </div>
-                                <div class="input-group">
-                                    <label for="state">State</label>
-                                    <select id="state" required>
-                                        <option value="" disabled selected>Select State</option>
-                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                        <option value="Assam">Assam</option>
-                                        <option value="Bihar">Bihar</option>
-                                        <option value="Chhattisgarh">Chhattisgarh</option>
-                                        <option value="Goa">Goa</option>
-                                        <option value="Gujarat">Gujarat</option>
-                                        <option value="Haryana">Haryana</option>
-                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                        <option value="Jharkhand">Jharkhand</option>
-                                        <option value="Karnataka">Karnataka</option>
-                                        <option value="Kerala">Kerala</option>
-                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                        <option value="Maharashtra">Maharashtra</option>
-                                        <option value="Manipur">Manipur</option>
-                                        <option value="Meghalaya">Meghalaya</option>
-                                        <option value="Mizoram">Mizoram</option>
-                                        <option value="Nagaland">Nagaland</option>
-                                        <option value="Odisha">Odisha</option>
-                                        <option value="Punjab">Punjab</option>
-                                        <option value="Rajasthan">Rajasthan</option>
-                                        <option value="Sikkim">Sikkim</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="Telangana">Telangana</option>
-                                        <option value="Tripura">Tripura</option>
-                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                        <option value="Uttarakhand">Uttarakhand</option>
-                                        <option value="West Bengal">West Bengal</option>
-                                        <option value="Delhi">Delhi</option>
-                                    </select>
+
+                                <!-- Bottom Row: 3 columns on desktop -->
+                                <div class="form-grid-3 desktop-grid-3">
+                                    <div class="field">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" placeholder="E.g. San Francisco" required>
+                                    </div>
+                                    <div class="field">
+                                        <label for="pincode">Pincode</label>
+                                        <input type="text" id="pincode" placeholder="6-digit ZIP code" required
+                                            pattern="[0-9]{6}">
+                                    </div>
+                                    <div class="field">
+                                        <label for="state">State</label>
+                                        <select id="state" required>
+                                            <option value="" disabled selected>Select State</option>
+                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                            <option value="Assam">Assam</option>
+                                            <option value="Bihar">Bihar</option>
+                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                            <option value="Goa">Goa</option>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Haryana">Haryana</option>
+                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                            <option value="Jharkhand">Jharkhand</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Manipur">Manipur</option>
+                                            <option value="Meghalaya">Meghalaya</option>
+                                            <option value="Mizoram">Mizoram</option>
+                                            <option value="Nagaland">Nagaland</option>
+                                            <option value="Odisha">Odisha</option>
+                                            <option value="Punjab">Punjab</option>
+                                            <option value="Rajasthan">Rajasthan</option>
+                                            <option value="Sikkim">Sikkim</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                            <option value="Telangana">Telangana</option>
+                                            <option value="Tripura">Tripura</option>
+                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                            <option value="Uttarakhand">Uttarakhand</option>
+                                            <option value="West Bengal">West Bengal</option>
+                                            <option value="Delhi">Delhi</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Preferences -->
                         <div class="form-section">
-                            <h3><i class="fas fa-tag"></i> Preferences</h3>
+                            <div class="section-title-group">
+                                <div class="section-title-box">
+                                    <i class="fas fa-tag"></i> Preferences
+                                </div>
+                            </div>
                             <div class="fields-container">
-                                <div class="input-group full-width">
+                                <div class="field">
                                     <label>Address Type</label>
                                     <div class="address-type-selector">
                                         <label class="type-option">
@@ -169,8 +183,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="checkbox-group full-width"
-                                    onclick="document.getElementById('set-default').click()">
+                                <div class="checkbox-group" onclick="document.getElementById('set-default').click()">
                                     <input type="checkbox" id="set-default">
                                     <label for="set-default">Set as my default shipping address</label>
                                 </div>

@@ -1,32 +1,47 @@
-/* Edit Address Page Styles */
+/* Address Page & Card Container */
 .edit-address-section {
-    padding-top: 120px;
-    padding-bottom: 80px;
+    padding-top: 100px;
+    padding-bottom: 60px;
     min-height: 100vh;
+    background-color: var(--bg-dark-1);
 }
 
-.form-container {
-    max-width: 900px;
-    margin: 0 auto;
+.address-page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.address-card {
+    width: 100%;
+    max-width: 1000px;
     background: var(--bg-dark-3);
     border: 1px solid var(--input-border);
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 40px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .form-header {
-    margin-bottom: 30px;
-    text-align: left;
+    margin-bottom: 32px;
+}
+
+.section-title.left {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
 }
 
 .section-subtitle {
     color: var(--text-secondary);
     font-size: 0.95rem;
-    margin-top: 10px;
     opacity: 0.8;
 }
 
+/* Form Structure */
 .address-form-standalone .form-grid {
     display: flex;
     flex-direction: column;
@@ -43,17 +58,23 @@
     padding-bottom: 0;
 }
 
-.form-section>h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 20px;
+.section-title-group {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: var(--text-primary);
+    margin-bottom: 24px;
 }
 
-.form-section h3 i {
+.section-title-box {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title-box i {
     color: var(--neon-red);
     font-size: 1.1rem;
     background: rgba(255, 31, 31, 0.1);
@@ -65,16 +86,38 @@
     border-radius: 8px;
 }
 
+/* Reusable Grid Classes */
 .fields-container {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
 }
 
-/* Two columns on desktop >= 992px */
-@media (min-width: 992px) {
-    .fields-container {
-        grid-template-columns: 1fr 1fr;
+.form-grid-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Desktop Grid Rules (>= 1024px) */
+@media (min-width: 1024px) {
+    .desktop-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .desktop-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .full-width {
@@ -82,33 +125,64 @@
     }
 }
 
-.input-group {
+/* Tablet Rules (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Rules (<= 767px) */
+@media (max-width: 767px) {
+
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .address-card {
+        padding: 25px;
+    }
+}
+
+/* Field Styles */
+.field {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
 }
 
-.input-group label {
+.field label {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-secondary);
+    text-align: left;
 }
 
-.input-group input,
-.input-group select {
+.field input,
+.field select {
     width: 100%;
     background-color: var(--input-bg);
     border: 1px solid var(--input-border);
-    border-radius: 10px;
-    padding: 14px 16px;
+    border-radius: 8px;
+    padding: 0 16px;
     color: var(--text-primary);
     font-size: 0.95rem;
-    height: 48px;
-    /* Consistent height */
-    transition: var(--transition);
+    height: 44px;
+    /* Fixed height for consistency */
+    transition: all 0.3s ease;
 }
 
-.input-group select {
+.field input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+/* Select Styling */
+.field select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -117,12 +191,20 @@
     cursor: pointer;
 }
 
-.input-group input:focus,
-.input-group select:focus {
-    border-color: var(--neon-red);
-    outline: none;
+/* Ensure dropdown options match theme */
+.field select option {
+    background-color: var(--bg-dark-3);
+    color: var(--text-primary);
 }
 
+.field input:focus,
+.field select:focus {
+    border-color: var(--neon-red);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 31, 31, 0.15);
+}
+
+/* Preferences Custom Styles */
 .address-type-selector {
     display: flex;
     flex-wrap: wrap;
@@ -132,7 +214,7 @@
 .type-option {
     cursor: pointer;
     flex: 1;
-    min-width: 110px;
+    min-width: 100px;
 }
 
 .type-option input {
@@ -188,19 +270,22 @@
     width: 20px;
     height: 20px;
     accent-color: var(--neon-red);
+    cursor: pointer;
 }
 
 .checkbox-group label {
     font-size: 0.95rem;
     color: var(--text-secondary);
+    cursor: pointer;
 }
 
+/* Actions */
 .form-footer-actions {
     display: flex;
     justify-content: flex-end;
     gap: 16px;
     margin-top: 40px;
-    padding-top: 24px;
+    padding-top: 25px;
     border-top: 1px solid var(--input-border);
 }
 
@@ -208,27 +293,31 @@
     background: transparent;
     border: 1px solid var(--input-border);
     color: var(--text-secondary);
-    padding: 14px 30px;
-    border-radius: 10px;
+    padding: 0 30px;
+    height: 44px;
+    border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
+    transition: var(--transition);
 }
 
-.primary-btn.submit-btn {
-    padding: 14px 40px;
+.secondary-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.submit-btn {
+    height: 44px;
+    padding: 0 40px;
+    border-radius: 10px;
     width: auto;
 }
 
-@media (max-width: 991px) {
-    .form-container {
-        padding: 30px;
-    }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .type-option {
-        flex: 1 1 calc(50% - 12px);
+        flex: 1 1 100%;
     }
 
     .form-footer-actions {
