@@ -110,6 +110,25 @@
     gap: 20px;
 }
 
+/* targeted address grid for City/Pincode/State */
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .address-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Desktop Grid Rules (>= 1024px) */
 @media (min-width: 1024px) {
     .desktop-grid-2 {
@@ -189,6 +208,7 @@
     background-position: right 15px center;
     background-size: 16px;
     cursor: pointer;
+    background-color: var(--input-bg);
 }
 
 /* Ensure dropdown options match theme */
