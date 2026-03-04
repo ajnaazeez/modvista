@@ -9,8 +9,9 @@ const getApiBase = () => {
     return (window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://localhost:5000/api";
 };
 
-const API_PRODUCTS_URL = `${getApiBase()}/products`;
-const API_CATEGORIES_URL = `${getApiBase()}/categories`;
+// Lazy-load API URLs to avoid race conditions with api.js
+const getProductsUrl = () => `${(window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://localhost:5000/api"}/products`;
+const getCategoriesUrl = () => `${(window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://localhost:5000/api"}/categories`;
 
 let allProducts = [];
 let currentPage = 1;
@@ -73,7 +74,7 @@ async function loadShopCategories(totalAllProducts = 0) {
     if (!list) return;
 
     try {
-        const res = await fetch(API_CATEGORIES_URL);
+        const res = await fetch(getCategoriesUrl());
         const responseData = await res.json();
         const categories = responseData.data || [];
 
@@ -290,7 +291,7 @@ async function fetchProducts() {
         if (sortBy === 'price-high') query += `&sort=-price`;
         if (sortBy === 'newest') query += `&sort=-createdAt`;
 
-        const res = await fetch(`${API_PRODUCTS_URL}${query}`);
+        const res = await fetch(`${getProductsUrl()}${query}`);
         const data = await res.json();
 
         if (data.success) {
@@ -316,7 +317,10 @@ async function fetchProducts() {
 }
 
 function resolveShopImg(src) {
-    return window.ModVistaAPI.resolveImg(src);
+    if (window.ModVistaAPI && typeof window.ModVistaAPI.resolveImg === 'function') {
+        return window.ModVistaAPI.resolveImg(src);
+    }
+    return src ? src : 'assets/default-product.png';
 }
 
 function renderProducts(products) {

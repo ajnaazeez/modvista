@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("ModVista API Addresses Loaded ✅");
-
     // DOM
     const addAddressTrigger = document.getElementById("add-address-trigger");
-    const addNewCardBtn = document.querySelector(".add-new-card");
+    const addNewCardBtn = document.getElementById("add-new-card-btn");
     const cancelDeleteBtn = document.getElementById("cancel-delete");
     const confirmDeleteBtn = document.getElementById("confirm-delete");
     const confirmModal = document.getElementById("confirm-modal");
@@ -22,23 +20,29 @@ document.addEventListener("DOMContentLoaded", () => {
             renderAddresses();
         } catch (error) {
             console.error("Error loading addresses:", error);
+            addressGrid.innerHTML = `<p class="error-msg" style="display:block; text-align:center; grid-column: 1/-1;">Error loading addresses. Please try again.</p>`;
         }
     }
 
     function renderAddresses() {
-        const existingCards = addressGrid.querySelectorAll(".address-card:not(.add-new-card)");
-        existingCards.forEach((card) => card.remove());
+        // Keep the "Add New Card" if it exists, clear others
+        const cards = Array.from(addressGrid.querySelectorAll(".address-card"));
+        cards.forEach(card => {
+            if (!card.classList.contains('add-new-card')) {
+                card.remove();
+            }
+        });
 
         if (!addresses || addresses.length === 0) {
             emptyState.style.display = "block";
             addressGrid.style.display = "none";
-            addAddressTrigger.style.display = "none";
+            if (addAddressTrigger) addAddressTrigger.style.display = "none";
             return;
         }
 
         emptyState.style.display = "none";
         addressGrid.style.display = "grid";
-        addAddressTrigger.style.display = "block";
+        if (addAddressTrigger) addAddressTrigger.style.display = "block";
 
         addresses.forEach((addr) => {
             const card = createAddressCard(addr);
@@ -49,28 +53,28 @@ document.addEventListener("DOMContentLoaded", () => {
     function createAddressCard(addr) {
         const card = document.createElement("div");
         const id = addr._id || addr.id;
-        const fullName = addr.fullName || addr.name || "Unnamed";
+        const fullName = addr.fullName || "User";
         const type = addr.type || "Home";
 
         card.className = `address-card ${addr.isDefault ? "default" : ""}`;
         card.dataset.id = id;
 
         card.innerHTML = `
-      <div class="card-header-type">
-        <span class="type-badge">${type}</span>
-        ${addr.isDefault ? '<span class="default-badge">DEFAULT</span>' : ""}
-      </div>
-      <div class="address-details">
-        <h3>${fullName}</h3>
-        <span class="phone">+91 ${addr.phone || ""}</span>
-        <p class="address-text">${addr.house || ""}, ${addr.street || ""}, ${addr.city || ""}, ${addr.state || ""} - ${addr.pincode || ""}</p>
-      </div>
-      <div class="address-actions">
-        <button class="action-link edit-trigger">Edit</button>
-        <button class="action-link delete delete-trigger">Delete</button>
-        ${!addr.isDefault ? '<button class="action-link set-default set-default-trigger">Set as Default</button>' : ""}
-      </div>
-    `;
+            <div class="card-header-type">
+                <span class="type-badge">${type}</span>
+                ${addr.isDefault ? '<span class="default-badge">DEFAULT</span>' : ""}
+            </div>
+            <div class="address-details">
+                <h3>${fullName}</h3>
+                <span class="phone">+91 ${addr.phone || ""}</span>
+                <p class="address-text">${addr.house || ""}, ${addr.street || ""}, ${addr.city || ""}, ${addr.state || ""} - ${addr.pincode || ""}</p>
+            </div>
+            <div class="address-actions">
+                <button class="action-link edit-trigger">Edit</button>
+                <button class="action-link delete delete-trigger">Delete</button>
+                ${!addr.isDefault ? '<button class="action-link set-default set-default-trigger">Set as Default</button>' : ""}
+            </div>
+        `;
 
         card.querySelector(".edit-trigger").addEventListener("click", () => {
             window.location.href = `edit-address.html?id=${id}`;
@@ -121,11 +125,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------- Events ----------
-    if (addAddressTrigger) addAddressTrigger.addEventListener("click", () => { openAddressModal(); });
-    if (addNewCardBtn) addNewCardBtn.addEventListener("click", () => { openAddressModal(); });
+    if (addAddressTrigger) {
+        addAddressTrigger.addEventListener("click", () => {
+            window.openAddressModal(() => window.loadAddresses());
+        });
+    }
 
-    cancelDeleteBtn.addEventListener("click", closeModal);
-    confirmDeleteBtn.addEventListener("click", deleteAddress);
+    if (addNewCardBtn) {
+        addNewCardBtn.addEventListener("click", () => {
+            window.openAddressModal(() => window.loadAddresses());
+        });
+    }
+
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener("click", closeModal);
+    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener("click", deleteAddress);
 
     window.addEventListener("click", (e) => {
         if (e.target === confirmModal) closeModal();
@@ -133,21 +146,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---------- Init ----------
     loadAddresses();
-    fetchSidebarProfile();
-
-    async function fetchSidebarProfile() {
-        try {
-            const data = await window.ModVistaAPI.apiCall("/users/me");
-            if (data.success) {
-                const user = data.user;
-                if (document.getElementById('profileName')) document.getElementById('profileName').textContent = user.fullName || user.name;
-                if (document.getElementById('profileEmail')) document.getElementById('profileEmail').textContent = user.email;
-                if (document.getElementById('profileAvatar')) {
-                    document.getElementById('profileAvatar').src = window.ModVistaAPI.resolveImg(user.avatar);
-                }
-            }
-        } catch (err) {
-            console.error("Sidebar profile fetch error:", err);
-        }
-    }
 });

@@ -541,8 +541,10 @@
                         // Item name (from item or populated product)
                         const itemName = item.name || item.product?.name || 'Product';
 
-                        // Item image
-                        let itemImage = window.ModVistaAPI.resolveImg(item.image || item.product?.image);
+                        // Safe Item image resolution
+                        let itemImage = (window.ModVistaAPI && typeof window.ModVistaAPI.resolveImg === 'function')
+                            ? window.ModVistaAPI.resolveImg(item.image || item.product?.image)
+                            : (item.image || 'assets/default-product.png');
 
                         // Item variant
                         const itemVariant = item.variant || 'Standard';

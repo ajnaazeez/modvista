@@ -80,40 +80,45 @@
             <div id="sidebar-container"></div>
 
             <div class="profile-content">
-                <div class="section-container">
+                <nav class="breadcrumb">
+                    <a href="index.html">Home</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="profile.html">Profile</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="active">Addresses</span>
+                </nav>
 
+                <div class="page-header-flex">
+                    <h1 class="section-title left"><span class="highlight">SAVED</span> ADDRESSES</h1>
+                    <button class="primary-btn add-new-top" id="add-address-trigger">
+                        <i class="fas fa-plus"></i> Add New Address
+                    </button>
+                </div>
 
-                    <div class="page-header-flex">
-                        <h1 class="section-title left"><span class="highlight">SAVED</span> ADDRESSES</h1>
-                        <button class="primary-btn add-new-top" id="add-address-trigger">
-                            <i class="fas fa-plus"></i> Add New Address
-                        </button>
-                    </div>
-
-                    <!-- Address Grid -->
-                    <div class="address-grid" id="address-grid">
-                        <!-- Add New Address Card -->
-                        <div class="address-card add-new-card" id="add-new-card-btn">
-                            <div class="add-new-content">
-                                <i class="fas fa-plus-circle"></i>
-                                <p>Add New Address</p>
-                            </div>
+                <!-- Address Grid -->
+                <div class="address-grid" id="address-grid">
+                    <!-- Add New Address Card -->
+                    <div class="address-card add-new-card" id="add-new-card-btn">
+                        <div class="add-new-content">
+                            <i class="fas fa-plus-circle"></i>
+                            <p>Add New Address</p>
                         </div>
-
-                        <!-- Addresses will be dynamically injected here -->
                     </div>
 
-                    <!-- Empty State -->
-                    <div class="empty-state" id="empty-state" style="display: none;">
-                        <div class="empty-icon">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <h2>No addresses saved yet</h2>
-                        <p>Add your first delivery address to experience a faster checkout.</p>
-                        <button class="primary-btn mt-4" onclick="openAddressModal()">Add Your First Address</button>
+                    <!-- Addresses will be dynamically injected here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-map-marked-alt"></i>
                     </div>
+                    <h2>No addresses saved yet</h2>
+                    <p>Add your first delivery address to experience a faster checkout.</p>
+                    <button class="primary-btn mt-4" onclick="openAddressModal()">Add Your First Address</button>
                 </div>
             </div>
+        </div>
         </div>
         </div>
     </main>
