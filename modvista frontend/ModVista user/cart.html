@@ -79,25 +79,11 @@
         <div class="section-container">
             <h1 class="cart-title">Your <span class="highlight">Cart</span></h1>
 
-            <div id="cart-container">
+            <div id="cart-container" style="display: none;">
                 <!-- Cart items will be injected here by JS -->
                 <div class="cart-grid">
                     <div class="cart-items" id="cart-items-list">
-                        <!-- Example Item (Template) -->
-                        <div class="cart-item">
-                            <div class="item-img"><img src="assets/bg-car.png" alt="Product"></div>
-                            <div class="item-info">
-                                <h3>Product Name</h3>
-                                <p>Variant: Stealth Black</p>
-                            </div>
-                            <div class="item-qty">
-                                <button class="qty-btn">-</button>
-                                <input type="number" value="1" readonly>
-                                <button class="qty-btn">+</button>
-                            </div>
-                            <div class="item-price">₹0.00</div>
-                            <button class="remove-item"><i class="fas fa-trash"></i></button>
-                        </div>
+                        <!-- Items injected by JS -->
                     </div>
 
                     <div class="cart-summary">

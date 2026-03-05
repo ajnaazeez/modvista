@@ -69,6 +69,9 @@
         const list = document.getElementById("cart-items-list");
         const emptyMsg = document.getElementById("empty-cart-msg");
 
+        if (list) list.innerHTML = '<p class="loading-text">Loading your modifications...</p>';
+        if (emptyMsg) emptyMsg.style.display = "none";
+
         try {
             const cart = await fetchCart();
             const items = cart.items || [];
@@ -80,9 +83,8 @@
                 return;
             }
 
-            if (cartContainer) cartContainer.style.display = "grid";
-            if (emptyMsg) emptyMsg.style.display = "none";
             if (list) list.innerHTML = "";
+            if (cartContainer) cartContainer.style.display = "grid";
 
             const summary = cart.summary || { subtotal: 0, total: 0, offerDiscountTotal: 0 };
 
