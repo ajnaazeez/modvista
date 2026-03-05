@@ -18,12 +18,30 @@ class QueryFeatures {
                 if (parts.length === 2) {
                     const [field, operator] = parts;
                     if (!finalQuery[field]) finalQuery[field] = {};
-                    finalQuery[field][operator] = queryObj[key];
+
+                    let value = queryObj[key];
+                    // Parse as number if numeric string and operator is simple comparison
+                    if (['gt', 'gte', 'lt', 'lte'].includes(operator) && !isNaN(value) && value !== '') {
+                        value = parseFloat(value);
+                    }
+                    finalQuery[field][operator] = value;
                 } else {
                     finalQuery[key] = queryObj[key];
                 }
             } else {
                 finalQuery[key] = queryObj[key];
+            }
+        });
+
+        // Ensure nested values (if already parsed by qs) are also numeric when appropriate
+        Object.keys(finalQuery).forEach(field => {
+            if (typeof finalQuery[field] === 'object' && finalQuery[field] !== null) {
+                Object.keys(finalQuery[field]).forEach(operator => {
+                    let value = finalQuery[field][operator];
+                    if (['gt', 'gte', 'lt', 'lte'].includes(operator) && typeof value === 'string' && !isNaN(value) && value !== '') {
+                        finalQuery[field][operator] = parseFloat(value);
+                    }
+                });
             }
         });
 

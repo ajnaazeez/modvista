@@ -166,10 +166,13 @@ function attachCategoryListeners() {
 
 function setupPriceFilter() {
     const applyBtn = document.querySelector('.apply-filter-btn');
-    const minInput = document.getElementById('price-min');
-    const maxInput = document.getElementById('price-max');
+    const minInput = document.getElementById('price-min') || document.querySelector('.price-range input[placeholder*="Min"]');
+    const maxInput = document.getElementById('price-max') || document.querySelector('.price-range input[placeholder*="Max"]');
 
-    if (!applyBtn || !minInput || !maxInput) return;
+    if (!applyBtn || !minInput || !maxInput) {
+        console.warn("Price filter elements not found", { applyBtn, minInput, maxInput });
+        return;
+    }
 
     const performFilter = () => {
         const min = minInput.value;
@@ -309,20 +312,28 @@ async function fetchProducts() {
     if (countText) countText.textContent = 'Loading results...';
 
     try {
-        const { category, minPrice, maxPrice, sortBy, search } = currentFilters;
-        let query = `?page=${currentPage}&limit=${itemsPerPage}`;
+        const { category, sortBy, search } = currentFilters;
+        const params = new URLSearchParams();
+        params.append('page', currentPage);
+        params.append('limit', itemsPerPage);
 
-        if (category && category !== 'all') query += `&category=${category}`;
-        if (currentFilters.minPrice !== null && !isNaN(currentFilters.minPrice)) query += `&price[gte]=${currentFilters.minPrice}`;
-        if (currentFilters.maxPrice !== null && !isNaN(currentFilters.maxPrice)) query += `&price[lte]=${currentFilters.maxPrice}`;
-        if (search && search.trim() !== '') query += `&search=${encodeURIComponent(search)}`;
+        if (category && category !== 'all') params.append('category', category);
+        if (currentFilters.minPrice !== null && !isNaN(currentFilters.minPrice)) {
+            params.append('price[gte]', currentFilters.minPrice);
+        }
+        if (currentFilters.maxPrice !== null && !isNaN(currentFilters.maxPrice)) {
+            params.append('price[lte]', currentFilters.maxPrice);
+        }
+        if (search && search.trim() !== '') {
+            params.append('search', search.trim());
+        }
 
         // Sorting mapping
-        if (sortBy === 'price-low') query += `&sort=price`;
-        if (sortBy === 'price-high') query += `&sort=-price`;
-        if (sortBy === 'newest') query += `&sort=-createdAt`;
+        if (sortBy === 'price-low') params.append('sort', 'price');
+        else if (sortBy === 'price-high') params.append('sort', '-price');
+        else if (sortBy === 'newest') params.append('sort', '-createdAt');
 
-        const res = await fetch(`${getProductsUrl()}${query}`);
+        const res = await fetch(`${getProductsUrl()}?${params.toString()}`);
         const data = await res.json();
 
         if (data.success) {
