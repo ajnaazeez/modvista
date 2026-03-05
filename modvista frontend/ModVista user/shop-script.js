@@ -175,11 +175,14 @@ function setupPriceFilter() {
     }
 
     const performFilter = () => {
-        const min = minInput.value;
-        const max = maxInput.value;
+        const minVal = minInput.value.trim();
+        const maxVal = maxInput.value.trim();
 
-        currentFilters.minPrice = (min !== '' && !isNaN(min)) ? parseFloat(min) : null;
-        currentFilters.maxPrice = (max !== '' && !isNaN(max)) ? parseFloat(max) : null;
+        const minNum = minVal !== '' ? Number(minVal) : null;
+        const maxNum = maxVal !== '' ? Number(maxVal) : null;
+
+        currentFilters.minPrice = (minNum !== null && !isNaN(minNum)) ? minNum : null;
+        currentFilters.maxPrice = (maxNum !== null && !isNaN(maxNum)) ? maxNum : null;
 
         if (currentFilters.minPrice !== null && currentFilters.maxPrice !== null && currentFilters.minPrice > currentFilters.maxPrice) {
             alert("Min price cannot be greater than Max price.");
@@ -313,29 +316,52 @@ async function fetchProducts() {
 
     try {
         const { category, minPrice, maxPrice, sortBy, search } = currentFilters;
-        const params = new URLSearchParams();
-        params.append('page', currentPage);
-        params.append('limit', itemsPerPage);
 
-        if (category && category !== 'all') params.set('category', category);
-        if (minPrice !== null && !isNaN(minPrice)) {
-            params.set('price[gte]', minPrice);
-        }
-        if (maxPrice !== null && !isNaN(maxPrice)) {
-            params.set('price[lte]', maxPrice);
-        }
-        if (search && search.trim() !== '') {
-            params.set('search', search.trim());
-        }
+        const buildParams = (useFallback = false) => {
+            const params = new URLSearchParams();
+            params.set('page', currentPage);
+            params.set('limit', itemsPerPage);
 
-        // Sorting mapping
-        if (sortBy === 'price-low') params.set('sort', 'price');
-        else if (sortBy === 'price-high') params.set('sort', '-price');
-        else if (sortBy === 'newest') params.set('sort', '-createdAt');
+            if (category && category !== 'all') params.set('category', category);
 
-        const finalUrl = `${getProductsUrl()}?${params.toString()}`;
-        const res = await fetch(finalUrl);
-        const data = await res.json();
+            if (useFallback) {
+                if (minPrice !== null) params.set('minPrice', minPrice);
+                if (maxPrice !== null) params.set('maxPrice', maxPrice);
+            } else {
+                if (minPrice !== null) params.set('price[gte]', minPrice);
+                if (maxPrice !== null) params.set('price[lte]', maxPrice);
+            }
+
+            if (search && search.trim() !== '') {
+                params.set('search', search.trim());
+            }
+
+            // Sorting mapping
+            if (sortBy === 'price-low') params.set('sort', 'price');
+            else if (sortBy === 'price-high') params.set('sort', '-price');
+            else if (sortBy === 'newest') params.set('sort', '-createdAt');
+
+            return params;
+        };
+
+        let params = buildParams(false);
+        let query = `${getProductsUrl()}?${params.toString()}`;
+        console.log("Price filter query", query);
+
+        let res = await fetch(query);
+        let data = await res.json();
+        console.log("Products response total", data.total);
+
+        // Fallback retry if needed: success is false OR total is 0 while min/max exists
+        if ((!data.success || data.total === 0) && (minPrice !== null || maxPrice !== null)) {
+            console.log("Fallback: retrying with minPrice/maxPrice params...");
+            params = buildParams(true);
+            query = `${getProductsUrl()}?${params.toString()}`;
+            console.log("Price filter query (fallback)", query);
+            res = await fetch(query);
+            data = await res.json();
+            console.log("Products response total (fallback)", data.total);
+        }
 
         if (data.success) {
             allProducts = data.data;
