@@ -45,9 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchInput) searchInput.value = searchParam;
     }
 
+    fetchAllProductsForSidebar().then(() => {
+        loadShopCategories();
+    });
+
     fetchProducts();
-    loadShopCategories();
+
     // Mobile filter logic
+
     setupMobileFilters();
     // Setup Filters
     setupPriceFilter();
@@ -69,7 +74,21 @@ function setupShopSearch() {
     });
 }
 
-async function loadShopCategories(totalAllProducts = 0) {
+async function fetchAllProductsForSidebar() {
+    try {
+        const res = await fetch(`${getProductsUrl()}?limit=5000`);
+        const data = await res.json();
+        if (data.success) {
+            window.__ALL_PRODUCTS__ = data.data || [];
+            globalTotalProducts = window.__ALL_PRODUCTS__.length;
+        }
+    } catch (err) {
+        console.error("Failed to pre-fetch products for sidebar counts", err);
+        window.__ALL_PRODUCTS__ = [];
+    }
+}
+
+async function loadShopCategories() {
     const list = document.getElementById('sidebar-category-list');
     if (!list) return;
 
@@ -93,8 +112,14 @@ async function loadShopCategories(totalAllProducts = 0) {
         let html = '';
 
         categories.forEach(cat => {
-            // Use totalProducts from backend API
-            const count = cat.totalProducts || 0;
+            // Compute count per category by matching product.category (string or populated) to cat._id
+            let count = 0;
+            if (window.__ALL_PRODUCTS__ && window.__ALL_PRODUCTS__.length > 0) {
+                count = window.__ALL_PRODUCTS__.filter(p => {
+                    const pCatId = (p.category && typeof p.category === 'object') ? p.category._id : p.category;
+                    return pCatId === cat._id;
+                }).length;
+            }
 
             // Check if this category is active
             let match = false;
@@ -113,7 +138,8 @@ async function loadShopCategories(totalAllProducts = 0) {
 
         // "All Products" active state and count
         const allActive = (currentFilters.category === 'all' || !currentFilters.category) ? 'active' : '';
-        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${globalTotalProducts}</span></a></li>` + html;
+        const totalCount = window.__ALL_PRODUCTS__ ? window.__ALL_PRODUCTS__.length : globalTotalProducts;
+        html = `<li><a href="#" class="${allActive}" data-cat="all"><i class="fas fa-border-all"></i> All Products <span class="count">${totalCount}</span></a></li>` + html;
 
         list.innerHTML = html;
         attachCategoryListeners();
@@ -151,6 +177,11 @@ function setupPriceFilter() {
 
         currentFilters.minPrice = (min !== '' && !isNaN(min)) ? parseFloat(min) : null;
         currentFilters.maxPrice = (max !== '' && !isNaN(max)) ? parseFloat(max) : null;
+
+        if (currentFilters.minPrice !== null && currentFilters.maxPrice !== null && currentFilters.minPrice > currentFilters.maxPrice) {
+            alert("Min price cannot be greater than Max price.");
+            return;
+        }
 
         applyFilters();
     };
@@ -305,7 +336,9 @@ async function fetchProducts() {
 
             totalPages = Math.ceil(totalResults / itemsPerPage);
             renderPage();
-            loadShopCategories(globalTotalProducts);
+            // Category counts are based on cached all products, no need to reload unless categories change
+            // but we call it here to ensure active state is updated
+            loadShopCategories();
         } else {
             throw new Error(data.message || 'Failed to load products');
         }
