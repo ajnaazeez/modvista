@@ -68,7 +68,23 @@ async function uploadImages(files) {
         body: formData
     });
 
-    const data = await res.json();
+    let data;
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+        data = await res.json().catch(() => ({}));
+    } else {
+        const text = await res.text();
+        console.error("Non-JSON response received:", text);
+
+        if (res.status === 413) {
+            throw new Error("Image file is too large for the server. Please try a smaller image or update Nginx 'client_max_body_size'.");
+        }
+
+        // Extract error snippet from HTML if possible
+        const errorSnippet = text.length > 200 ? text.substring(0, 200) + "..." : text;
+        throw new Error(`Server returned an error (${res.status}): ${errorSnippet}`);
+    }
+
     console.log("Upload response:", data);
     if (!res.ok) throw new Error(data.message || 'Image upload failed');
     return data.images || [];
