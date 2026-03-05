@@ -317,23 +317,24 @@ async function fetchProducts() {
         params.append('page', currentPage);
         params.append('limit', itemsPerPage);
 
-        if (category && category !== 'all') params.append('category', category);
-        if (currentFilters.minPrice !== null && !isNaN(currentFilters.minPrice)) {
-            params.append('price[gte]', currentFilters.minPrice);
+        if (category && category !== 'all') params.set('category', category);
+        if (minPrice !== null && !isNaN(minPrice)) {
+            params.set('price[gte]', minPrice);
         }
-        if (currentFilters.maxPrice !== null && !isNaN(currentFilters.maxPrice)) {
-            params.append('price[lte]', currentFilters.maxPrice);
+        if (maxPrice !== null && !isNaN(maxPrice)) {
+            params.set('price[lte]', maxPrice);
         }
         if (search && search.trim() !== '') {
-            params.append('search', search.trim());
+            params.set('search', search.trim());
         }
 
         // Sorting mapping
-        if (sortBy === 'price-low') params.append('sort', 'price');
-        else if (sortBy === 'price-high') params.append('sort', '-price');
-        else if (sortBy === 'newest') params.append('sort', '-createdAt');
+        if (sortBy === 'price-low') params.set('sort', 'price');
+        else if (sortBy === 'price-high') params.set('sort', '-price');
+        else if (sortBy === 'newest') params.set('sort', '-createdAt');
 
-        const res = await fetch(`${getProductsUrl()}?${params.toString()}`);
+        const finalUrl = `${getProductsUrl()}?${params.toString()}`;
+        const res = await fetch(finalUrl);
         const data = await res.json();
 
         if (data.success) {

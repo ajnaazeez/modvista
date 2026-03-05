@@ -24,11 +24,8 @@ function test(queryString) {
     console.log('Resulting Filters:', JSON.stringify(mockQuery.filters, null, 2));
 }
 
-// Case 1: Flat keys (from URLSearchParams or simple express parser)
+// Case 4: URLSearchParams.append results (flat keys)
 test({ 'price[gte]': '1000', 'price[lte]': '2000' });
 
-// Case 2: Nested keys (Express extended parser with qs)
-test({ price: { gte: '1000', lte: '2000' } });
-
-// Case 3: Mixed or other fields
-test({ category: '698434f39c70d59f83', 'price[gte]': '500' });
+// Case 5: Empty search and other fields
+test({ search: '', 'price[gte]': '1000' });

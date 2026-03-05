@@ -4,8 +4,8 @@
  */
 (function () {
     const getBaseUrl = () => {
-        const localHosts = ['localhost', '127.0.0.1'];
-        if (localHosts.includes(window.location.hostname)) {
+        const localHosts = ['localhost', '127.0.0.1', ''];
+        if (localHosts.includes(window.location.hostname) || window.location.protocol === 'file:') {
             return "http://localhost:5000/api";
         }
         return "http://13.61.174.57/api";

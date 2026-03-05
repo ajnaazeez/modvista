@@ -65,6 +65,15 @@ class QueryFeatures {
             }
         });
 
+        if (this.queryString.minPrice) {
+            if (!mongoFilter.price) mongoFilter.price = {};
+            mongoFilter.price.$gte = parseFloat(this.queryString.minPrice);
+        }
+        if (this.queryString.maxPrice) {
+            if (!mongoFilter.price) mongoFilter.price = {};
+            mongoFilter.price.$lte = parseFloat(this.queryString.maxPrice);
+        }
+
         this.query = this.query.find(mongoFilter);
         return this;
     }
