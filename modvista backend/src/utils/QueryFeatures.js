@@ -10,46 +10,62 @@ class QueryFeatures {
         const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
         excludedFields.forEach(el => delete queryObj[el]);
 
-        // Transform flat keys like "price[gte]" into nested objects
-        const finalQuery = {};
+        const mongoFilter = {};
+        const operators = ['gt', 'gte', 'lt', 'lte', 'ne', 'in', 'nin', 'regex', 'options'];
+
         Object.keys(queryObj).forEach(key => {
+            let field, operator, value;
+
+            // Handle bracket notation: price[gte]=1000
             if (key.includes('[') && key.includes(']')) {
                 const parts = key.split(/[\[\]]/).filter(Boolean);
                 if (parts.length === 2) {
-                    const [field, operator] = parts;
-                    if (!finalQuery[field]) finalQuery[field] = {};
-
-                    let value = queryObj[key];
-                    // Parse as number if numeric string and operator is simple comparison
-                    if (['gt', 'gte', 'lt', 'lte'].includes(operator) && !isNaN(value) && value !== '') {
-                        value = parseFloat(value);
-                    }
-                    finalQuery[field][operator] = value;
+                    [field, operator] = parts;
+                    value = queryObj[key];
                 } else {
-                    finalQuery[key] = queryObj[key];
+                    field = key;
+                    value = queryObj[key];
                 }
             } else {
-                finalQuery[key] = queryObj[key];
+                field = key;
+                value = queryObj[key];
             }
-        });
 
-        // Ensure nested values (if already parsed by qs) are also numeric when appropriate
-        Object.keys(finalQuery).forEach(field => {
-            if (typeof finalQuery[field] === 'object' && finalQuery[field] !== null) {
-                Object.keys(finalQuery[field]).forEach(operator => {
-                    let value = finalQuery[field][operator];
-                    if (['gt', 'gte', 'lt', 'lte'].includes(operator) && typeof value === 'string' && !isNaN(value) && value !== '') {
-                        finalQuery[field][operator] = parseFloat(value);
+            // If value is an object (already parsed by qs), process its operators
+            if (typeof value === 'object' && value !== null) {
+                if (!mongoFilter[field]) mongoFilter[field] = {};
+                Object.keys(value).forEach(op => {
+                    let opVal = value[op];
+                    const cleanOp = op.startsWith('$') ? op.substring(1) : op;
+                    if (operators.includes(cleanOp)) {
+                        // Parse numbers for comparison operators
+                        if (['gt', 'gte', 'lt', 'lte'].includes(cleanOp) && typeof opVal === 'string' && !isNaN(opVal) && opVal !== '') {
+                            opVal = parseFloat(opVal);
+                        }
+                        mongoFilter[field][`$${cleanOp}`] = opVal;
+                    } else {
+                        mongoFilter[field][op] = opVal;
                     }
                 });
+            } else if (operator) {
+                // Was flat bracket notation
+                if (!mongoFilter[field]) mongoFilter[field] = {};
+                const cleanOp = operator.startsWith('$') ? operator.substring(1) : operator;
+                if (operators.includes(cleanOp)) {
+                    if (['gt', 'gte', 'lt', 'lte'].includes(cleanOp) && typeof value === 'string' && !isNaN(value) && value !== '') {
+                        value = parseFloat(value);
+                    }
+                    mongoFilter[field][`$${cleanOp}`] = value;
+                } else {
+                    mongoFilter[field][operator] = value;
+                }
+            } else {
+                // Simple equality
+                mongoFilter[field] = value;
             }
         });
 
-        // Advanced filtering (gt, gte, lt, lte, regex)
-        let queryStr = JSON.stringify(finalQuery);
-        queryStr = queryStr.replace(/\b(gt|gte|lt|lte|regex|options)\b/g, match => `$${match}`);
-
-        this.query = this.query.find(JSON.parse(queryStr));
+        this.query = this.query.find(mongoFilter);
         return this;
     }
 
