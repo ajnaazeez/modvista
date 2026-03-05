@@ -1,14 +1,9 @@
 /**
  * ModVista - API Helper
- * Handles authentication headers, token storage, and image resolution.
+ * Handles authentication headers, token storage, and login requirement.
  */
 (function () {
-    // Ensure the global object exists immediately
-    window.ModVistaAPI = window.ModVistaAPI || {};
-
-    const API_BASE = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-        ? "http://localhost:5000/api"
-        : window.location.origin + "/api";
+    const API_BASE = "http://13.61.174.57/api";
 
     const AUTH_KEY = 'userInfo';
 
@@ -48,7 +43,7 @@
         return headers;
     };
 
-    // Enforce login
+    // Enforce login - usage: if (!requireLogin()) return;
     const requireLogin = (redirectTo = null) => {
         if (!getToken()) {
             const target = redirectTo || window.location.href;
@@ -70,6 +65,7 @@
 
     // Generic Fetch Wrapper
     const apiCall = async (endpoint, options = {}) => {
+        // If endpoint already starts with /api, remove it to avoid double /api/api
         const cleanEndpoint = endpoint.startsWith('/api') ? endpoint.substring(4) : endpoint;
         const url = `${API_BASE}${cleanEndpoint}`;
         const headers = authHeaders();
@@ -91,6 +87,7 @@
             }
 
             const data = await response.json();
+
             if (!response.ok) {
                 throw new Error(data.message || 'API Error');
             }
@@ -117,8 +114,8 @@
         return `assets/${cleanPath}`;
     };
 
-    // Export to global scope
-    Object.assign(window.ModVistaAPI, {
+    // Export to global scope safely
+    window.ModVistaAPI = {
         API_BASE,
         getToken,
         authHeaders,
@@ -127,7 +124,5 @@
         logout,
         apiCall,
         resolveImg
-    });
-
-    console.log("ModVistaAPI initialized with host:", API_BASE);
+    };
 })();

@@ -75,10 +75,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             row.className = 'summary-item';
             row.style.marginBottom = '15px';
 
-            // Use unified image resolver
-            const imgSrc = window.ModVistaAPI && typeof window.ModVistaAPI.resolveImg === 'function'
-                ? window.ModVistaAPI.resolveImg(item.image)
-                : 'assets/default-product.png';
+            // Handle image path (frontend assets vs backend uploads)
+            let imgSrc = 'assets/default-product.png';
+            if (item.image) {
+                if (item.image.startsWith('uploads/')) {
+                    imgSrc = `http://13.61.174.57/${item.image}`;
+                } else if (item.image.startsWith('assets/')) {
+                    imgSrc = item.image;
+                } else {
+                    imgSrc = `assets/${item.image}`;
+                }
+            }
 
             row.innerHTML = `
                 <img src="${imgSrc}" alt="${item.name}" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;">
