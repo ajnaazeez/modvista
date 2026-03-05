@@ -312,7 +312,7 @@ async function fetchProducts() {
     if (countText) countText.textContent = 'Loading results...';
 
     try {
-        const { category, sortBy, search } = currentFilters;
+        const { category, minPrice, maxPrice, sortBy, search } = currentFilters;
         const params = new URLSearchParams();
         params.append('page', currentPage);
         params.append('limit', itemsPerPage);
