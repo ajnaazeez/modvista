@@ -1,11 +1,15 @@
 /**
  * ModVista - Reusable Address Modal
- * Handles adding new addresses from any page.
+ * Handles adding and editing addresses from any page.
  */
 
 (function () {
-    const apiCall = window.ModVistaAPI ? window.ModVistaAPI.apiCall : null;
     let onSaveSuccessCallback = null;
+    let currentEditId = null;
+
+    function getAPI() {
+        return window.ModVistaAPI;
+    }
 
     // Initialize Modal on Page Load
     document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +18,7 @@
                 <div class="address-modal-overlay" id="address-modal-container">
                     <div class="address-modal-content">
                         <div class="address-modal-header">
-                            <h2>Add New Address</h2>
+                            <h2 id="modal-title-text">Add New Address</h2>
                             <button class="close-modal-btn" onclick="closeAddressModal()">&times;</button>
                         </div>
                         <form id="address-modal-form" onsubmit="submitAddressForm(event)">
@@ -61,6 +65,7 @@
                                 <div class="type-options">
                                     <label><input type="radio" name="addressType" value="Home" checked> Home</label>
                                     <label><input type="radio" name="addressType" value="Work"> Work</label>
+                                    <label><input type="radio" name="addressType" value="Other"> Other</label>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -76,13 +81,39 @@
     });
 
     // Expose Global Functions
-    window.openAddressModal = function (callback = null) {
+    window.openAddressModal = function (callback = null, existingAddress = null) {
         const modal = document.getElementById("address-modal-container");
-        if (modal) {
-            modal.classList.add("active");
-            document.body.style.overflow = "hidden";
-            onSaveSuccessCallback = callback;
+        if (!modal) return;
+
+        const titleText = document.getElementById("modal-title-text");
+        const form = document.getElementById("address-modal-form");
+
+        currentEditId = null;
+        form.reset();
+
+        if (existingAddress) {
+            currentEditId = existingAddress._id || existingAddress.id;
+            titleText.innerText = "Edit Address";
+
+            // Populate form
+            document.getElementById("modal-fullName").value = existingAddress.fullName || "";
+            document.getElementById("modal-phone").value = existingAddress.phone || "";
+            document.getElementById("modal-pincode").value = existingAddress.pincode || "";
+            document.getElementById("modal-house").value = existingAddress.house || "";
+            document.getElementById("modal-area").value = existingAddress.street || "";
+            document.getElementById("modal-city").value = existingAddress.city || "";
+            document.getElementById("modal-state").value = existingAddress.state || "";
+            document.getElementById("modal-landmark").value = existingAddress.landmark || "";
+
+            const typeRadio = form.querySelector(`input[name="addressType"][value="${existingAddress.type}"]`);
+            if (typeRadio) typeRadio.checked = true;
+        } else {
+            titleText.innerText = "Add New Address";
         }
+
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+        onSaveSuccessCallback = callback;
     };
 
     window.closeAddressModal = function () {
@@ -91,13 +122,15 @@
             modal.classList.remove("active");
             document.body.style.overflow = "auto";
             document.getElementById("address-modal-form").reset();
+            currentEditId = null;
         }
     };
 
     window.submitAddressForm = async function (event) {
         event.preventDefault();
+        const api = getAPI();
 
-        if (!apiCall) {
+        if (!api || !api.apiCall) {
             console.error("ModVistaAPI not found!");
             return;
         }
@@ -114,8 +147,8 @@
             alert("Please enter a valid 10-digit phone number.");
             return;
         }
-        if (!/^[0-9]{6}$/.test(pincode)) {
-            alert("Please enter a valid 6-digit pincode.");
+        if (!/^[0-9]{5,6}$/.test(pincode)) {
+            alert("Please enter a valid pincode.");
             return;
         }
 
@@ -135,16 +168,17 @@
             submitBtn.innerText = "Saving...";
             submitBtn.disabled = true;
 
-            const result = await apiCall('/addresses', {
-                method: 'POST',
+            const url = currentEditId ? `/addresses/${currentEditId}` : '/addresses';
+            const method = currentEditId ? 'PUT' : 'POST';
+
+            const result = await api.apiCall(url, {
+                method: method,
                 body: JSON.stringify(formData)
             });
 
             if (result && result.success) {
                 // Success
-                alert("Address saved successfully!");
                 window.closeAddressModal();
-
                 if (onSaveSuccessCallback && typeof onSaveSuccessCallback === 'function') {
                     onSaveSuccessCallback(result.data);
                 } else if (window.loadAddresses) {

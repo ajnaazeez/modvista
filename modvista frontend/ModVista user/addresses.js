@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         card.querySelector(".edit-trigger").addEventListener("click", () => {
-            window.location.href = `edit-address.html?id=${id}`;
+            window.openAddressModal(() => window.loadAddresses(), addr);
         });
 
         card.querySelector(".delete-trigger").addEventListener("click", () => openDeleteConfirm(id));

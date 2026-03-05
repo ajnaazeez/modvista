@@ -51,12 +51,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const data = await window.ModVistaAPI.apiCall('/addresses');
             if (data && data.success) {
-                const defaultAddr = data.data.find(addr => addr.isDefault) || data.data[0];
+                const addresses = data.data || [];
+                const defaultAddr = addresses.find(addr => addr.isDefault) || addresses[0];
                 renderDefaultAddress(defaultAddr);
+                renderUserAddressesGrid(addresses);
             }
         } catch (error) {
             console.error("Address load error:", error);
-            document.getElementById('default-address-container').innerHTML = '<p class="text-error">Failed to load address</p>';
+            const grid = document.getElementById('address-grid');
+            if (grid) grid.innerHTML = '<p class="text-error">Failed to load addresses</p>';
         }
     }
 
@@ -225,6 +228,86 @@ document.addEventListener('DOMContentLoaded', async () => {
                 Phone: ${address.phone}
             </p>
         `;
+    }
+
+    function renderUserAddressesGrid(addresses) {
+        const grid = document.getElementById('address-grid');
+        const emptyState = document.getElementById('address-empty-state');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+        if (!addresses || addresses.length === 0) {
+            if (emptyState) emptyState.style.display = 'block';
+            grid.style.display = 'none';
+            return;
+        }
+
+        if (emptyState) emptyState.style.display = 'none';
+        grid.style.display = 'grid';
+
+        addresses.forEach(addr => {
+            const card = createAddressCard(addr);
+            grid.appendChild(card);
+        });
+    }
+
+    function createAddressCard(addr) {
+        const card = document.createElement('div');
+        card.className = `address-card ${addr.isDefault ? 'default' : ''}`;
+        card.style.cssText = 'background: #1a1a1a; border: 1px solid #2d2d2d; border-radius: 12px; padding: 20px; position: relative;';
+
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <span style="background: #333; color: #aaa; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">${addr.type}</span>
+                ${addr.isDefault ? '<span style="color: #ff1f1f; font-size: 0.7rem; font-weight: 800;">DEFAULT</span>' : ''}
+            </div>
+            <h4 style="margin-bottom: 5px;">${addr.fullName}</h4>
+            <p style="color: #888; font-size: 0.85rem; margin-bottom: 15px;">
+                ${addr.house}, ${addr.street}<br>
+                ${addr.city}, ${addr.state} - ${addr.pincode}<br>
+                Phone: ${addr.phone}
+            </p>
+            <div style="display: flex; gap: 12px; border-top: 1px solid #2d2d2d; padding-top: 15px;">
+                <button class="edit-addr-btn" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Edit</button>
+                <button class="delete-addr-btn" style="background: none; border: none; color: #ff1f1f; cursor: pointer; font-size: 0.8rem; font-weight: 600; opacity: 0.8;">Delete</button>
+                ${!addr.isDefault ? '<button class="set-default-btn" style="background: none; border: none; color: #4cd137; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Set Default</button>' : ''}
+            </div>
+        `;
+
+        card.querySelector('.edit-addr-btn').onclick = () => {
+            window.openAddressModal(() => fetchUserAddresses(), addr);
+        };
+
+        card.querySelector('.delete-addr-btn').onclick = async () => {
+            if (confirm("Are you sure you want to delete this address?")) {
+                try {
+                    await window.ModVistaAPI.apiCall(`/addresses/${addr._id}`, { method: 'DELETE' });
+                    fetchUserAddresses();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        };
+
+        const defaultBtn = card.querySelector('.set-default-btn');
+        if (defaultBtn) {
+            defaultBtn.onclick = async () => {
+                try {
+                    await window.ModVistaAPI.apiCall(`/addresses/${addr._id}/default`, { method: 'PUT' });
+                    fetchUserAddresses();
+                } catch (error) {
+                    alert(error.message);
+                }
+            };
+        }
+
+        return card;
+    }
+
+    // Add Address Trigger
+    const addBtn = document.getElementById('add-address-trigger');
+    if (addBtn) {
+        addBtn.onclick = () => window.openAddressModal(() => fetchUserAddresses());
     }
 
     function renderOrdersPreview(orders) {

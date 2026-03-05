@@ -7,6 +7,7 @@
     <title>User Profile | ModVista</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="css/address-modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -306,104 +307,6 @@
         </div>
     </main>
 
-    <!-- Address Modal -->
-    <div class="modal-overlay" id="address-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title">Add New Address</h3>
-                <button class="close-modal" id="close-modal">&times;</button>
-            </div>
-            <form id="address-form" class="address-form">
-                <input type="hidden" id="edit-id">
-                <div class="form-row">
-                    <div class="input-group">
-                        <label for="full-name">Full Name</label>
-                        <input type="text" id="full-name" placeholder="E.g. Alex Rodriguez" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="mobile-number">Mobile Number</label>
-                        <input type="tel" id="mobile-number" placeholder="10-digit number" required pattern="[0-9]{10}">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="house-info">House / Flat / Building Name</label>
-                    <input type="text" id="house-info" placeholder="E.g. Flat 402, Skyline Towers" required>
-                </div>
-
-                <div class="input-group">
-                    <label for="street-info">Street / Area</label>
-                    <input type="text" id="street-info" placeholder="E.g. Performance Way, Silicon Valley" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="input-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" placeholder="E.g. San Francisco" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="state">State</label>
-                        <select id="state" required>
-                            <option value="" disabled selected>Select State</option>
-                            <option value="California">California</option>
-                            <option value="New York">New York</option>
-                            <option value="Texas">Texas</option>
-                            <option value="Florida">Florida</option>
-                            <option value="Washington">Washington</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="input-group">
-                        <label for="pincode">Pincode</label>
-                        <input type="text" id="pincode" placeholder="6-digit ZIP code" required pattern="[0-9]{5,6}">
-                    </div>
-                    <div class="input-group">
-                        <label>Address Type</label>
-                        <div class="address-type-group">
-                            <label class="type-btn">
-                                <input type="radio" name="address-type" value="Home" checked>
-                                <span>Home</span>
-                            </label>
-                            <label class="type-btn">
-                                <input type="radio" name="address-type" value="Work">
-                                <span>Work</span>
-                            </label>
-                            <label class="type-btn">
-                                <input type="radio" name="address-type" value="Other">
-                                <span>Other</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="checkbox-group">
-                    <input type="checkbox" id="set-default">
-                    <label for="set-default">Set as default address</label>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="outline-btn" id="cancel-form">Cancel</button>
-                    <button type="submit" class="primary-btn" id="save-address-btn">Save Address</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Confirm Delete Modal -->
-    <div class="modal-overlay" id="confirm-modal">
-        <div class="modal-content confirm-content">
-            <div class="confirm-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <h3>Delete Address?</h3>
-            <p>Are you sure you want to remove this address? This action cannot be undone.</p>
-            <div class="confirm-actions">
-                <button class="outline-btn" id="cancel-delete">No, Keep it</button>
-                <button class="primary-btn" id="confirm-delete">Yes, Delete</button>
-            </div>
-        </div>
     </div>
 
     <!-- Footer -->
@@ -441,6 +344,7 @@
     <script src="sidebar-loader.js"></script>
     <script src="cart-script.js"></script>
     <script src="script.js"></script>
+    <script src="js/address-modal.js"></script>
     <script src="profile.js"></script>
 </body>
 
