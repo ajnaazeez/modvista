@@ -1,8 +1,10 @@
 /* Address Page & Card Container */
 .edit-address-section {
-    padding-top: 80px;
+    padding-top: 60px;
+    /* Reduced further for mobile */
     padding-bottom: 40px;
-    min-height: 100vh;
+    min-height: auto;
+    /* Changed from 100vh to avoid unnecessary height */
     background-color: var(--bg-dark-1);
 }
 
