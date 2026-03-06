@@ -45,15 +45,17 @@
 /* Address Grid */
 .address-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* Reduced from 320px for better fit on small mobile */
+    gap: 20px;
 }
 
 .address-card {
     background: var(--bg-dark-3);
     border: 1px solid var(--input-border);
     border-radius: 12px;
-    padding: 24px;
+    padding: 20px;
+    /* Slightly reduced padding */
     position: relative;
     transition: var(--transition);
     display: flex;
@@ -415,10 +417,16 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .addresses-page-section {
+        padding-top: 100px;
+        padding-bottom: 40px;
+    }
+
     .page-header-flex {
         flex-direction: column;
         align-items: flex-start;
-        gap: 20px;
+        gap: 15px;
+        margin-bottom: 30px;
     }
 
     .add-new-top {
@@ -430,10 +438,43 @@
     }
 
     .modal-content {
-        padding: 25px;
+        padding: 20px;
+        border-radius: 12px;
     }
 
     .form-actions {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+    }
+
+    .empty-state h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .address-card {
+        padding: 16px;
+    }
+
+    .address-actions {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .action-link {
+        font-size: 0.8rem;
     }
 }

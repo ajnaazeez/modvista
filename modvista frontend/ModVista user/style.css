@@ -793,11 +793,18 @@ body {
     margin-bottom: 20px;
 }
 
+@media (max-width: 480px) {
+    .address-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .address-card {
     position: relative;
     border: 1px solid var(--input-border);
     border-radius: 10px;
-    padding: 24px;
+    padding: 20px;
+    /* Reduced from 24px */
     cursor: pointer;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.02);

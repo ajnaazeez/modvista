@@ -22,11 +22,16 @@
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
+    /* Default vertical centering */
     justify-content: center;
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
     transition: var(--transition);
+    overflow-y: auto;
+    /* Enable scrolling if modal is too tall */
+    padding: 20px;
+    /* Space around modal on small screens */
 }
 
 .address-modal-overlay.active {
@@ -38,12 +43,15 @@
     background: var(--bg-dark-2);
     border: 1px solid var(--input-border);
     border-radius: 16px;
-    width: 90%;
+    width: 100%;
     max-width: 600px;
     padding: 30px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     transform: translateY(20px);
     transition: var(--transition);
+    position: relative;
+    margin: auto;
+    /* Ensure centering within scrollable overlay */
 }
 
 .address-modal-overlay.active .address-modal-content {
@@ -129,7 +137,8 @@
 
 .type-options {
     display: flex;
-    gap: 30px;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .type-options label {
@@ -191,6 +200,11 @@
 }
 
 @media (max-width: 600px) {
+    .address-modal-overlay {
+        align-items: flex-start;
+        /* Better for scrolling tall content on mobile */
+    }
+
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
@@ -198,5 +212,23 @@
 
     .address-modal-content {
         padding: 20px;
+        border-radius: 12px;
+    }
+
+    .address-modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .type-options {
+        gap: 15px;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer button {
+        width: 100%;
     }
 }
