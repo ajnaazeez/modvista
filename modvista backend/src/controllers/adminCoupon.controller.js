@@ -32,6 +32,19 @@ exports.getCoupons = asyncHandler(async (req, res) => {
         .skip(skip)
         .limit(limit);
 
+    const now = new Date();
+    const data = coupons.map(coupon => {
+        const couponObj = coupon.toObject();
+        if (!coupon.isActive) {
+            couponObj.status = 'inactive';
+        } else if (coupon.endDate && new Date(coupon.endDate) < now) {
+            couponObj.status = 'expired';
+        } else {
+            couponObj.status = 'active';
+        }
+        return couponObj;
+    });
+
     res.status(200).json({
         success: true,
         count: coupons.length,
@@ -40,7 +53,7 @@ exports.getCoupons = asyncHandler(async (req, res) => {
             page,
             pages: Math.ceil(total / limit)
         },
-        data: coupons
+        data: data
     });
 });
 

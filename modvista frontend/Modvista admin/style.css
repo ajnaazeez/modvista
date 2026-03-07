@@ -378,6 +378,12 @@ td {
     color: var(--status-cancelled);
 }
 
+.status-expired {
+    background-color: rgba(255, 171, 0, 0.1);
+    color: #ff9100;
+    border: 1px solid rgba(255, 171, 0, 0.2);
+}
+
 .status-ai-enabled {
     background-color: rgba(255, 31, 31, 0.15);
     color: var(--accent);

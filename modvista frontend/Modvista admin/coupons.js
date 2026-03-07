@@ -97,7 +97,7 @@ function renderCoupons() {
                 <td style="font-weight: 600;">₹${coupon.discountValue}</td>
                 <td>₹${coupon.minProductPrice || 0}</td>
                 <td style="font-size: 0.85rem;">${validity}</td>
-                <td><span class="status-badge status-${coupon.isActive ? 'active' : 'disabled'}">${coupon.isActive ? 'Active' : 'Inactive'}</span></td>
+                <td><span class="status-badge status-${coupon.status || (coupon.isActive ? 'active' : 'disabled')}">${coupon.status ? coupon.status.charAt(0).toUpperCase() + coupon.status.slice(1) : (coupon.isActive ? 'Active' : 'Inactive')}</span></td>
                 <td>
                     <div style="display: flex; gap: 12px; align-items: center;">
                         <i class="fas fa-pencil-alt edit-coupon" data-id="${coupon._id}" style="cursor: pointer; color: var(--text-dim);" title="Edit"></i>
