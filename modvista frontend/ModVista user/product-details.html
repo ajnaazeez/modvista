@@ -12,6 +12,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        #product-loader {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-secondary);
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 107, 107, 0.1);
+            border-top: 3px solid var(--neon-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #product-content-wrapper {
+            display: none;
+        }
+
+        .product-error-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .product-error-state i {
+            font-size: 3rem;
+            color: var(--neon-red);
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -48,158 +93,174 @@
     <!-- Product Details Section -->
     <main class="product-details-page">
         <div class="section-container">
-
-
-            <div class="product-main-layout">
-                <!-- Left: Image Gallery -->
-                <div class="product-gallery">
-                    <div class="featured-image">
-                        <img src="assets/Gemini_Generated_Image_8hc4oj8hc4oj8hc4 - Copy.png" alt="Forged Carbon Rim"
-                            id="main-img">
-                    </div>
-                    <div class="thumbnail-grid">
-                        <div class="thumb active"><img
-                                src="https://images.unsplash.com/photo-1621259182978-f09e5270383f?q=80&w=200&auto=format&fit=crop"
-                                alt="Thumb 1"></div>
-                        <div class="thumb"><img
-                                src="https://images.unsplash.com/photo-1594931215112-9844e1383793?q=80&w=200&auto=format&fit=crop"
-                                alt="Thumb 2"></div>
-                        <div class="thumb"><img
-                                src="https://images.unsplash.com/photo-1611116213915-d93540d99990?q=80&w=200&auto=format&fit=crop"
-                                alt="Thumb 3"></div>
-                        <div class="thumb"><img
-                                src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=200&auto=format&fit=crop"
-                                alt="Thumb 4"></div>
-                    </div>
-                </div>
-
-                <!-- Right: Purchase Info -->
-                <div class="product-buy-info">
-                    <h1 class="product-title">Forged Carbon Rims V12 - Performance Edition</h1>
-                    <div class="product-stats">
-
-                        <span class="stock-status"><i class="fas fa-check-circle"></i> In Stock</span>
-                    </div>
-
-                    <div class="product-price">$2,499.00 <span class="price-unit">per wheel</span></div>
-
-                    <p class="short-desc">Engineered for extreme performance, the V12 Forged Carbon Series utilizes
-                        advanced material science to achieve unparalleled strength-to-weight ratios. Designed for those
-                        who demand the pinnacle of automotive engineering.</p>
-
-
-                    <div class="action-btns">
-
-                        <div class="cart-row">
-                            <div class="qty-selector">
-                                <button>-</button>
-                                <input type="number" value="1">
-                                <button>+</button>
-                            </div>
-                            <button class="outline-btn add-to-cart-big">Add to Cart</button>
-                            <button class="wishlist-btn-detail" id="wishlist-btn-detail">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                        <button class="buy-now-btn">Buy It Now</button>
-                    </div>
-
-                    <div class="feature-pills">
-                        <div class="pill"><i class="fas fa-shipping-fast"></i> Free Shipping</div>
-                        <div class="pill"><i class="fas fa-shield-alt"></i> Lifetime Warranty</div>
-                        <div class="pill"><i class="fas fa-certificate"></i> TUV Certified</div>
-                    </div>
-                </div>
+            <!-- Loading State -->
+            <div id="product-loader">
+                <div class="loader-spinner"></div>
+                <p>Loading premium experience...</p>
             </div>
 
-            <!-- Product Tabs -->
-            <div class="product-tabs">
-                <div class="tabs-header">
-                    <button class="tab-btn active">Description</button>
-                    <button class="tab-btn">Specifications</button>
-
-                </div>
-                <div class="tab-content" id="tab-content">
-                    <div class="tab-pane active" id="description-tab">
-                        <p>Loading description...</p>
-                    </div>
-                    <div class="tab-pane" id="specifications-tab">
-                        <p>Specifications are coming soon.</p>
-                    </div>
-
-                </div>
+            <!-- Error State (Hidden) -->
+            <div id="product-error" style="display: none;" class="product-error-state">
+                <i class="fas fa-exclamation-circle"></i>
+                <h2 id="error-title">Product Not Found</h2>
+                <p id="error-msg">The product you are looking for might have been moved or deleted.</p>
+                <a href="shop.html" class="primary-btn" style="margin-top: 20px; display: inline-block;">Back to
+                    Shop</a>
             </div>
 
-            <!-- Related Products -->
-            <section class="related-products">
-                <h2 class="section-title left">You May Also Like</h2>
-                <div class="product-grid" id="related-products-grid">
-                    <div class="product-card">
-                        <div class="product-img">
-                            <a href="product-details.html">
-                                <img src="https://images.unsplash.com/photo-1486006920555-c77dcf18193b?q=80&w=600&auto=format&fit=crop"
-                                    alt="Product">
-                            </a>
-                            <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                        </div>
-                        <div class="product-info">
-                            <h3>BBS Super RS - Silver</h3>
-                            <div class="product-meta">
-                                <span class="price">$1,850.00</span>
-                            </div>
+            <!-- Main Content (Hidden until loaded) -->
+            <div id="product-content-wrapper">
 
+
+                <div class="product-main-layout">
+                    <!-- Left: Image Gallery -->
+                    <div class="product-gallery">
+                        <div class="featured-image">
+                            <img src="assets/Gemini_Generated_Image_8hc4oj8hc4oj8hc4 - Copy.png" alt="Forged Carbon Rim"
+                                id="main-img">
+                        </div>
+                        <div class="thumbnail-grid">
+                            <div class="thumb active"><img
+                                    src="https://images.unsplash.com/photo-1621259182978-f09e5270383f?q=80&w=200&auto=format&fit=crop"
+                                    alt="Thumb 1"></div>
+                            <div class="thumb"><img
+                                    src="https://images.unsplash.com/photo-1594931215112-9844e1383793?q=80&w=200&auto=format&fit=crop"
+                                    alt="Thumb 2"></div>
+                            <div class="thumb"><img
+                                    src="https://images.unsplash.com/photo-1611116213915-d93540d99990?q=80&w=200&auto=format&fit=crop"
+                                    alt="Thumb 3"></div>
+                            <div class="thumb"><img
+                                    src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=200&auto=format&fit=crop"
+                                    alt="Thumb 4"></div>
                         </div>
                     </div>
-                    <div class="product-card">
-                        <div class="product-img">
-                            <a href="product-details.html">
-                                <img src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=600&auto=format&fit=crop"
-                                    alt="Product">
-                            </a>
-                            <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                        </div>
-                        <div class="product-info">
-                            <h3>HRE P101 - Brushed Clear</h3>
-                            <div class="product-meta">
-                                <span class="price">$3,100.00</span>
-                            </div>
 
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-img">
-                            <a href="product-details.html">
-                                <img src="https://images.unsplash.com/photo-1621259182978-f09e5270383f?q=80&w=600&auto=format&fit=crop"
-                                    alt="Product">
-                            </a>
-                            <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                        </div>
-                        <div class="product-info">
-                            <h3>Enkei RPF1 - Racing Gold</h3>
-                            <div class="product-meta">
-                                <span class="price">$1,100.00</span>
-                            </div>
+                    <!-- Right: Purchase Info -->
+                    <div class="product-buy-info">
+                        <h1 class="product-title"></h1>
+                        <div class="product-stats">
 
+                            <span class="stock-status"><i class="fas fa-check-circle"></i> In Stock</span>
                         </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-img">
-                            <a href="product-details.html">
-                                <img src="https://images.unsplash.com/photo-1589148625905-02164da61715?q=80&w=600&auto=format&fit=crop"
-                                    alt="Product">
-                            </a>
-                            <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                        </div>
-                        <div class="product-info">
-                            <h3>ADV.1 ADV5.0 - Flow Spec</h3>
-                            <div class="product-meta">
-                                <span class="price">$2,200.00</span>
-                            </div>
 
+                        <div class="product-price"></div>
+
+                        <p class="short-desc"></p>
+
+
+                        <div class="action-btns">
+
+                            <div class="cart-row">
+                                <div class="qty-selector">
+                                    <button>-</button>
+                                    <input type="number" value="1">
+                                    <button>+</button>
+                                </div>
+                                <button class="outline-btn add-to-cart-big">Add to Cart</button>
+                                <button class="wishlist-btn-detail" id="wishlist-btn-detail">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <button class="buy-now-btn">Buy It Now</button>
+                        </div>
+
+                        <div class="feature-pills">
+                            <div class="pill"><i class="fas fa-shipping-fast"></i> Free Shipping</div>
+                            <div class="pill"><i class="fas fa-shield-alt"></i> Lifetime Warranty</div>
+                            <div class="pill"><i class="fas fa-certificate"></i> TUV Certified</div>
                         </div>
                     </div>
                 </div>
-            </section>
+
+                <!-- Product Tabs -->
+                <div class="product-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active">Description</button>
+                        <button class="tab-btn">Specifications</button>
+
+                    </div>
+                    <div class="tab-content" id="tab-content">
+                        <div class="tab-pane active" id="description-tab">
+                            <p>Loading description...</p>
+                        </div>
+                        <div class="tab-pane" id="specifications-tab">
+                            <p>Specifications are coming soon.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Related Products -->
+                <section class="related-products">
+                    <h2 class="section-title left">You May Also Like</h2>
+                    <div class="product-grid" id="related-products-grid">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <a href="product-details.html">
+                                    <img src="https://images.unsplash.com/photo-1486006920555-c77dcf18193b?q=80&w=600&auto=format&fit=crop"
+                                        alt="Product">
+                                </a>
+                                <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            </div>
+                            <div class="product-info">
+                                <h3>BBS Super RS - Silver</h3>
+                                <div class="product-meta">
+                                    <span class="price">$1,850.00</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img">
+                                <a href="product-details.html">
+                                    <img src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=600&auto=format&fit=crop"
+                                        alt="Product">
+                                </a>
+                                <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            </div>
+                            <div class="product-info">
+                                <h3>HRE P101 - Brushed Clear</h3>
+                                <div class="product-meta">
+                                    <span class="price">$3,100.00</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img">
+                                <a href="product-details.html">
+                                    <img src="https://images.unsplash.com/photo-1621259182978-f09e5270383f?q=80&w=600&auto=format&fit=crop"
+                                        alt="Product">
+                                </a>
+                                <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Enkei RPF1 - Racing Gold</h3>
+                                <div class="product-meta">
+                                    <span class="price">$1,100.00</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img">
+                                <a href="product-details.html">
+                                    <img src="https://images.unsplash.com/photo-1589148625905-02164da61715?q=80&w=600&auto=format&fit=crop"
+                                        alt="Product">
+                                </a>
+                                <button class="add-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            </div>
+                            <div class="product-info">
+                                <h3>ADV.1 ADV5.0 - Flow Spec</h3>
+                                <div class="product-meta">
+                                    <span class="price">$2,200.00</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div> <!-- End product-content-wrapper -->
         </div>
     </main>
 

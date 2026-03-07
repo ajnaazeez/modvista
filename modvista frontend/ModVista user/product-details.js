@@ -317,10 +317,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 qtyInput.value = v;
             });
         }
+        // Hide Loader, Show Content
+        document.getElementById("product-loader").style.display = "none";
+        document.getElementById("product-content-wrapper").style.display = "block";
+
     } catch (err) {
-        console.error(err);
-        alert(`Failed to load product details: ${err.message}`);
-        // window.location.href = "shop.html"; // Commented out to allow debugging
+        console.error("Product details error:", err);
+
+        // Hide Loader
+        document.getElementById("product-loader").style.display = "none";
+
+        // Show Error State
+        const errorDiv = document.getElementById("product-error");
+        if (errorDiv) {
+            errorDiv.style.display = "block";
+            const errorMsg = document.getElementById("error-msg");
+            if (errorMsg) errorMsg.textContent = err.message || "Failed to load product details.";
+        }
     }
 });
 
