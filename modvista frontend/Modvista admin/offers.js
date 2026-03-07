@@ -26,6 +26,23 @@ async function apiFetch(path, options = {}) {
     return data;
 }
 
+const DEFAULT_IMG = "assets/default-product.png";
+const API_HOST = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+    ? "http://localhost:5000"
+    : window.location.origin;
+
+function resolveImg(src) {
+    if (!src) return DEFAULT_IMG;
+    // Normalize slashes for comparison and construction
+    const normalizedSrc = src.replace(/\\/g, '/');
+    if (normalizedSrc.startsWith("uploads/")) return `${API_HOST}/${normalizedSrc}`;
+    if (normalizedSrc.startsWith("/uploads/")) return `${API_HOST}${normalizedSrc}`;
+    if (src.startsWith("http") || src.startsWith("data:") || src.startsWith("blob:")) {
+        return src;
+    }
+    return src;
+}
+
 // --- State ---
 let products = [];
 let currentPage = 1;
@@ -118,9 +135,9 @@ function renderTable() {
         tr.innerHTML = `
             <td>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${p.images && p.images[0] ? (p.images[0].startsWith('uploads/') ? `http://localhost:5000/${p.images[0]}` : p.images[0]) : 'assets/default-product.png'}" 
+                    <img src="${resolveImg(p.images && p.images[0] ? p.images[0] : null)}" 
                          style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--border);"
-                         onerror="this.src='assets/default-product.png'">
+                         onerror="this.src='${DEFAULT_IMG}'">
                     <div style="display:flex; flex-direction:column;">
                         <span style="font-weight:600; color:var(--text-main);">${p.name}</span>
                         <small style="color:var(--text-dim); font-size:0.7rem;">ID: ${p._id.slice(-6).toUpperCase()}</small>

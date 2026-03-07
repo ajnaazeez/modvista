@@ -11,7 +11,7 @@ router.post('/', protect, adminOnly, upload.array('images', 3), (req, res) => {
     }
 
     // Return paths relative to server root
-    const imagePaths = req.files.map(file => `uploads/${file.filename}`);
+    const imagePaths = req.files.map(file => `uploads/${file.filename}`.replace(/\\/g, '/'));
 
     res.json({
         message: 'Images uploaded successfully',

@@ -44,8 +44,10 @@ let limit = 10;
 
 function resolveImg(src) {
     if (!src) return DEFAULT_IMG;
-    if (src.startsWith("uploads/")) return `${API_HOST}/${src}`;
-    if (src.startsWith("/uploads/")) return `${API_HOST}${src}`;
+    // Normalize slashes for comparison and construction
+    const normalizedSrc = src.replace(/\\/g, '/');
+    if (normalizedSrc.startsWith("uploads/")) return `${API_HOST}/${normalizedSrc}`;
+    if (normalizedSrc.startsWith("/uploads/")) return `${API_HOST}${normalizedSrc}`;
     if (src.startsWith("http") || src.startsWith("data:") || src.startsWith("blob:")) {
         return src;
     }
