@@ -69,7 +69,12 @@ async function loadRelatedProducts(categoryId, currentProductId) {
     try {
         const res = await fetch(`${localApiBase}/products`);
         if (!res.ok) throw new Error("Failed to fetch related products");
-        const allProducts = await res.json();
+        const result = await res.json();
+        const allProducts = result.data || [];
+
+        if (!Array.isArray(allProducts)) {
+            throw new Error("API did not return a product array");
+        }
 
         // Filter: Same category, not current product, and active
         const related = allProducts.filter(p =>
