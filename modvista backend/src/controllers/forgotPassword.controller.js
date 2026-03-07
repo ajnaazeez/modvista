@@ -15,8 +15,18 @@ const requestOtp = asyncHandler(async (req, res) => {
         return res.status(400).json({ ok: false, message: 'Email is required.' });
     }
 
-    // Find user but do NOT reveal whether they exist (security)
+    // Verify role if specified (for admin portal)
+    const { role } = req.query; // or use a different parameter if you prefer
+
     const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    if (role === 'admin' && user && user.role !== 'admin' && !user.isAdmin) {
+        return res.status(200).json({
+            ok: true,
+            message: 'If this email is registered as an admin, an OTP has been sent.',
+            resetSessionId: crypto.randomUUID(),
+        });
+    }
 
     // Silently succeed if user not found or has no phone
     if (!user || !user.phone) {
