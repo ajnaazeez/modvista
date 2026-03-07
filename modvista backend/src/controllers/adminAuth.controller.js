@@ -49,4 +49,11 @@ const adminLogin = async (req, res) => {
     });
 };
 
-module.exports = { adminLogin };
+const disableSignup = async (req, res) => {
+    return res.status(403).json({
+        success: false,
+        message: "Admin signup is disabled"
+    });
+};
+
+module.exports = { adminLogin, disableSignup };
