@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wireExports = () => {
         document.querySelectorAll('.export-btn-group button, .action-btn').forEach(btn => {
             const text = btn.textContent.trim().toLowerCase();
-            if (text.includes('pdf')) {
+            if (text.includes('pdf') && btn.id !== 'generateSalesReportBtn') {
                 btn.addEventListener('click', () => {
                     const original = btn.innerHTML;
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
