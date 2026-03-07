@@ -2,6 +2,10 @@ const API_BASE = (window.location.protocol === 'file:' || !window.location.origi
     ? "http://localhost:5000/api"
     : window.location.origin + "/api";
 
+const API_HOST = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+    ? "http://localhost:5000"
+    : window.location.origin;
+
 // --- Helpers ---
 function getToken() {
     return localStorage.getItem("adminToken");
@@ -29,76 +33,18 @@ async function apiFetch(path, options = {}) {
 }
 
 const DEFAULT_IMG = "assets/default-product.png";
-
-const API_HOST = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-    ? "http://localhost:5000"
-    : window.location.origin;
+const ON_ERROR_HANDLER = `this.onerror=null; this.src='${DEFAULT_IMG}';`;
 
 function resolveImg(src) {
     if (!src) return DEFAULT_IMG;
-
-    // Normalize slashes
-    const normalizedSrc = String(src).replace(/\\/g, '/');
-
-    // Case 1: Full URLs
-    if (normalizedSrc.startsWith("http://") || normalizedSrc.startsWith("https://") || normalizedSrc.startsWith("data:") || normalizedSrc.startsWith("blob:")) {
-        return normalizedSrc;
+    // Normalize slashes for comparison and construction
+    const normalizedSrc = src.replace(/\\/g, '/');
+    if (normalizedSrc.startsWith("uploads/")) return `${API_HOST}/${normalizedSrc}`;
+    if (normalizedSrc.startsWith("/uploads/")) return `${API_HOST}${normalizedSrc}`;
+    if (src.startsWith("http") || src.startsWith("data:") || src.startsWith("blob:")) {
+        return src;
     }
-
-    // Case 2: Starts with /uploads/
-    if (normalizedSrc.startsWith("/uploads/")) {
-        return `${API_HOST}${normalizedSrc}`;
-    }
-
-    // Case 3: Starts with uploads/
-    if (normalizedSrc.startsWith("uploads/")) {
-        return `${API_HOST}/${normalizedSrc}`;
-    }
-
-    // filename only -> assume uploads folder
-    return `${API_HOST}/uploads/${normalizedSrc}`;
-}
-
-function getProductImage(product) {
-    if (!product) return DEFAULT_IMG;
-
-    // A. Check for direct fields (most common)
-    if (Array.isArray(product.images) && product.images.length > 0) {
-        const first = product.images[0];
-        if (typeof first === "string" && first.trim()) return resolveImg(first);
-        if (first && typeof first === "object") {
-            const url = first.url || first.path || first.filename || first.src;
-            if (url) return resolveImg(url);
-        }
-    }
-
-    // B. Check for common alternative field names
-    const altFields = ['productImage', 'image', 'thumbnail', 'imageCover', 'img', 'productImages'];
-    for (const field of altFields) {
-        const val = product[field];
-        if (!val) continue;
-
-        if (Array.isArray(val) && val.length > 0) {
-            const first = val[0];
-            if (typeof first === "string" && first.trim()) return resolveImg(first);
-            if (first && typeof first === "object") {
-                const url = first.url || first.path || first.filename || first.src;
-                if (url) return resolveImg(url);
-            }
-        } else if (typeof val === "string" && val.trim()) {
-            return resolveImg(val);
-        } else if (val && typeof val === "object") {
-            const url = val.url || val.path || val.filename || val.src;
-            if (url) return resolveImg(url);
-        }
-    }
-
-    // C. Handle nested product objects (occurs in some populated responses)
-    if (product.product && typeof product.product === "object") {
-        return getProductImage(product.product);
-    }
-
-    return DEFAULT_IMG;
+    return src;
 }
 
 // --- State ---
@@ -203,13 +149,16 @@ function renderTable() {
             ? `${p.offerStart ? new Date(p.offerStart).toLocaleDateString() : 'Always'} - ${p.offerEnd ? new Date(p.offerEnd).toLocaleDateString() : 'Forever'}`
             : '<span style="color: var(--text-dim);">Not set</span>';
 
+        // Same image rendering pattern as products.js
+        const imgSrc = p.images?.[0] ? resolveImg(p.images[0]) : DEFAULT_IMG;
+
         tr.innerHTML = `
             <td>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${getProductImage(p)}" 
+                    <img src="${imgSrc}" 
                          alt="${p.name || 'Product'}"
                          style="width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--border); background:#111;"
-                         onerror="this.onerror=null; this.src='${DEFAULT_IMG}';">
+                         onerror="${ON_ERROR_HANDLER}">
                     <div style="display:flex; flex-direction:column;">
                         <span style="font-weight:600; color:var(--text-main); line-height:1.2;">${p.name || 'Unnamed Product'}</span>
                         <small style="color:var(--text-dim); font-size:0.7rem;">ID: ${p._id ? p._id.slice(-6).toUpperCase() : 'N/A'}</small>
