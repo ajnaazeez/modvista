@@ -37,7 +37,7 @@ async function fetchCoupons() {
 }
 
 function renderCouponCard(coupon) {
-    const { code, discountType, discountValue, minOrderAmount, minProductPrice, endDate, isExpired } = coupon;
+    const { code, discountType, discountValue, minOrderAmount, minProductPrice, endDate, isExpired, usedByUser } = coupon;
 
     const discountText = discountType === 'FLAT'
         ? `₹${discountValue.toLocaleString()} OFF`
@@ -59,18 +59,28 @@ function renderCouponCard(coupon) {
         minOrderHtml = `<div class="coupon-detail" style="color: #6c757d; font-style: italic;">No minimum requirement</div>`;
     }
 
+    // Status badges
+    let statusBadge = '';
+    if (usedByUser) {
+        statusBadge = '<span class="status-badge success">Already Used</span>';
+    } else if (isExpired) {
+        statusBadge = '<span class="status-badge error">Expired</span>';
+    }
+
     return `
-        <div class="coupon-card ${isExpired ? 'expired' : ''}">
+        <div class="coupon-card ${isExpired || usedByUser ? 'expired' : ''}">
             <div class="coupon-header">
                 <span class="coupon-badge">${discountText}</span>
-                ${isExpired ? '<span class="status-badge error">Expired</span>' : ''}
+                ${statusBadge}
             </div>
             
             <div class="coupon-code-wrap">
-                <span class="coupon-code">${code}</span>
+                <span class="coupon-code ${usedByUser ? 'strikethrough' : ''}">${code}</span>
+                ${usedByUser ? '' : `
                 <button class="copy-btn" data-code="${code}" title="Copy Code">
                     <i class="far fa-copy"></i>
                 </button>
+                `}
             </div>
             
             ${minOrderHtml}

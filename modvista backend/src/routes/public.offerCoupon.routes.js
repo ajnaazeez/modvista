@@ -3,11 +3,11 @@ const router = express.Router();
 const {
     getPublicOffers, getPublicCoupons, applyCoupon
 } = require('../controllers/public.offerCoupon.controller');
-const { protect } = require('../middleware/auth.middleware');
+const { protect, optionalProtect } = require('../middleware/auth.middleware');
 
 // Public
 router.get('/offers', getPublicOffers);
-router.get('/coupons', getPublicCoupons);
+router.get('/coupons', optionalProtect, getPublicCoupons);
 
 // Protected (Apply)
 router.post('/coupons/apply', protect, applyCoupon);

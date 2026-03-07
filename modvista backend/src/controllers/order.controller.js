@@ -50,7 +50,7 @@ const createOrder = asyncHandler(async (req, res) => {
         coupon = await Coupon.findOne({ code: cart.appliedCoupon.code, isActive: true });
 
         // Double check per-user restriction before ordering
-        if (coupon && coupon.usersUsed && coupon.usersUsed.includes(req.user._id.toString())) {
+        if (coupon && coupon.usersUsed && coupon.usersUsed.some(id => id.toString() === req.user._id.toString())) {
             res.status(400);
             throw new Error('You have already used this coupon');
         }

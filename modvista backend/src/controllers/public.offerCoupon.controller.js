@@ -26,10 +26,16 @@ const getPublicOffers = asyncHandler(async (req, res) => {
 const getPublicCoupons = asyncHandler(async (req, res) => {
     const coupons = await Coupon.find({ isActive: true }).sort({ createdAt: -1 });
     const now = new Date();
+    const userId = req.user ? req.user._id : null;
 
     const formattedCoupons = coupons.map(coupon => {
         const couponObj = coupon.toObject();
         couponObj.isExpired = coupon.endDate && new Date(coupon.endDate) < now;
+
+        // Check if current user has already used this coupon
+        couponObj.usedByUser = Boolean(userId && coupon.usersUsed &&
+            coupon.usersUsed.some(id => id.toString() === userId.toString()));
+
         return couponObj;
     });
 
@@ -68,7 +74,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
     }
 
     // Check if user has already used this coupon
-    if (coupon.usersUsed && coupon.usersUsed.includes(req.user._id.toString())) {
+    if (coupon.usersUsed && coupon.usersUsed.some(id => id.toString() === req.user._id.toString())) {
         res.status(400);
         throw new Error('You have already used this coupon');
     }
