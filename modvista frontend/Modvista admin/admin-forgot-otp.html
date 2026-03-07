@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -5,13 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Modern Design System - Sync with admin-login.html */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
             --primary: #FF1F1F;
             --primary-dark: #cc1919;
@@ -24,9 +20,16 @@
             --glass-border: rgba(255, 255, 255, 0.15);
         }
 
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+        }
+
+        body {
             background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -62,7 +65,6 @@
             background: var(--primary);
             top: -200px;
             left: -200px;
-            animation-delay: 0s;
         }
 
         .bg-animation::after {
@@ -116,7 +118,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 48px 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
         }
 
         .back-link {
@@ -126,7 +128,7 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.875rem;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             transition: all 0.3s;
         }
 
@@ -147,7 +149,7 @@
             width: 80px;
             height: 80px;
             background: linear-gradient(135deg, var(--primary), #8B5CF6);
-            border-radius: 20px;
+            border-radius: 22px;
             margin-bottom: 24px;
             box-shadow: 0 8px 24px rgba(255, 31, 31, 0.3);
         }
@@ -173,7 +175,7 @@
         .login-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
         /* OTP Inputs */
@@ -181,16 +183,16 @@
             display: flex;
             gap: 12px;
             justify-content: center;
-            margin: 24px 0;
+            margin: 32px 0;
         }
 
         .otp-input {
-            width: 50px;
-            height: 60px;
+            width: 54px;
+            height: 64px;
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            border-radius: 12px;
+            border-radius: 14px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--text-primary);
@@ -201,7 +203,8 @@
             outline: none;
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 4px rgba(255, 31, 31, 0.1);
+            box-shadow: 0 0 0 4px rgba(255, 31, 31, 0.2);
+            transform: translateY(-2px);
         }
 
         .submit-btn {
@@ -215,7 +218,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 12px;
+            margin-top: 8px;
             box-shadow: 0 4px 16px rgba(255, 31, 31, 0.3);
             display: flex;
             align-items: center;
@@ -237,7 +240,7 @@
             background: rgba(255, 31, 31, 0.1);
             border: 1px solid rgba(255, 31, 31, 0.3);
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             color: var(--primary);
             font-size: 0.875rem;
             display: none;
@@ -246,10 +249,14 @@
             margin-top: 16px;
         }
 
+        .error-message.show {
+            display: flex;
+        }
+
         .login-footer {
             text-align: center;
-            margin-top: 24px;
-            padding-top: 16px;
+            margin-top: 32px;
+            padding-top: 24px;
             border-top: 1px solid var(--border);
         }
 
@@ -318,3 +325,5 @@
 
     <script src="admin-forgot-otp.js"></script>
 </body>
+
+</html>
