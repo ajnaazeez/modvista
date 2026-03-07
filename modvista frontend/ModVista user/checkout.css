@@ -71,6 +71,22 @@
     background: #444;
     cursor: not-allowed;
     color: #888;
+    opacity: 0.7;
+}
+
+.apply-btn.used {
+    background: #333 !important;
+    color: #ffd700 !important;
+    /* Gold text for "Used" */
+    cursor: not-allowed;
+    border: 1px solid #444;
+}
+
+.apply-btn.disabled-state {
+    background: #2a2a2a !important;
+    color: #666 !important;
+    cursor: not-allowed;
+    border: 1px dashed #444;
 }
 
 .apply-btn.applied {

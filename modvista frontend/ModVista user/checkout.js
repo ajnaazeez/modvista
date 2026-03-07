@@ -153,14 +153,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function getCouponEligibility(coupon, currentSubtotal, items = []) {
-        if (!coupon.isActive) return { eligible: false, reason: 'Inactive' };
+        if (!coupon.isActive) return { eligible: false, reason: 'Inactive', code: 'INACTIVE' };
+
+        // Check if already used
+        if (coupon.usedByUser) {
+            return { eligible: false, reason: 'Already Used', code: 'USED' };
+        }
 
         const now = new Date();
         const start = new Date(coupon.startDate);
         const end = new Date(coupon.endDate);
 
-        if (now < start) return { eligible: false, reason: `Starts on ${start.toLocaleDateString()}` };
-        if (now > end) return { eligible: false, reason: 'Expired' };
+        if (now < start) return { eligible: false, reason: `Starts on ${start.toLocaleDateString()}`, code: 'NOT_STARTED' };
+        if (now > end) return { eligible: false, reason: 'Expired', code: 'EXPIRED' };
 
         // Check Min Product Price
         const hasQualifyingProduct = (items || []).some(item => {
@@ -168,12 +173,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             return itemPrice >= (coupon.minProductPrice || 0);
         });
         if (!hasQualifyingProduct) {
-            return { eligible: false, reason: `Min. Product Price ₹${(coupon.minProductPrice || 0).toLocaleString()} required` };
+            return { eligible: false, reason: `Min. Item ₹${(coupon.minProductPrice || 0).toLocaleString()} required`, code: 'MIN_ITEM' };
         }
 
         // Check Min Order Amount
         if (currentSubtotal < (coupon.minOrderAmount || 0)) {
-            return { eligible: false, reason: `Min. Order ₹${(coupon.minOrderAmount || 0).toLocaleString()} required` };
+            return { eligible: false, reason: `Min. Order ₹${(coupon.minOrderAmount || 0).toLocaleString()} required`, code: 'MIN_ORDER' };
         }
 
         return { eligible: true };
@@ -193,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         availableCoupons.forEach(coupon => {
-            const { eligible, reason } = getCouponEligibility(coupon, checkAmount, items);
+            const { eligible, reason, code } = getCouponEligibility(coupon, checkAmount, items);
             const isApplied = appliedCoupon && appliedCoupon.code === coupon.code;
 
             // If a coupon was applied but is no longer eligible, auto-remove it silently
@@ -209,6 +214,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `${coupon.discountValue}% OFF`
                 : `₹${coupon.discountValue} OFF`;
 
+            let btnText = 'Apply';
+            let btnClass = 'apply-btn';
+
+            if (isApplied) {
+                btnText = 'Applied';
+                btnClass += ' applied';
+            } else if (!eligible) {
+                if (code === 'USED') {
+                    btnText = 'Used';
+                    btnClass += ' used';
+                } else if (code === 'MIN_ORDER' || code === 'MIN_ITEM') {
+                    btnText = 'Ineligible';
+                    btnClass += ' disabled-state';
+                } else {
+                    btnText = 'Unavailable';
+                    btnClass += ' disabled-state';
+                }
+            }
+
             const metaLine = !eligible
                 ? `<br><span class="ineligible-reason" style="color: #ff6b6b; font-size: 11px;">${reason}</span>`
                 : ` • Min. Item ₹${(coupon.minProductPrice || 0).toLocaleString()}`;
@@ -220,11 +244,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${discountText}${metaLine}
                     </div>
                 </div>
-                <button class="apply-btn ${isApplied ? 'applied' : ''}" 
+                <button class="${btnClass}" 
                         ${!eligible ? 'disabled' : ''} 
-                        onclick="handleCouponAction('${coupon.code}')"
-                        style="${!eligible ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
-                    ${isApplied ? 'Applied' : 'Apply'}
+                        onclick="handleCouponAction('${coupon.code}')">
+                    ${btnText}
                 </button>
             `;
             listContainer.appendChild(card);
@@ -245,6 +268,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     window.handleCouponAction = async (code) => {
+        // Double check eligibility before proceeding
+        const coupon = availableCoupons.find(c => c.code === code);
+        if (!coupon) return;
+
+        const checkAmount = cartSummary ? cartSummary.discountedSubtotal : 0;
+        const eligibility = getCouponEligibility(coupon, checkAmount, cartItems);
+
+        if (!eligibility.eligible) {
+            alert(eligibility.reason || "This coupon is not eligible.");
+            return;
+        }
+
         if (appliedCoupon && appliedCoupon.code === code) return;
 
         try {
