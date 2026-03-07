@@ -62,27 +62,41 @@ function resolveImg(src) {
 function getProductImage(product) {
     if (!product) return DEFAULT_IMG;
 
-    // case 1: images array
+    // A. Check for direct fields (most common)
     if (Array.isArray(product.images) && product.images.length > 0) {
         const first = product.images[0];
-
-        // array of strings
-        if (typeof first === "string" && first.trim()) {
-            return resolveImg(first);
-        }
-
-        // array of objects
+        if (typeof first === "string" && first.trim()) return resolveImg(first);
         if (first && typeof first === "object") {
-            if (first.url) return resolveImg(first.url);
-            if (first.path) return resolveImg(first.path);
-            if (first.filename) return resolveImg(first.filename);
-            if (first.src) return resolveImg(first.src);
+            const url = first.url || first.path || first.filename || first.src;
+            if (url) return resolveImg(url);
         }
     }
 
-    // case 2: single image fields
-    if (product.image) return resolveImg(product.image);
-    if (product.thumbnail) return resolveImg(product.thumbnail);
+    // B. Check for common alternative field names
+    const altFields = ['productImage', 'image', 'thumbnail', 'imageCover', 'img', 'productImages'];
+    for (const field of altFields) {
+        const val = product[field];
+        if (!val) continue;
+
+        if (Array.isArray(val) && val.length > 0) {
+            const first = val[0];
+            if (typeof first === "string" && first.trim()) return resolveImg(first);
+            if (first && typeof first === "object") {
+                const url = first.url || first.path || first.filename || first.src;
+                if (url) return resolveImg(url);
+            }
+        } else if (typeof val === "string" && val.trim()) {
+            return resolveImg(val);
+        } else if (val && typeof val === "object") {
+            const url = val.url || val.path || val.filename || val.src;
+            if (url) return resolveImg(url);
+        }
+    }
+
+    // C. Handle nested product objects (occurs in some populated responses)
+    if (product.product && typeof product.product === "object") {
+        return getProductImage(product.product);
+    }
 
     return DEFAULT_IMG;
 }
@@ -106,7 +120,6 @@ async function loadProducts(page = 1) {
     try {
         const query = `?page=${currentPage}&limit=${limit}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`;
         const response = await apiFetch(`/admin/products${query}`);
-
         if (response.success) {
             products = response.data || [];
             totalPages = Math.ceil((response.total || 0) / limit);

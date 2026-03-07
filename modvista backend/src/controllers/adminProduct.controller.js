@@ -17,11 +17,20 @@ const adminGetProducts = asyncHandler(async (req, res) => {
     const products = await features.query;
     const count = await Product.countDocuments(features.query.getFilter());
 
+    // Explicitly include all fields and ensure images is an array
+    const data = products.map(p => {
+        const doc = p.toObject();
+        return {
+            ...doc,
+            images: doc.images || []
+        };
+    });
+
     res.json({
         success: true,
         count: products.length,
         total: count,
-        data: products
+        data
     });
 });
 
