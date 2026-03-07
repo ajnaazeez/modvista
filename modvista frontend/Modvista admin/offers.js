@@ -119,7 +119,18 @@ function renderPagination(total) {
 }
 
 function updateStats() {
-    const activeCount = products.filter(p => p.offerActive).length;
+    const now = new Date();
+    const activeCount = products.filter(p => {
+        if (!p.offerActive) return false;
+        const end = p.offerEnd ? new Date(p.offerEnd) : null;
+        if (end && now > end) return false;
+
+        const start = p.offerStart ? new Date(p.offerStart) : null;
+        if (start && now < start) return false;
+
+        return true;
+    }).length;
+
     const activeOffersCount = document.getElementById('activeOffersCount');
     if (activeOffersCount) {
         activeOffersCount.textContent = activeCount;
@@ -152,6 +163,27 @@ function renderTable() {
         // Same image rendering pattern as products.js
         const imgSrc = p.images?.[0] ? resolveImg(p.images[0]) : DEFAULT_IMG;
 
+        // Calculate effective status
+        const now = new Date();
+        const start = p.offerStart ? new Date(p.offerStart) : null;
+        const end = p.offerEnd ? new Date(p.offerEnd) : null;
+
+        let statusText = 'Inactive';
+        let statusClass = 'status-inactive';
+
+        if (p.offerActive) {
+            if (end && now > end) {
+                statusText = 'Expired';
+                statusClass = 'status-expired';
+            } else if (start && now < start) {
+                statusText = 'Scheduled';
+                statusClass = 'status-pending'; // Using yellow/pending color for scheduled
+            } else {
+                statusText = 'Active';
+                statusClass = 'status-active';
+            }
+        }
+
         tr.innerHTML = `
             <td>
                 <div style="display:flex; align-items:center; gap:12px;">
@@ -166,16 +198,16 @@ function renderTable() {
                 </div>
             </td>
             <td style="font-family: monospace; color: var(--text-dim);">₹${Number(p.price || 0).toLocaleString()}</td>
-            <td style="font-weight: 600; color: ${hasOffer ? 'var(--status-delivered)' : 'var(--text-dim)'}">
+            <td style="font-weight: 600; color: ${statusText === 'Active' ? 'var(--status-delivered)' : 'var(--text-dim)'}">
                 ${p.salePrice ? `₹${Number(p.salePrice).toLocaleString()}` : '-'}
             </td>
             <td>
-                ${hasOffer ? `<span class="status-badge" style="background: rgba(0, 214, 143, 0.1); color: var(--status-delivered); border: 1px solid rgba(0, 214, 143, 0.2);">${discount}% OFF</span>` : '-'}
+                ${statusText === 'Active' ? `<span class="status-badge" style="background: rgba(0, 214, 143, 0.1); color: var(--status-delivered); border: 1px solid rgba(0, 214, 143, 0.2);">${discount}% OFF</span>` : '-'}
             </td>
             <td><small style="color: var(--text-dim);">${period}</small></td>
             <td>
-                <span class="status-badge ${hasOffer ? 'status-active' : 'status-inactive'}">
-                    ${hasOffer ? 'Active' : 'Inactive'}
+                <span class="status-badge ${statusClass}">
+                    ${statusText}
                 </span>
             </td>
             <td style="text-align: right;">
