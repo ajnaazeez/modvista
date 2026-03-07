@@ -1,16 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify OTP | Admin Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
     <style>
+        /* Modern Design System - Sync with admin-login.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF1F1F;
+            --primary-dark: #cc1919;
+            --bg-dark: #0a0a0a;
+            --bg-card: #141414;
+            --border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before,
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-animation::before {
+            background: var(--primary);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation::after {
+            background: #8B5CF6;
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(100px, -100px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-100px, 100px) scale(0.9);
+            }
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             padding: 48px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .back-link {
@@ -21,13 +127,56 @@
             text-decoration: none;
             font-size: 0.875rem;
             margin-bottom: 24px;
-            transition: color 0.3s;
+            transition: all 0.3s;
         }
 
         .back-link:hover {
             color: var(--primary);
+            transform: translateX(-4px);
         }
 
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(255, 31, 31, 0.3);
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* OTP Inputs */
         .otp-inputs {
             display: flex;
             gap: 12px;
@@ -54,6 +203,71 @@
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 0 4px rgba(255, 31, 31, 0.1);
         }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), #cc1919);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            box-shadow: 0 4px 16px rgba(255, 31, 31, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(255, 31, 31, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: rgba(255, 31, 31, 0.1);
+            border: 1px solid rgba(255, 31, 31, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--primary);
+            font-size: 0.875rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .login-footer p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .login-footer a:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 
@@ -69,7 +283,7 @@
 
             <div class="login-header">
                 <div class="logo">
-                    <i class="fas fa-shield-check"></i>
+                    <i class="fas fa-shield-halved"></i>
                 </div>
                 <h1>Verify OTP</h1>
                 <p>Enter the 6-digit code sent to your email</p>
@@ -77,7 +291,7 @@
 
             <form id="otp-verify-form" class="login-form">
                 <div class="otp-inputs" id="otp-container">
-                    <input type="text" maxlength="1" class="otp-input" required />
+                    <input type="text" maxlength="1" class="otp-input" required autofocus />
                     <input type="text" maxlength="1" class="otp-input" required />
                     <input type="text" maxlength="1" class="otp-input" required />
                     <input type="text" maxlength="1" class="otp-input" required />
@@ -95,7 +309,7 @@
                     <span id="error-text"></span>
                 </div>
 
-                <div class="login-footer" style="border-top: none; margin-top: 10px;">
+                <div class="login-footer">
                     <p>Didn't receive code? <a href="#" id="resend-otp">Resend</a></p>
                 </div>
             </form>
@@ -104,5 +318,3 @@
 
     <script src="admin-forgot-otp.js"></script>
 </body>
-
-</html>
