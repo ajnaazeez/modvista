@@ -3,7 +3,9 @@ const API_BASE = (window.location.protocol === 'file:' || !window.location.origi
     : window.location.origin + "/api";
 
 // --- Helpers ---
-function getToken() { return localStorage.getItem("adminToken"); }
+function getToken() {
+    return localStorage.getItem("adminToken");
+}
 
 async function apiFetch(path, options = {}) {
     const token = getToken();
@@ -27,20 +29,62 @@ async function apiFetch(path, options = {}) {
 }
 
 const DEFAULT_IMG = "assets/default-product.png";
+
 const API_HOST = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
     ? "http://localhost:5000"
     : window.location.origin;
 
 function resolveImg(src) {
     if (!src) return DEFAULT_IMG;
-    // Normalize slashes for comparison and construction
-    const normalizedSrc = src.replace(/\\/g, '/');
-    if (normalizedSrc.startsWith("uploads/")) return `${API_HOST}/${normalizedSrc}`;
-    if (normalizedSrc.startsWith("/uploads/")) return `${API_HOST}${normalizedSrc}`;
-    if (src.startsWith("http") || src.startsWith("data:") || src.startsWith("blob:")) {
-        return src;
+
+    // Normalize slashes
+    const normalizedSrc = String(src).replace(/\\/g, '/');
+
+    // Case 1: Full URLs
+    if (normalizedSrc.startsWith("http://") || normalizedSrc.startsWith("https://") || normalizedSrc.startsWith("data:") || normalizedSrc.startsWith("blob:")) {
+        return normalizedSrc;
     }
-    return src;
+
+    // Case 2: Starts with /uploads/
+    if (normalizedSrc.startsWith("/uploads/")) {
+        return `${API_HOST}${normalizedSrc}`;
+    }
+
+    // Case 3: Starts with uploads/
+    if (normalizedSrc.startsWith("uploads/")) {
+        return `${API_HOST}/${normalizedSrc}`;
+    }
+
+    // filename only -> assume uploads folder
+    return `${API_HOST}/uploads/${normalizedSrc}`;
+}
+
+function getProductImage(product) {
+    if (!product) return DEFAULT_IMG;
+
+    // case 1: images array
+    if (Array.isArray(product.images) && product.images.length > 0) {
+        const first = product.images[0];
+
+        // array of strings
+        if (typeof first === "string" && first.trim()) {
+            return resolveImg(first);
+        }
+
+        // array of objects
+        if (first && typeof first === "object") {
+            if (first.url) return resolveImg(first.url);
+            if (first.path) return resolveImg(first.path);
+            if (first.filename) return resolveImg(first.filename);
+            if (first.src) return resolveImg(first.src);
+        }
+    }
+
+    // case 2: single image fields
+    if (product.image) return resolveImg(product.image);
+    if (product.thumbnail) return resolveImg(product.thumbnail);
+
+    return DEFAULT_IMG;
 }
 
 // --- State ---
@@ -53,14 +97,18 @@ let searchQuery = "";
 // --- Load Data ---
 async function loadProducts(page = 1) {
     const tbody = document.getElementById('offersTableBody');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-dim);">Loading offers...</td></tr>';
+    if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-dim);">Loading offers...</td></tr>';
+    }
 
     currentPage = page;
+
     try {
         const query = `?page=${currentPage}&limit=${limit}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`;
         const response = await apiFetch(`/admin/products${query}`);
+
         if (response.success) {
-            products = response.data;
+            products = response.data || [];
             totalPages = Math.ceil((response.total || 0) / limit);
             renderTable();
             updateStats();
@@ -68,7 +116,9 @@ async function loadProducts(page = 1) {
         }
     } catch (err) {
         console.error('Failed to load products:', err);
-        if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red; padding:3rem;">Error: ${err.message}</td></tr>`;
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red; padding:3rem;">Error: ${err.message}</td></tr>`;
+        }
     }
 }
 
@@ -105,16 +155,22 @@ function renderPagination(total) {
             Showing ${(currentPage - 1) * limit + 1} to ${Math.min(currentPage * limit, total)} of ${total} offers
         </div>
     `;
+
     container.innerHTML = html;
 }
 
 function updateStats() {
     const activeCount = products.filter(p => p.offerActive).length;
-    document.getElementById('activeOffersCount').textContent = activeCount;
+    const activeOffersCount = document.getElementById('activeOffersCount');
+    if (activeOffersCount) {
+        activeOffersCount.textContent = activeCount;
+    }
 }
 
 function renderTable() {
     const tbody = document.getElementById('offersTableBody');
+    if (!tbody) return;
+
     tbody.innerHTML = '';
 
     if (products.length === 0) {
@@ -125,8 +181,10 @@ function renderTable() {
     products.forEach(p => {
         const tr = document.createElement('tr');
 
-        const hasOffer = p.offerActive;
-        const discount = hasOffer ? Math.round(((p.price - p.salePrice) / p.price) * 100) : 0;
+        const hasOffer = !!p.offerActive;
+        const discount = hasOffer && p.price && p.salePrice
+            ? Math.round(((p.price - p.salePrice) / p.price) * 100)
+            : 0;
 
         const period = (p.offerStart || p.offerEnd)
             ? `${p.offerStart ? new Date(p.offerStart).toLocaleDateString() : 'Always'} - ${p.offerEnd ? new Date(p.offerEnd).toLocaleDateString() : 'Forever'}`
@@ -135,18 +193,19 @@ function renderTable() {
         tr.innerHTML = `
             <td>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${resolveImg(p.images && p.images[0] ? p.images[0] : null)}" 
-                         style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--border);"
-                         onerror="this.src='${DEFAULT_IMG}'">
+                    <img src="${getProductImage(p)}" 
+                         alt="${p.name || 'Product'}"
+                         style="width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--border); background:#111;"
+                         onerror="this.onerror=null; this.src='${DEFAULT_IMG}';">
                     <div style="display:flex; flex-direction:column;">
-                        <span style="font-weight:600; color:var(--text-main);">${p.name}</span>
-                        <small style="color:var(--text-dim); font-size:0.7rem;">ID: ${p._id.slice(-6).toUpperCase()}</small>
+                        <span style="font-weight:600; color:var(--text-main); line-height:1.2;">${p.name || 'Unnamed Product'}</span>
+                        <small style="color:var(--text-dim); font-size:0.7rem;">ID: ${p._id ? p._id.slice(-6).toUpperCase() : 'N/A'}</small>
                     </div>
                 </div>
             </td>
-            <td style="font-family: monospace; color: var(--text-dim);">₹${p.price.toLocaleString()}</td>
+            <td style="font-family: monospace; color: var(--text-dim);">₹${Number(p.price || 0).toLocaleString()}</td>
             <td style="font-weight: 600; color: ${hasOffer ? 'var(--status-delivered)' : 'var(--text-dim)'}">
-                ${p.salePrice ? `₹${p.salePrice.toLocaleString()}` : '-'}
+                ${p.salePrice ? `₹${Number(p.salePrice).toLocaleString()}` : '-'}
             </td>
             <td>
                 ${hasOffer ? `<span class="status-badge" style="background: rgba(0, 214, 143, 0.1); color: var(--status-delivered); border: 1px solid rgba(0, 214, 143, 0.2);">${discount}% OFF</span>` : '-'}
@@ -178,12 +237,11 @@ function openOfferModal(productId) {
     if (!p) return;
 
     document.getElementById('productId').value = p._id;
-    document.getElementById('offerProductName').value = p.name;
-    document.getElementById('basePrice').value = p.price;
+    document.getElementById('offerProductName').value = p.name || '';
+    document.getElementById('basePrice').value = p.price || '';
     document.getElementById('salePrice').value = p.salePrice || '';
-    document.getElementById('offerActive').checked = p.offerActive;
+    document.getElementById('offerActive').checked = !!p.offerActive;
 
-    // Format dates for input[type="date"]
     const today = new Date().toISOString().split('T')[0];
     const startInput = document.getElementById('offerStart');
     const endInput = document.getElementById('offerEnd');
@@ -191,98 +249,105 @@ function openOfferModal(productId) {
     startInput.min = today;
     endInput.min = today;
 
-    if (p.offerStart) startInput.value = new Date(p.offerStart).toISOString().split('T')[0];
-    else startInput.value = '';
-
-    if (p.offerEnd) endInput.value = new Date(p.offerEnd).toISOString().split('T')[0];
-    else endInput.value = '';
+    startInput.value = p.offerStart ? new Date(p.offerStart).toISOString().split('T')[0] : '';
+    endInput.value = p.offerEnd ? new Date(p.offerEnd).toISOString().split('T')[0] : '';
 
     modal.classList.add('show');
 }
 
 function closeModal() {
-    modal.classList.remove('show');
-    offerForm.reset();
+    if (modal) modal.classList.remove('show');
+    if (offerForm) offerForm.reset();
 }
 
 if (closeBtn) closeBtn.onclick = closeModal;
 if (cancelBtn) cancelBtn.onclick = closeModal;
-window.onclick = (e) => { if (e.target === modal) closeModal(); };
 
-// --- Form Submission ---
-offerForm.onsubmit = async (e) => {
-    e.preventDefault();
-
-    const productId = document.getElementById('productId').value;
-    const isEnabled = document.getElementById('offerActive').checked;
-    const basePrice = parseFloat(document.getElementById('basePrice').value);
-    const salePrice = parseFloat(document.getElementById('salePrice').value);
-    const offerStart = document.getElementById('offerStart').value;
-    const offerEnd = document.getElementById('offerEnd').value;
-
-    // Client-side validation
-    if (isEnabled) {
-        if (!salePrice || salePrice <= 0 || salePrice >= basePrice) {
-            alert('Sale price must be greater than 0 and less than base price');
-            return;
-        }
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (offerStart) {
-            const startStr = new Date(offerStart).toISOString().split('T')[0];
-            const todayStr = today.toISOString().split('T')[0];
-            if (startStr < todayStr) {
-                alert('Start date must be today or later');
-                return;
-            }
-        }
-
-        if (offerEnd) {
-            const endStr = new Date(offerEnd).toISOString().split('T')[0];
-            const todayStr = today.toISOString().split('T')[0];
-            if (endStr < todayStr) {
-                alert('End date must be today or later');
-                return;
-            }
-        }
-
-        if (offerStart && offerEnd && new Date(offerStart) > new Date(offerEnd)) {
-            alert('Start date should not be greater than end date');
-            return;
-        }
-    }
-
-    try {
-        await apiFetch(`/admin/products/${productId}/offer`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                offerActive: isEnabled,
-                salePrice: isEnabled ? salePrice : null,
-                offerStart: isEnabled && offerStart ? offerStart : null,
-                offerEnd: isEnabled && offerEnd ? offerEnd : null
-            })
-        });
-
-        alert('Offer updated successfully');
-        closeModal();
-        loadProducts();
-    } catch (err) {
-        alert(err.message);
-    }
+window.onclick = (e) => {
+    if (e.target === modal) closeModal();
 };
 
+// --- Form Submission ---
+if (offerForm) {
+    offerForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const productId = document.getElementById('productId').value;
+        const isEnabled = document.getElementById('offerActive').checked;
+        const basePrice = parseFloat(document.getElementById('basePrice').value);
+        const salePrice = parseFloat(document.getElementById('salePrice').value);
+        const offerStart = document.getElementById('offerStart').value;
+        const offerEnd = document.getElementById('offerEnd').value;
+
+        if (isEnabled) {
+            if (!salePrice || salePrice <= 0 || salePrice >= basePrice) {
+                alert('Sale price must be greater than 0 and less than base price');
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayStr = today.toISOString().split('T')[0];
+
+            if (offerStart) {
+                const startStr = new Date(offerStart).toISOString().split('T')[0];
+                if (startStr < todayStr) {
+                    alert('Start date must be today or later');
+                    return;
+                }
+            }
+
+            if (offerEnd) {
+                const endStr = new Date(offerEnd).toISOString().split('T')[0];
+                if (endStr < todayStr) {
+                    alert('End date must be today or later');
+                    return;
+                }
+            }
+
+            if (offerStart && offerEnd && new Date(offerStart) > new Date(offerEnd)) {
+                alert('Start date should not be greater than end date');
+                return;
+            }
+        }
+
+        try {
+            await apiFetch(`/admin/products/${productId}/offer`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    offerActive: isEnabled,
+                    salePrice: isEnabled ? salePrice : null,
+                    offerStart: isEnabled && offerStart ? offerStart : null,
+                    offerEnd: isEnabled && offerEnd ? offerEnd : null
+                })
+            });
+
+            alert('Offer updated successfully');
+            closeModal();
+            loadProducts(currentPage);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+}
+
 // --- Search ---
-document.getElementById('productSearch').addEventListener('input', (e) => {
-    searchQuery = e.target.value;
-    currentPage = 1;
-    loadProducts();
-});
+const searchInput = document.getElementById('productSearch');
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        currentPage = 1;
+        loadProducts(1);
+    });
+}
 
 // --- Initialize ---
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts(1);
+
     const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
-    if (adminUser.name) document.getElementById('adminNameDisplay').textContent = adminUser.name;
+    if (adminUser.name) {
+        const adminNameDisplay = document.getElementById('adminNameDisplay');
+        if (adminNameDisplay) adminNameDisplay.textContent = adminUser.name;
+    }
 });
