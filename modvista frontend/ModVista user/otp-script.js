@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
             }
 
-            const BASE_URL = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                ? "http://13.61.174.57"
-                : window.location.origin;
+            const BASE_URL = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ?
+                window.ModVistaAPI.API_BASE.replace('/api', '') :
+                (window.location.hostname === 'localhost' ? "http://localhost:5000" : window.location.origin);
 
             const res = await fetch(`${BASE_URL}/api/auth/verify-otp`, {
                 method: 'POST',
@@ -96,9 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 resendBtn.disabled = true;
                 resendBtn.innerText = 'Resending...';
 
-                const BASE_URL = (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === "null" || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                    ? "http://13.61.174.57"
-                    : window.location.origin;
+                const BASE_URL = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ?
+                    window.ModVistaAPI.API_BASE.replace('/api', '') :
+                    (window.location.hostname === 'localhost' ? "http://localhost:5000" : window.location.origin);
 
                 const res = await fetch(`${BASE_URL}/api/auth/resend-otp`, {
                     method: 'POST',

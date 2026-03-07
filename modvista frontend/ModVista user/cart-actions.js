@@ -7,7 +7,7 @@
 // Use centralized API tools from api.js
 const getModVistaAPI = () => {
   return window.ModVistaAPI || {
-    API_BASE: "http://13.61.174.57/api",
+    API_BASE: (window.location.hostname === 'localhost' ? "http://localhost:5000/api" : `${window.location.origin}/api`),
     getToken: () => localStorage.getItem("token"),
     authHeaders: () => ({ "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") })
   };

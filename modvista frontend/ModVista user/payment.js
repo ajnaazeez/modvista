@@ -78,8 +78,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Handle image path (frontend assets vs backend uploads)
             let imgSrc = 'assets/default-product.png';
             if (item.image) {
-                if (item.image.startsWith('uploads/')) {
-                    imgSrc = `http://13.61.174.57/${item.image}`;
+                if (window.ModVistaAPI && window.ModVistaAPI.resolveImg) {
+                    imgSrc = window.ModVistaAPI.resolveImg(item.image);
+                } else if (item.image.startsWith('uploads/')) {
+                    imgSrc = `${window.location.origin}/${item.image}`;
                 } else if (item.image.startsWith('assets/')) {
                     imgSrc = item.image;
                 } else {

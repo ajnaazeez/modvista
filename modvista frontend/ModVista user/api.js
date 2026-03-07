@@ -5,10 +5,14 @@
 (function () {
     const getBaseUrl = () => {
         const localHosts = ['localhost', '127.0.0.1', ''];
-        if (localHosts.includes(window.location.hostname) || window.location.protocol === 'file:') {
+        const hostname = window.location.hostname;
+
+        if (localHosts.includes(hostname) || window.location.protocol === 'file:') {
             return "http://localhost:5000/api";
         }
-        return "http://13.61.174.57/api";
+
+        // Use the current origin (protocol + host) to ensure HTTPS consistency
+        return `${window.location.origin}/api`;
     };
 
     const API_BASE = getBaseUrl();

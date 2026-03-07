@@ -201,7 +201,8 @@ function initGoogleAuth(retryCount = 0) {
 
 async function handleGoogleResponse(response) {
     try {
-        const apiBase = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://localhost:5000/api";
+        const apiBase = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ||
+            (window.location.hostname === 'localhost' ? "http://localhost:5000/api" : `${window.location.origin}/api`);
         const res = await fetch(`${apiBase}/auth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -724,7 +725,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
             }
 
-            const apiBase = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ? window.ModVistaAPI.API_BASE.replace('/api', '') : 'http://localhost:5000';
+            const apiBase = (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ?
+                window.ModVistaAPI.API_BASE.replace('/api', '') :
+                (window.location.hostname === 'localhost' ? 'http://localhost:5000' : window.location.origin);
 
             const res = await fetch(`${apiBase}/api/auth/signup`, {
                 method: 'POST',

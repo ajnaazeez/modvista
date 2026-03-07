@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const getApiBase = () => (window.ModVistaAPI && window.ModVistaAPI.API_BASE) || "http://13.61.174.57/api";
+    const getApiBase = () => (window.ModVistaAPI && window.ModVistaAPI.API_BASE) ||
+        (window.location.hostname === 'localhost' ? "http://localhost:5000/api" : `${window.location.origin}/api`);
     const localApiBase = getApiBase();
 
     const token = localStorage.getItem('token');
